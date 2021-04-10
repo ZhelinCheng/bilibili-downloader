@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-10 19:30:59
+ * @LastEditTime : 2021-04-10 23:32:18
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
@@ -385,6 +385,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
         display: {
           topic_info: { topic_details },
         },
+        card = '',
         desc: {
           bvid,
           timestamp,
@@ -393,12 +394,10 @@ export const getVideosUrl = async (): Promise<boolean> => {
           },
         },
       } of cards) {
-        const isDance = topic_details.findIndex(
-          ({ topic_name }) =>
-            timeout < timestamp &&
-            /星辰|姐姐|妹妹|舞/.test(topic_name) &&
-            !notes.includes(bvid),
-        );
+        const isDance = topic_details.findIndex(({ topic_name }) => {
+          const dance = /星辰|姐姐|妹妹|舞/.test(topic_name) || /舞/mg.test(card);
+          return timeout < timestamp && dance && !notes.includes(bvid);
+        });
 
         if (isDance < 0) {
           continue;
