@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-11 13:10:18
+ * @LastEditTime : 2021-04-11 22:12:55
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -22,22 +22,27 @@ type BaseItemType = VideoUrlItems & { cid: string };
 
 export const downloadVideo = async (
   url: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> => {
+): Promise<{
+  data: NodeJS.ReadStream;
+  size: number;
+}> => {
   try {
     if (!url) {
       return;
     }
 
-    const response = await axios({
+    const { data, headers } = await axios({
       method: 'get',
       url,
       headers: {
-        Cookie: ''
+        Cookie: '',
       },
       responseType: 'stream',
     });
-    return response.data;
+    return {
+      data,
+      size: Number(headers['content-length']),
+    };
   } catch (e) {
     console.error(e);
   }
@@ -58,26 +63,35 @@ async function downloadList(
   return new Promise((resolve, reject) => {
     mapLimit(
       queue,
-      2,
+      1,
       async function ({ bvid, name, cid }) {
         try {
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const url = await getVideoDownloadUrl(bvid, cid);
-          const res = await downloadVideo(url);
-          const isFtp =
-            res &&
-            (await postData(
-              ftp,
-              res,
-              `/Multimedia/Bilibili/${name}`,
-              `${cid}_${date.getMinutes()}.flv`,
-            ));
+          const { data, size } = await downloadVideo(url);
 
-          logger.info(`状态 ⇒ ${isFtp}`);
-          if (isFtp) {
-            await db.get<'notes'>('notes').push(bvid).write();
+          if (!data || size <= 0) {
+            return '';
           }
-          return isFtp ? bvid : '';
+
+          const filePath = `/Multimedia/Bilibili/${name}`;
+          const fileName = `${cid}_${date.getMinutes()}.flv`;
+          const filePos = `${filePath}/${fileName}`;
+
+          const uploadFtp = await postData(ftp, data, filePath, fileName);
+          const fileSize = (await ftp.size(filePos)) || 0;
+          // console.log(fileSize, size)
+
+          const isOver = fileSize === size && uploadFtp;
+          
+          logger.info(`状态 ⇒ ${isOver}`);
+          if (isOver) {
+            await db.get<'notes'>('notes').push(bvid).write();
+          } else {
+            await ftp.delete(filePos);
+          }
+
+          return isOver ? bvid : '';
         } catch (e) {
           return '';
         }
@@ -143,7 +157,7 @@ export const downloader = async (): Promise<void> => {
       }
     });
 
-    logger.info('===本次下载完成===')
+    logger.info('===本次下载完成===');
   } catch (e) {
     console.error(e);
   }
