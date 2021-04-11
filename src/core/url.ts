@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-10 23:32:18
+ * @LastEditTime : 2021-04-11 13:01:32
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
@@ -55,7 +55,7 @@ interface Detail {
 }
 
 interface Display {
-  topic_info: Topicinfo;
+  topic_info?: Topicinfo;
   usr_action_txt: string;
   relation: Relation;
   show_tip: Showtip;
@@ -383,7 +383,9 @@ export const getVideosUrl = async (): Promise<boolean> => {
       let isDownload = false;
       for (const {
         display: {
-          topic_info: { topic_details },
+          topic_info = {
+            topic_details: [],
+          },
         },
         card = '',
         desc: {
@@ -394,23 +396,29 @@ export const getVideosUrl = async (): Promise<boolean> => {
           },
         },
       } of cards) {
-        const isDance = topic_details.findIndex(({ topic_name }) => {
-          const dance = /星辰|姐姐|妹妹|舞/.test(topic_name) || /舞/mg.test(card);
-          return timeout < timestamp && dance && !notes.includes(bvid);
-        });
+        const { topic_details } = topic_info;
 
-        if (isDance < 0) {
-          continue;
+        let isDance: number | boolean = topic_details.findIndex(
+          ({ topic_name }) => {
+            return /星辰|姐姐|妹妹|舞/.test(topic_name);
+          },
+        );
+
+        isDance =
+          (isDance >= 0 || /舞/gm.test(card)) &&
+          timeout < timestamp &&
+          !notes.includes(bvid);
+
+        if (isDance) {
+          isDownload = true;
+          await db
+            .get<'queue'>('queue')
+            .push({
+              bvid,
+              name: uname,
+            })
+            .write();
         }
-
-        isDownload = true;
-        await db
-          .get<'queue'>('queue')
-          .push({
-            bvid,
-            name: uname,
-          })
-          .write();
       }
 
       return isDownload;
