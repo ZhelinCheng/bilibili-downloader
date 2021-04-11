@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-10 20:47:05
+ * @LastEditTime : 2021-04-11 13:08:13
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -61,7 +61,7 @@ async function downloadList(
       2,
       async function ({ bvid, name, cid }) {
         try {
-          logger.info(`下载${name}：${bvid}`);
+          logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const url = await getVideoDownloadUrl(bvid, cid);
           const res = await downloadVideo(url);
           const isFtp =
@@ -123,7 +123,7 @@ export const downloader = async (): Promise<void> => {
       return;
     }
 
-    logger.info(`执行下载：${queue.map(({ bvid }) => bvid).join('、')}`);
+    logger.info(`执行下载${queue.length}条`);
     let downQueue: Array<VideoUrlItems & { cid: string }> = [];
 
     // 获取分集信息
@@ -141,6 +141,8 @@ export const downloader = async (): Promise<void> => {
         await db.get('queue').remove({ bvid }).write();
       }
     });
+
+    logger.info('===本次下载完成===')
   } catch (e) {
     console.error(e);
   }
