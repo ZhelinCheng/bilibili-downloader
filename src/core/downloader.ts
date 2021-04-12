@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 10:01:46
+ * @LastEditTime : 2021-04-12 10:05:50
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -80,15 +80,15 @@ async function downloadList(
 
           const uploadFtp = await postData(ftp, data, filePath, fileName);
           const fileSize = (await ftp.size(filePos)) || 0;
-          // console.log(fileSize, size)
-
+          
+          // 校验下载完整性及上传状态
           const isOver = fileSize === size && uploadFtp;
 
           if (isOver) {
             await db.get<'notes'>('notes').push(bvid).write();
           }
 
-          logger.info(`状态 ⇒ ${isOver} 文件大小：${fileSize} 下载大小：${size} FTP状态：${uploadFtp}`);
+          logger.info(`状态 ⇒ ${isOver} | 文件大小：${fileSize} | 下载大小：${size} | FTP状态：${uploadFtp}`);
 
           // 删除不正确的文件
           if (!isOver && uploadFtp) {
