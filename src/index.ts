@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-11 13:05:05
- * @FilePath     : \bilibili-downloader\src\index.ts
+ * @LastEditTime : 2021-04-12 15:39:56
+ * @FilePath     : /bilibili-downloader/src/index.ts
  * @Description  : 入口文件
  */
 import { logger, db } from './utils';
@@ -22,8 +22,8 @@ async function bootstrap() {
         await getVideosUrl();
         await downloader();
         const notes = db.get('notes').value();
-        if (notes.length > 20) {
-          await db.set('notes', notes.slice(-20)).write();
+        if (notes.length > 40) {
+          await db.set('notes', notes.slice(-40)).write();
         }
       } catch (e) {
         console.error(e);

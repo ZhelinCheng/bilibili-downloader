@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 10:05:50
+ * @LastEditTime : 2021-04-12 15:45:05
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -60,6 +60,8 @@ async function downloadList(
   });
   logger.info(serverMessage);
   const date = new Date();
+  const notes = db.get('notes').value()
+  
   return new Promise((resolve, reject) => {
     mapLimit(
       queue,
@@ -70,7 +72,7 @@ async function downloadList(
           const url = await getVideoDownloadUrl(bvid, cid);
           const { data, size } = await downloadVideo(url);
 
-          if (!data || size <= 0) {
+          if (!data || size <= 0 || notes.includes(cid)) {
             return '';
           }
 
@@ -85,7 +87,9 @@ async function downloadList(
           const isOver = fileSize === size && uploadFtp;
 
           if (isOver) {
-            await db.get<'notes'>('notes').push(bvid).write();
+            const dbNotes = db.get<'notes'>('notes')
+            dbNotes.push(bvid);
+            await dbNotes.push(cid).write();
           }
 
           logger.info(`状态 ⇒ ${isOver} | 文件大小：${fileSize} | 下载大小：${size} | FTP状态：${uploadFtp}`);
