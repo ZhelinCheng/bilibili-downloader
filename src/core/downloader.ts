@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 19:40:13
+ * @LastEditTime : 2021-04-12 20:36:34
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -77,7 +77,7 @@ async function downloadList(
           }
 
           if (notes.includes(cid)) {
-            return bvid
+            return bvid;
           }
 
           const filePath = `/Multimedia/Bilibili/${name}`;
@@ -91,9 +91,8 @@ async function downloadList(
           const isOver = fileSize === size && uploadFtp;
 
           if (isOver) {
-            const dbNotes = db.get<'notes'>('notes')
-            dbNotes.push(bvid);
-            await dbNotes.push(cid).write();
+            notes.push(cid);
+            notes.push(bvid);
           }
 
           logger.info(
@@ -107,11 +106,13 @@ async function downloadList(
 
           return isOver ? bvid : '';
         } catch (e) {
+          console.error(e);
           return '';
         }
       },
       async (err, results: Array<string>) => {
         await ftp.end();
+        await db.set('notes', notes).write();
         if (err) {
           return reject(err);
         }
@@ -174,19 +175,19 @@ export const downloader = async (): Promise<void> => {
 
       // 保存
       if (!saveStatus) {
-        statusMemo[bvid] = 2
+        statusMemo[bvid] = 2;
       }
 
       // 当下载失败时
       if (!status) {
-        statusMemo[bvid] = 1
+        statusMemo[bvid] = 1;
       }
     });
 
-    const downSuccess: string[] = []
+    const downSuccess: string[] = [];
     for (const [key, val] of Object.entries(statusMemo)) {
       if (val === 2) {
-        downSuccess.push(key)
+        downSuccess.push(key);
       }
     }
 
