@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 20:36:34
+ * @LastEditTime : 2021-04-12 20:37:03
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -60,7 +60,7 @@ async function downloadList(
   });
   logger.info(serverMessage);
   const date = new Date();
-  const notes = db.get('notes').value();
+  const notes = db.get('notes').value() || [];
 
   return new Promise((resolve, reject) => {
     mapLimit(
