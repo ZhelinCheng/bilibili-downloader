@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 20:37:03
+ * @LastEditTime : 2021-04-12 21:06:22
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -48,17 +48,33 @@ export const downloadVideo = async (
   }
 };
 
+async function ftpLink () {
+  try {
+    const serverMessage = await ftp.connect({
+      host: env.BILIBILI_FTP_HOST,
+      user: env.BILIBILI_FTP_USER,
+      password: env.BILIBILI_FTP_PASS
+    });
+    logger.info(serverMessage);
+    return true
+  } catch(e) {
+    console.error(e)
+  }
+  return false
+} 
+
 // 下载列表
 async function downloadList(
   queue: Array<BaseItemType>,
 ): Promise<Array<string>> {
   logger.info('开始执行下载');
-  const serverMessage = await ftp.connect({
-    host: env.BILIBILI_FTP_HOST,
-    user: env.BILIBILI_FTP_USER,
-    password: env.BILIBILI_FTP_PASS,
-  });
-  logger.info(serverMessage);
+
+  const isConnFtp = await ftpLink()
+
+  if (!isConnFtp) {
+    return []
+  }
+
   const date = new Date();
   const notes = db.get('notes').value() || [];
 
@@ -167,6 +183,7 @@ export const downloader = async (): Promise<void> => {
 
     // 状态1：有下载失败，需要重新下载，状态2：表示成功
     const statusMemo: { [key: string]: number } = {};
+    const downStatusLen = downStatus.length
     downQueue.forEach(({ bvid }, index: number) => {
       // 本次下载状态
       const status = downStatus[index];
@@ -179,7 +196,7 @@ export const downloader = async (): Promise<void> => {
       }
 
       // 当下载失败时
-      if (!status) {
+      if (!status && downStatusLen) {
         statusMemo[bvid] = 1;
       }
     });
