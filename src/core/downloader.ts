@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 15:45:05
+ * @LastEditTime : 2021-04-12 19:40:13
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -60,8 +60,8 @@ async function downloadList(
   });
   logger.info(serverMessage);
   const date = new Date();
-  const notes = db.get('notes').value()
-  
+  const notes = db.get('notes').value();
+
   return new Promise((resolve, reject) => {
     mapLimit(
       queue,
@@ -72,8 +72,12 @@ async function downloadList(
           const url = await getVideoDownloadUrl(bvid, cid);
           const { data, size } = await downloadVideo(url);
 
-          if (!data || size <= 0 || notes.includes(cid)) {
+          if (!data || size <= 0) {
             return '';
+          }
+
+          if (notes.includes(cid)) {
+            return bvid
           }
 
           const filePath = `/Multimedia/Bilibili/${name}`;
@@ -82,7 +86,7 @@ async function downloadList(
 
           const uploadFtp = await postData(ftp, data, filePath, fileName);
           const fileSize = (await ftp.size(filePos)) || 0;
-          
+
           // 校验下载完整性及上传状态
           const isOver = fileSize === size && uploadFtp;
 
@@ -92,13 +96,16 @@ async function downloadList(
             await dbNotes.push(cid).write();
           }
 
-          logger.info(`状态 ⇒ ${isOver} | 文件大小：${fileSize} | 下载大小：${size} | FTP状态：${uploadFtp}`);
+          logger.info(
+            `状态 ⇒ ${isOver} | 文件大小：${fileSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
+          );
 
           // 删除不正确的文件
           if (!isOver && uploadFtp) {
             await ftp.delete(filePos);
           }
-          return bvid;
+
+          return isOver ? bvid : '';
         } catch (e) {
           return '';
         }
@@ -155,16 +162,40 @@ export const downloader = async (): Promise<void> => {
     }
 
     // 执行下载
-    const downSuccess = await downloadList(downQueue);
+    const downStatus = await downloadList(downQueue);
 
-    logger.info('删除已下载完成的bvid');
-    downSuccess.forEach(async (bvid: string) => {
-      if (bvid) {
-        await db.get('queue').remove({ bvid }).write();
+    // 状态1：有下载失败，需要重新下载，状态2：表示成功
+    const statusMemo: { [key: string]: number } = {};
+    downQueue.forEach(({ bvid }, index: number) => {
+      // 本次下载状态
+      const status = downStatus[index];
+      // 保存的下载状态
+      const saveStatus = statusMemo[bvid];
+
+      // 保存
+      if (!saveStatus) {
+        statusMemo[bvid] = 2
+      }
+
+      // 当下载失败时
+      if (!status) {
+        statusMemo[bvid] = 1
       }
     });
 
-    logger.info('===本次下载完成===');
+    const downSuccess: string[] = []
+    for (const [key, val] of Object.entries(statusMemo)) {
+      if (val === 2) {
+        downSuccess.push(key)
+      }
+    }
+
+    logger.info('删除已下载完成的bvid');
+    downSuccess.forEach(async (bvid: string) => {
+      await db.get('queue').remove({ bvid }).write();
+    });
+
+    logger.info('+++ 本次下载完成 +++');
   } catch (e) {
     console.error(e);
   }
