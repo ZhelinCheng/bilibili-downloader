@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 10:08:41
+ * @LastEditTime : 2021-04-13 14:20:25
  * @FilePath     : /bilibili-downloader/src/index.ts
  * @Description  : 入口文件
  */
@@ -16,8 +16,8 @@ let timer: CronJob;
 async function netOnline() {
   try {
     const [external, internal] = await Promise.all([
-      ping.promise.probe('www.baidu.com'),
-      ping.promise.probe(env.BILIBILI_FTP_HOST || ''),
+      ping.promise.probe('api.vc.bilibili.com'),
+      ping.promise.probe(env.BILIBILI_FTP_HOST || '127.0.0.1'),
     ]);
     return external.alive && internal.alive
   } catch (e) {
