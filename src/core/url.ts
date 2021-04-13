@@ -2,11 +2,11 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 09:40:31
+ * @LastEditTime : 2021-04-13 10:08:05
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
-import { rq, env, db } from '../utils';
+import { rq, env, db, logger } from '../utils';
 
 export interface VideoUrlItems {
   bvid: string;
@@ -425,6 +425,8 @@ export const getVideosUrl = async (): Promise<boolean> => {
       }
 
       return isDownload;
+    } else {
+      logger.error(`错误代码：${code}`)
     }
   } catch (e) {
     console.error(e);
