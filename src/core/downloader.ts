@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 18:08:19
+ * @LastEditTime : 2021-04-13 18:36:52
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -87,6 +87,10 @@ async function downloadList(
       1,
       async function ({ bvid, name, cid }) {
         try {
+          if (notes.includes(cid)) {
+            return bvid;
+          }
+          
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const url = await getVideoDownloadUrl(bvid, cid);
           const { data, size } = await downloadVideo(url);
@@ -95,9 +99,7 @@ async function downloadList(
             return '';
           }
 
-          if (notes.includes(cid)) {
-            return bvid;
-          }
+
 
           const filePath = `/Multimedia/Bilibili/${name}`;
           const fileName = `${date}-${cid}.flv`;
