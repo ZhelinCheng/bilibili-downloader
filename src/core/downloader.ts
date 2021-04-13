@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 18:36:52
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-04-13 23:10:54
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -99,9 +99,7 @@ async function downloadList(
             return '';
           }
 
-
-
-          const filePath = `/Multimedia/Bilibili/${name}`;
+          const filePath = `${env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili/'}${name}`;
           const fileName = `${date}-${cid}.flv`;
           const filePos = `${filePath}/${fileName}`;
 

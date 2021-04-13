@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:52:51
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-10 17:58:01
+ * @LastEditTime : 2021-04-13 23:10:06
  * @FilePath     : \bilibili-downloader\src\utils\env.ts
  * @Description  : 未添加文件描述
  */
@@ -21,6 +21,7 @@ interface EnvType {
     BILIBILI_FTP_USER: string
     BILIBILI_FTP_PASS: string
     NODE_ENV: string
+    BILIBILI_FTP_PATH: string
 }
 
 export const env = process.env as unknown as EnvType
