@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-12 21:06:22
+ * @LastEditTime : 2021-04-13 13:32:30
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -13,6 +13,7 @@ import { mapLimit } from 'async';
 import PromiseFtp from 'promise-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
+import dayjs from 'dayjs'
 
 const ftp = new PromiseFtp();
 
@@ -75,7 +76,7 @@ async function downloadList(
     return []
   }
 
-  const date = new Date();
+  const date = dayjs().format('YYYYMMDDHHmm')
   const notes = db.get('notes').value() || [];
 
   return new Promise((resolve, reject) => {
@@ -97,7 +98,7 @@ async function downloadList(
           }
 
           const filePath = `/Multimedia/Bilibili/${name}`;
-          const fileName = `${cid}_${date.getMinutes()}.flv`;
+          const fileName = `${date}-${cid}.flv`;
           const filePos = `${filePath}/${fileName}`;
 
           const uploadFtp = await postData(ftp, data, filePath, fileName);
