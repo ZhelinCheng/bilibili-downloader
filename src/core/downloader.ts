@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 13:32:30
+ * @LastEditTime : 2021-04-13 18:08:19
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -24,12 +24,12 @@ type BaseItemType = VideoUrlItems & { cid: string };
 export const downloadVideo = async (
   url: string,
 ): Promise<{
-  data: NodeJS.ReadStream;
+  data?: NodeJS.ReadStream;
   size: number;
 }> => {
   try {
     if (!url) {
-      return;
+      return { size: 0 };
     }
 
     const { data, headers } = await axios({
@@ -47,6 +47,8 @@ export const downloadVideo = async (
   } catch (e) {
     console.error(e);
   }
+
+  return { size: 0 };
 };
 
 async function ftpLink () {
