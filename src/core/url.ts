@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-11 13:01:32
- * @FilePath     : \bilibili-downloader\src\core\url.ts
+ * @LastEditTime : 2021-04-13 09:40:31
+ * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db } from '../utils';
@@ -364,6 +364,9 @@ export const getVideoPage = async (
 // 获取列表
 export const getVideosUrl = async (): Promise<boolean> => {
   try {
+    const queue = db.get('queue').value() || [];
+    const filterSet = new Set(queue.map(({ bvid }) => bvid))
+
     const {
       data: { code, data },
     } = await rq<DynamicNewType>({
@@ -407,7 +410,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
         isDance =
           (isDance >= 0 || /舞/gm.test(card)) &&
           timeout < timestamp &&
-          !notes.includes(bvid);
+          !notes.includes(bvid) && !filterSet.has(bvid);
 
         if (isDance) {
           isDownload = true;
