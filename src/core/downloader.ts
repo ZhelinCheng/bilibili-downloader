@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 23:10:54
+ * @LastEditTime : 2021-04-14 00:32:51
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -16,6 +16,8 @@ import { postData } from './ftp';
 import dayjs from 'dayjs'
 
 const ftp = new PromiseFtp();
+
+const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili/'
 
 type BaseItemType = VideoUrlItems & { cid: string };
 
@@ -59,6 +61,7 @@ async function ftpLink () {
       password: env.BILIBILI_FTP_PASS
     });
     logger.info(serverMessage);
+    // ftp.mkdir(baseFtpPath, true)
     return true
   } catch(e) {
     console.error(e)
@@ -99,7 +102,7 @@ async function downloadList(
             return '';
           }
 
-          const filePath = `${env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili/'}${name}`;
+          const filePath = `${baseFtpPath}${name}`;
           const fileName = `${date}-${cid}.flv`;
           const filePos = `${filePath}/${fileName}`;
 

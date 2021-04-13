@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 21:06:22
- * @FilePath     : /bilibili-downloader/src/index.ts
+ * @LastEditTime : 2021-04-14 00:33:00
+ * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
 import { logger, db, env } from './utils';
@@ -26,7 +26,7 @@ async function netOnline() {
 }
 
 async function bootstrap() {
-
+  // console.log(env.BILIBILI_FTP_PATH )
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   timer = new CronJob(
     '0 * * * * *',
