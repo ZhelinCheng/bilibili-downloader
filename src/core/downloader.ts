@@ -95,8 +95,8 @@ async function downloadList(
           }
           
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
-          const url = await getVideoDownloadUrl(bvid, cid);
-          const { data, size } = await downloadVideo(url);
+          const { url, size } = await getVideoDownloadUrl(bvid, cid);
+          const { data } = await downloadVideo(url);
 
           if (!data || size <= 0) {
             return '';
