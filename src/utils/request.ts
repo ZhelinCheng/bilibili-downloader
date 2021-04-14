@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-18 21:20:04
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-10 18:01:42
- * @FilePath     : \bilibili-downloader\src\utils\request.ts
+ * @LastEditTime : 2021-04-14 16:55:18
+ * @FilePath     : /bilibili-downloader/src/utils/request.ts
  * @Description  : 未添加文件描述
  */
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -16,7 +16,7 @@ axios.defaults.headers = {
   'Cookie': env.BILIBILI_COOKIE,
   'Accept': '*/*',
   'referer': 'https://t.bilibili.com/',
-  'Accept-Encoding': 'gzip, deflate, br',
+  // 'Accept-Encoding': 'gzip, deflate, br',
   'Connection': 'keep-alive',
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
