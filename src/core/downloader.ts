@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-14 00:32:51
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2021-04-14 09:53:56
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -17,7 +17,7 @@ import dayjs from 'dayjs'
 
 const ftp = new PromiseFtp();
 
-const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili/'
+const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili'
 
 type BaseItemType = VideoUrlItems & { cid: string };
 
