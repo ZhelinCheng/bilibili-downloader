@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-15 20:12:46
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2021-04-19 20:48:11
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -170,6 +170,7 @@ async function getPageList(
 
 export const downloader = async (): Promise<void> => {
   try {
+    const downSuccess: string[] = [];
     const queue = db.get('queue').value();
     if (queue.length <= 0) {
       return;
@@ -180,6 +181,14 @@ export const downloader = async (): Promise<void> => {
 
     // 获取分集信息
     const arr = await getPageList(queue);
+
+    // 应对404的情况
+    if (arr.length <= 0 && queue.length) {
+      queue.forEach(({ bvid }) => {
+        downSuccess.push(bvid)
+      })
+    }
+
     for (const item of arr) {
       downQueue = downQueue.concat(item);
     }
@@ -207,7 +216,7 @@ export const downloader = async (): Promise<void> => {
       }
     });
 
-    const downSuccess: string[] = [];
+   
     for (const [key, val] of Object.entries(statusMemo)) {
       if (val === 2) {
         downSuccess.push(key);
