@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-19 20:52:29
+ * @LastEditTime : 2021-04-19 20:54:39
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -185,7 +185,7 @@ export const downloader = async (): Promise<void> => {
     for (const item of arr) {
       downQueue = downQueue.concat(item);
     }
-    
+
     // 应对404的情况
     if (downQueue.length <= 0 && queue.length) {
       queue.forEach(({ bvid }) => {
@@ -223,7 +223,7 @@ export const downloader = async (): Promise<void> => {
       }
     }
 
-    console.log(downSuccess)
+    // console.log(downSuccess)
 
     logger.info('删除已下载完成的bvid');
     downSuccess.forEach(async (bvid: string) => {
