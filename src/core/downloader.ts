@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-14 12:35:47
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-04-15 20:12:46
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -27,11 +27,11 @@ export const downloadVideo = async (
   url: string,
 ): Promise<{
   data?: NodeJS.ReadStream;
-  size: number;
+  headerSize: number;
 }> => {
   try {
     if (!url) {
-      return { size: 0 };
+      return { headerSize: 0 };
     }
 
     const { data, headers } = await axios({
@@ -44,13 +44,13 @@ export const downloadVideo = async (
     });
     return {
       data,
-      size: Number(headers['content-length']),
+      headerSize: Number(headers['content-length']),
     };
   } catch (e) {
     console.error(e);
   }
 
-  return { size: 0 };
+  return { headerSize: 0 };
 };
 
 async function ftpLink () {
@@ -95,8 +95,8 @@ async function downloadList(
           }
           
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
-          const url = await getVideoDownloadUrl(bvid, cid);
-          const { data, size } = await downloadVideo(url);
+          const { url, size } = await getVideoDownloadUrl(bvid, cid);
+          const { data, headerSize } = await downloadVideo(url);
 
           if (!data || size <= 0) {
             return '';
@@ -110,7 +110,7 @@ async function downloadList(
           const fileSize = (await ftp.size(filePos)) || 0;
 
           // 校验下载完整性及上传状态
-          const isOver = fileSize === size && uploadFtp;
+          const isOver = fileSize === size && headerSize === fileSize && uploadFtp;
 
           if (isOver) {
             notes.push(cid);
@@ -118,7 +118,7 @@ async function downloadList(
           }
 
           logger.info(
-            `状态 ⇒ ${isOver} | 文件大小：${fileSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
+            `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头大小：${headerSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
           );
 
           // 删除不正确的文件

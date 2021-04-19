@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-13 10:08:05
- * @FilePath     : /bilibili-downloader/src/core/url.ts
+ * @LastEditTime : 2021-04-14 22:49:28
+ * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
@@ -280,6 +280,7 @@ interface VideoPageType {
 interface VideoDownloadUrl {
   durl: Array<{
     url: string;
+    size: number;
   }>;
 }
 
@@ -287,7 +288,10 @@ interface VideoDownloadUrl {
 export const getVideoDownloadUrl = async (
   bvid: string,
   cid: string,
-): Promise<string> => {
+): Promise<{
+  size: number
+  url: string
+}> => {
   try {
     const {
       data: { code, data },
@@ -305,14 +309,20 @@ export const getVideoDownloadUrl = async (
     });
 
     if (code === 0 && data && Array.isArray(data.durl)) {
-      const { url } = data.durl[0];
-      return url;
+      const { url, size } = data.durl[0];
+      return {
+        url,
+        size
+      };
     }
   } catch (e) {
     console.error(e);
   }
 
-  return '';
+  return {
+    url: '',
+    size: 0
+  }
 };
 
 // 获取单个分集信息
