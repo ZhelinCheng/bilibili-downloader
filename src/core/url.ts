@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-14 22:49:28
- * @FilePath     : \bilibili-downloader\src\core\url.ts
+ * @LastEditTime : 2021-04-19 20:03:45
+ * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
@@ -392,7 +392,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
     if (code === 0 && Array.isArray(data.cards)) {
       const { cards } = data;
       const notes: string[] = db.get('notes').value();
-      const timeout = Math.floor(Date.now() / 1000) - 600;
+      const timeout = Math.floor(Date.now() / 1000) - 43200;
       let isDownload = false;
       for (const {
         display: {
