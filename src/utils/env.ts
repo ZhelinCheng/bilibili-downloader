@@ -24,6 +24,7 @@ interface EnvType {
   BILIBILI_FTP_PATH?: string;
   BILIBILI_INCLUDE_UID?: string;
   BILIBILI_EXCLUDE_UID?: string;
+  BILIBILI_OUTPUT_PATH?: string
 }
 
 export const env = (process.env as unknown) as EnvType;

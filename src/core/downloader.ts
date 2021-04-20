@@ -2,22 +2,25 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-19 20:54:39
+ * @LastEditTime : 2021-04-20 21:58:02
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
 import axios from 'axios';
+import fs from 'fs'
+import fse from 'fs-extra'
 import { db, logger, env } from '../utils';
 import { mapLimit } from 'async';
 import PromiseFtp from 'promise-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
-import dayjs from 'dayjs'
+import { outputPath, isFtp } from '../const';
+import dayjs from 'dayjs';
 
 const ftp = new PromiseFtp();
 
-const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili'
+const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
 
 type BaseItemType = VideoUrlItems & { cid: string };
 
@@ -53,21 +56,25 @@ export const downloadVideo = async (
   return { headerSize: 0 };
 };
 
-async function ftpLink () {
+async function ftpLink() {
   try {
-    const serverMessage = await ftp.connect({
-      host: env.BILIBILI_FTP_HOST,
-      user: env.BILIBILI_FTP_USER,
-      password: env.BILIBILI_FTP_PASS
-    });
-    logger.info(serverMessage);
-    // ftp.mkdir(baseFtpPath, true)
-    return true
-  } catch(e) {
-    console.error(e)
+    if (isFtp) {
+      const serverMessage = await ftp.connect({
+        host: env.BILIBILI_FTP_HOST,
+        user: env.BILIBILI_FTP_USER,
+        password: env.BILIBILI_FTP_PASS,
+      });
+      logger.info(serverMessage);
+      // ftp.mkdir(baseFtpPath, true)
+    } else {
+      logger.info(`存储到本地：${outputPath}`);
+    }
+    return true;
+  } catch (e) {
+    console.error(e);
   }
-  return false
-} 
+  return false;
+}
 
 // 下载列表
 async function downloadList(
@@ -75,13 +82,13 @@ async function downloadList(
 ): Promise<Array<string>> {
   logger.info('开始执行下载');
 
-  const isConnFtp = await ftpLink()
+  const isConnFtp = await ftpLink();
 
   if (!isConnFtp) {
-    return []
+    return [];
   }
 
-  const date = dayjs().format('YYYYMMDDHHmm')
+  const date = dayjs().format('YYYYMMDDHHmm');
   const notes = db.get('notes').value() || [];
 
   return new Promise((resolve, reject) => {
@@ -93,7 +100,7 @@ async function downloadList(
           if (notes.includes(cid)) {
             return bvid;
           }
-          
+
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const { url, size } = await getVideoDownloadUrl(bvid, cid);
           const { data, headerSize } = await downloadVideo(url);
@@ -105,12 +112,14 @@ async function downloadList(
           const filePath = `${baseFtpPath}/${name}`;
           const fileName = `${date}-${cid}.flv`;
           const filePos = `${filePath}/${fileName}`;
+          const localPath = `${outputPath}/${name}/${fileName}`
 
-          const uploadFtp = await postData(ftp, data, filePath, fileName);
-          const fileSize = (await ftp.size(filePos)) || 0;
+          const uploadFtp = await postData(ftp, data, filePath, fileName, localPath);
+          const fileSize = isFtp ? (await ftp.size(filePos)) : fs.statSync(localPath).size;
 
           // 校验下载完整性及上传状态
-          const isOver = fileSize === size && headerSize === fileSize && uploadFtp;
+          const isOver =
+            fileSize === size && headerSize === fileSize && uploadFtp;
 
           if (isOver) {
             notes.push(cid);
@@ -123,7 +132,11 @@ async function downloadList(
 
           // 删除不正确的文件
           if (!isOver && uploadFtp) {
-            await ftp.delete(filePos);
+            if (isFtp) {
+              await ftp.delete(filePos);
+            } else {
+              fse.removeSync(localPath)
+            }
           }
 
           return isOver ? bvid : '';
@@ -189,8 +202,8 @@ export const downloader = async (): Promise<void> => {
     // 应对404的情况
     if (downQueue.length <= 0 && queue.length) {
       queue.forEach(({ bvid }) => {
-        downSuccess.push(bvid)
-      })
+        downSuccess.push(bvid);
+      });
     }
 
     // 执行下载
@@ -198,7 +211,7 @@ export const downloader = async (): Promise<void> => {
 
     // 状态1：有下载失败，需要重新下载，状态2：表示成功
     const statusMemo: { [key: string]: number } = {};
-    const downStatusLen = downStatus.length
+    const downStatusLen = downStatus.length;
     downQueue.forEach(({ bvid }, index: number) => {
       // 本次下载状态
       const status = downStatus[index];
@@ -216,7 +229,6 @@ export const downloader = async (): Promise<void> => {
       }
     });
 
-   
     for (const [key, val] of Object.entries(statusMemo)) {
       if (val === 2) {
         downSuccess.push(key);
