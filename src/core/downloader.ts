@@ -2,14 +2,14 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-20 21:58:02
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-04-24 00:19:22
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
 import axios from 'axios';
-import fs from 'fs'
-import fse from 'fs-extra'
+import fs from 'fs';
+import fse from 'fs-extra';
 import { db, logger, env } from '../utils';
 import { mapLimit } from 'async';
 import PromiseFtp from 'promise-ftp';
@@ -112,10 +112,19 @@ async function downloadList(
           const filePath = `${baseFtpPath}/${name}`;
           const fileName = `${date}-${cid}.flv`;
           const filePos = `${filePath}/${fileName}`;
-          const localPath = `${outputPath}/${name}/${fileName}`
+          const localPath = `${outputPath}/${name}/${fileName}`;
 
-          const uploadFtp = await postData(ftp, data, filePath, fileName, localPath);
-          const fileSize = isFtp ? (await ftp.size(filePos)) : fs.statSync(localPath).size;
+          const uploadFtp = await postData(
+            ftp,
+            data,
+            filePath,
+            fileName,
+            localPath,
+          );
+
+          const fileSize = isFtp
+            ? await ftp.size(filePos)
+            : fs.statSync(localPath).size;
 
           // 校验下载完整性及上传状态
           const isOver =
@@ -127,7 +136,7 @@ async function downloadList(
           }
 
           logger.info(
-            `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头大小：${headerSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
+            `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头：${headerSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
           );
 
           // 删除不正确的文件
@@ -135,7 +144,7 @@ async function downloadList(
             if (isFtp) {
               await ftp.delete(filePos);
             } else {
-              fse.removeSync(localPath)
+              fse.removeSync(localPath);
             }
           }
 
@@ -146,7 +155,10 @@ async function downloadList(
         }
       },
       async (err, results: Array<string>) => {
-        await ftp.end();
+        if (isFtp) {
+          await ftp.end();
+        }
+
         await db.set('notes', notes).write();
         if (err) {
           return reject(err);

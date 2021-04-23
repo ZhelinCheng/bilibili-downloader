@@ -8,16 +8,16 @@
  */
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { logger } from './index';
-import { env } from './env'
+import { env } from './env';
 
 axios.defaults.timeout = 5000;
 
 axios.defaults.headers = {
-  'Cookie': env.BILIBILI_COOKIE,
-  'Accept': '*/*',
-  'referer': 'https://t.bilibili.com/',
+  Cookie: env.BILIBILI_COOKIE,
+  Accept: '*/*',
+  referer: 'https://t.bilibili.com/',
   // 'Accept-Encoding': 'gzip, deflate, br',
-  'Connection': 'keep-alive',
+  Connection: 'keep-alive',
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
 };

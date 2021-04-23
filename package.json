@@ -1,13 +1,15 @@
 {
   "name": "bilibili-downloader",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "B站下载助手",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "nodemon -e ts, js",
+    "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "build": "tsc",
-    "format": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
-    "lint": "eslint . --ext .ts"
+    "format": "prettier --write **/*.{js,jsx,tsx,ts,less,md,json}",
+    "lint": "eslint . --ext .ts",
+    "prepare-commit-msg": "prepare-commit-msg"
   },
   "repository": {
     "type": "git",
@@ -22,7 +24,8 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint"
+      "pre-commit": "lint",
+      "prepare-commit-msg": "prepare-commit-msg"
     }
   },
   "bugs": {

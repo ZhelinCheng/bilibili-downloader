@@ -19,4 +19,4 @@ export const logger = pino({
   },
 });
 
-export const env = process.env
+export const env = process.env;

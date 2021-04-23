@@ -2,11 +2,13 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-19 20:03:45
- * @FilePath     : /bilibili-downloader/src/core/url.ts
+ * @LastEditTime : 2021-04-24 00:17:04
+ * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
+
+const _MY_UID = /DedeUserID=(?<userId>\d+);/gm.exec(env.BILIBILI_COOKIE);
 
 export interface VideoUrlItems {
   bvid: string;
@@ -289,8 +291,8 @@ export const getVideoDownloadUrl = async (
   bvid: string,
   cid: string,
 ): Promise<{
-  size: number
-  url: string
+  size: number;
+  url: string;
 }> => {
   try {
     const {
@@ -312,7 +314,7 @@ export const getVideoDownloadUrl = async (
       const { url, size } = data.durl[0];
       return {
         url,
-        size
+        size,
       };
     }
   } catch (e) {
@@ -321,8 +323,8 @@ export const getVideoDownloadUrl = async (
 
   return {
     url: '',
-    size: 0
-  }
+    size: 0,
+  };
 };
 
 // 获取单个分集信息
@@ -371,18 +373,28 @@ export const getVideoPage = async (
   return [];
 };
 
+const includeUid = new Set(
+  env.BILIBILI_INCLUDE_UID ? env.BILIBILI_INCLUDE_UID.split('|') : [],
+);
+
+const excludeUid = new Set(
+  env.BILIBILI_EXCLUDE_UID ? env.BILIBILI_EXCLUDE_UID.split('|') : [],
+);
+
 // 获取列表
 export const getVideosUrl = async (): Promise<boolean> => {
   try {
     const queue = db.get('queue').value() || [];
-    const filterSet = new Set(queue.map(({ bvid }) => bvid))
+    const filterSet = new Set(queue.map(({ bvid }) => bvid));
+
+    const { groups } = _MY_UID || { groups: { userId: '' } };
 
     const {
-      data: { code, data },
+      data: { code, data, message },
     } = await rq<DynamicNewType>({
       url: 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new',
       params: {
-        uid: env.BILIBILI_UID,
+        uid: groups.userId,
         type_list: 8,
         from: '',
         platform: 'web',
@@ -394,6 +406,9 @@ export const getVideosUrl = async (): Promise<boolean> => {
       const notes: string[] = db.get('notes').value();
       const timeout = Math.floor(Date.now() / 1000) - 43200;
       let isDownload = false;
+
+      const includeRe = new RegExp(env.BILIBILI_INCLUDE_KW || '', 'img');
+
       for (const {
         display: {
           topic_info = {
@@ -402,6 +417,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
         },
         card = '',
         desc: {
+          uid,
           bvid,
           timestamp,
           user_profile: {
@@ -410,19 +426,33 @@ export const getVideosUrl = async (): Promise<boolean> => {
         },
       } of cards) {
         const { topic_details } = topic_info;
+        const userId = uid.toString();
 
-        let isDance: number | boolean = topic_details.findIndex(
-          ({ topic_name }) => {
-            return /星辰|姐姐|妹妹|舞/.test(topic_name);
-          },
-        );
+        // 话题中是否有关键词
+        const isTopic: number = topic_details.findIndex(({ topic_name }) => {
+          return includeRe.test(topic_name);
+        });
 
-        isDance =
-          (isDance >= 0 || /舞/gm.test(card)) &&
+        // 描述中是否有关键词
+        const isCard = includeRe.test(card);
+
+        // 是否是必须包含的用户
+        const isIncludeUid = includeUid.has(userId);
+
+        let isNeed =
+          // 判断是否符合条件
+          ((isTopic >= 0 && isCard) || isIncludeUid) &&
+          // 判断是否需要下载
           timeout < timestamp &&
-          !notes.includes(bvid) && !filterSet.has(bvid);
+          !notes.includes(bvid) &&
+          !filterSet.has(bvid);
 
-        if (isDance) {
+        // 如果需要下载，看是否是排除的UID
+        if (isNeed) {
+          isNeed = !excludeUid.has(userId);
+        }
+
+        if (isNeed) {
           isDownload = true;
           await db
             .get<'queue'>('queue')
@@ -436,7 +466,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
 
       return isDownload;
     } else {
-      logger.error(`错误代码：${code}`)
+      logger.error(`错误代码：${code}；错误信息：${message}`);
     }
   } catch (e) {
     console.error(e);

@@ -2,21 +2,23 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:52:51
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-19 16:08:02
- * @FilePath     : /bilibili-downloader/src/utils/env.ts
+ * @LastEditTime : 2021-04-24 00:37:50
+ * @FilePath     : \bilibili-downloader\src\utils\env.ts
  * @Description  : 未添加文件描述
  */
 
 import path from 'path';
 import dotenv from 'dotenv';
+import fs from 'fs';
+
+const envPath = path.join(__dirname, '../../.env');
 
 dotenv.config({
-  path: path.join(__dirname, '../../.env'),
+  path: envPath,
 });
 
 interface EnvType {
   BILIBILI_COOKIE: string;
-  BILIBILI_UID: string;
   BILIBILI_FTP_HOST?: string;
   BILIBILI_FTP_USER: string;
   BILIBILI_FTP_PASS: string;
@@ -24,7 +26,9 @@ interface EnvType {
   BILIBILI_FTP_PATH?: string;
   BILIBILI_INCLUDE_UID?: string;
   BILIBILI_EXCLUDE_UID?: string;
-  BILIBILI_OUTPUT_PATH?: string
+  BILIBILI_OUTPUT_PATH?: string;
+  BILIBILI_LISTEN_INTERVAL?: string;
 }
 
 export const env = (process.env as unknown) as EnvType;
+export const isEnv = fs.existsSync(envPath);
