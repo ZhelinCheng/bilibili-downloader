@@ -49,6 +49,7 @@ yarn start
 # 或者
 npm run start
 ```
+如果你使用的是pm2，那么该项目也提供了`ecosystem.config.js`，你仅需执行它即可。
 
 ### 开发
 
