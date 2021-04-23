@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 00:51:33
+ * @LastEditTime : 2021-04-24 01:11:45
  * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
@@ -84,6 +84,7 @@ async function bootstrap() {
 bootstrap()
   .then(() => {
     logger.info('启动成功');
+    logger.info(`视频保存位置：${isFtp ? 'FTP服务器' : '本地'}`);
   })
   .catch((e: Error) => {
     logger.error(`启动失败：${e.message}`);
