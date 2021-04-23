@@ -67,6 +67,7 @@ npm run dev
 
 ```sh
 # 必填 B站账户Cookie
+# 不知道如何获取，请查看：https://jingyan.baidu.com/article/5d368d1ea6c6e33f60c057ef.html
 BILIBILI_COOKIE = "登录站后的Cookie"
 
 # 选填 执行间隔（单位分钟），不填则每分钟执行一次
