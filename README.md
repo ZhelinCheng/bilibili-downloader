@@ -1,10 +1,11 @@
 <h1 align="center">Welcome to bilibili-downloader 👋</h1>
 
-<center>❗❗❗ 下载1080 60P清晰度以上视频需要自行**开通大会员** ❗❗❗<br />
-❗❗❗ 该工具仅仅监听**个人动态更新的视频**，也就是说，你需要**关注UP主** ❗❗❗</center>
+<p align="center">
+❗❗❗ 下载1080 60P清晰度以上视频需要自行`开通大会员` ❗❗❗ <br />
+❗❗❗ 该工具仅仅监听个人动态更新的视频，也就是说，你需要`关注UP主` ❗❗❗
+</p>
 
-<p>
-<center>
+<p align="center">
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/ZhelinCheng/bilibili-downloader#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
@@ -21,10 +22,9 @@
   <a href="https://www.typescriptlang.org/" target="_blank">
     <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-%3E%3D3.0-green.svg" />
   </a>
-  </center>
 </p>
 
-> B 站个人动态视频下载助手。是不是经常遇到视频还没看就被删除？视频还未下载就先被下架？使用本程序可以帮助你第一时间下载个人动态中的视频，让你不漏过任何一个美丽的瞬间。
+> B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。妈妈再也不担心我没时间下载视频啦！🎉
 
 ![bilibili-downloader](https://cdn.jsdelivr.net/gh/ZhelinCheng/storage@master/picture/78ZrEH_55.png)
 
