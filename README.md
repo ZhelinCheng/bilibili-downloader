@@ -1,12 +1,12 @@
 <h1 align="center">Welcome to bilibili-downloader 👋</h1>
 
 <p align="center">
-❗❗❗ 下载1080 60P清晰度以上视频需要自行<b>开通大会员</b> ❗❗❗ <br />
+❗❗❗ 下载1080 60帧清晰度以上视频需要自行<b>开通大会员</b>，普通用户仅仅下载1080P ❗❗❗ <br />
 ❗❗❗ 该工具仅仅监听个人动态更新的视频，也就是说，你需要<b>关注UP主</b> ❗❗❗
 </p>
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/github/package-json/v/ZhelinCheng/bilibili-downloader.svg" />
   <a href="https://github.com/ZhelinCheng/bilibili-downloader#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -17,7 +17,7 @@
     <img alt="License: MIT" src="https://img.shields.io/github/license/ZhelinCheng/bilibili-downloader" />
   </a>
   <a href="https://nodejs.org/en/" target="_blank">
-    <img alt="Node" src="https://img.shields.io/badge/Node.js-%3E%3D7.6.0-green.svg" />
+    <img alt="Node" src="https://img.shields.io/badge/Node.js-%3E%3D12.0-green.svg" />
   </a>
   <a href="https://www.typescriptlang.org/" target="_blank">
     <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-%3E%3D3.0-green.svg" />
@@ -32,7 +32,7 @@
 
 ## 使用
 
-本应用基于 NodeJS 12.19.0 开发，使用前请保证你的 Node 版本大于等于 12。**需要注意的是，只有你是大会员才会下载 4k / 1080 60P等会员专享清晰度，如果不是大会员只能下载普通清晰度的视频**，本程序不会去突破 B 站的清晰度限制，如果需要保存高清的视频，在活动期间开上一年的大会员，是十分划算的。
+本应用基于 NodeJS 12.19.0 开发，使用前请保证你的 Node 版本大于等于 12。**需要注意的是，只有你是大会员才会下载 4k / 1080 60帧等会员专享清晰度，如果不是大会员只能下载普通1080P清晰度的视频**，本程序不会去突破 B 站的清晰度限制，如果需要保存高清的视频，在活动期间开上一年的大会员，是十分划算的。
 
 本程序支持视频保存本地及保存到 FTP 服务器，如何配置将在下面说明。
 

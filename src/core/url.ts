@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 00:17:04
+ * @LastEditTime : 2021-04-24 12:59:26
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
@@ -286,6 +286,30 @@ interface VideoDownloadUrl {
   }>;
 }
 
+// 获取用户是否是大会员
+let isVip = false
+export const getVipStatus = async (): Promise<boolean> => {
+  try {
+    const nowTime = Date.now();
+    const {
+      data: { code, data },
+    } = await rq<{
+      code: number;
+      data: {
+        vip_due_date: number;
+      };
+    }>({
+      url: 'https://api.bilibili.com/x/vip/web/user/info',
+    });
+
+    return code === 0 && data.vip_due_date > nowTime;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return false;
+};
+
 // 获取单个分集信息
 export const getVideoDownloadUrl = async (
   bvid: string,
@@ -293,6 +317,7 @@ export const getVideoDownloadUrl = async (
 ): Promise<{
   size: number;
   url: string;
+  ext: 'flv' | 'mp4';
 }> => {
   try {
     const {
@@ -302,19 +327,30 @@ export const getVideoDownloadUrl = async (
       data: VideoDownloadUrl;
     }>({
       url: 'https://api.bilibili.com/x/player/playurl',
-      params: {
-        bvid,
-        cid,
-        qn: 120,
-        fourk: 1,
-      },
+      params: isVip
+        ? {
+            bvid,
+            cid,
+            qn: 120,
+            fourk: 1,
+          }
+        : {
+            bvid,
+            cid,
+            platform: 'html5',
+            high_quality: 1,
+          },
     });
 
     if (code === 0 && data && Array.isArray(data.durl)) {
-      const { url, size } = data.durl[0];
+      const { url = '', size } = data.durl[0];
+      const urlExt = /\.(?<ext>mp4|flv)\?/.exec(url) || {
+        groups: { ext: 'flv' },
+      };
       return {
         url,
         size,
+        ext: urlExt.groups.ext as 'flv' | 'mp4',
       };
     }
   } catch (e) {
@@ -324,6 +360,7 @@ export const getVideoDownloadUrl = async (
   return {
     url: '',
     size: 0,
+    ext: 'mp4',
   };
 };
 
@@ -384,6 +421,7 @@ const excludeUid = new Set(
 // 获取列表
 export const getVideosUrl = async (): Promise<boolean> => {
   try {
+    isVip = await getVipStatus();
     const queue = db.get('queue').value() || [];
     const filterSet = new Set(queue.map(({ bvid }) => bvid));
 

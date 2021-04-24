@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 01:11:45
+ * @LastEditTime : 2021-04-24 12:54:04
  * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
@@ -63,7 +63,7 @@ async function bootstrap() {
 
       try {
         timer.stop();
-        await getVideosUrl();
+        // await getVideosUrl();
         await downloader();
         const notes = db.get('notes').value();
         if (notes.length > 40) {

@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 00:19:22
+ * @LastEditTime : 2021-04-24 12:56:50
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -102,7 +102,7 @@ async function downloadList(
           }
 
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
-          const { url, size } = await getVideoDownloadUrl(bvid, cid);
+          const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
           const { data, headerSize } = await downloadVideo(url);
 
           if (!data || size <= 0) {
@@ -110,7 +110,7 @@ async function downloadList(
           }
 
           const filePath = `${baseFtpPath}/${name}`;
-          const fileName = `${date}-${cid}.flv`;
+          const fileName = `${date}-${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
           const localPath = `${outputPath}/${name}/${fileName}`;
 
@@ -136,7 +136,8 @@ async function downloadList(
           }
 
           logger.info(
-            `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头：${headerSize} | 下载大小：${size} | FTP状态：${uploadFtp}`,
+            `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头：${headerSize} | 下载大小：${size}` +
+              `${isFtp ? ` | FTP状态：${uploadFtp}` : ''}`,
           );
 
           // 删除不正确的文件

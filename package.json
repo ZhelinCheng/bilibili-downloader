@@ -1,6 +1,6 @@
 {
   "name": "bilibili-downloader",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "B站下载助手",
   "main": "./dist/index.js",
   "scripts": {
