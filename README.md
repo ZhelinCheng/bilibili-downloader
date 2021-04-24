@@ -40,10 +40,9 @@
 
 首先你需要[下载NodeJs](https://nodejs.org/en/)，进入后选择**LTS**版本。NodeJS会附带自动安装NPM，所以NodeJS安装完成后即可运行程序。
 
-```sh
-# 克隆当前项目
-git clone https://github.com/ZhelinCheng/bilibili-downloader.git && cd bilibili-downloader
+你可以克隆master分支，或者直接到[Releases下载](https://github.com/ZhelinCheng/bilibili-downloader/releases)最新版本解压，进入目录执行：
 
+```sh
 # 使用npm安装依赖
 npm install
 
