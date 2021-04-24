@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 14:22:43
+ * @LastEditTime : 2021-04-24 19:52:41
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
@@ -477,7 +477,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
 
         let isNeed =
           // 判断是否符合条件
-          ((isTopic >= 0 && isCard) || isIncludeUid) &&
+          (isTopic >= 0 || isCard || isIncludeUid) &&
           // 判断是否需要下载
           timeout < timestamp &&
           !notes.includes(bvid) &&
@@ -488,6 +488,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
           isNeed = !excludeUid.has(userId);
         }
 
+        // console.log(uname, isTopic, isCard, isIncludeUid, isNeed)
         if (isNeed) {
           isDownload = true;
           await db
