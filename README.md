@@ -38,21 +38,22 @@
 
 ### 安装
 
+首先你需要[下载NodeJs](https://nodejs.org/en/)，进入后选择**LTS**版本。NodeJS会附带自动安装NPM，所以NodeJS安装完成后即可运行程序。
+
 ```sh
 # 克隆当前项目
 git clone https://github.com/ZhelinCheng/bilibili-downloader.git && cd bilibili-downloader
 
-# 如果你安装了yarn
-yarn install
-# 或者使用npm
+# 使用npm安装依赖
 npm install
+
+# 执行build命令，每一次更新都需要build一次
+npm run build
 ```
 
 ### 运行
 
 ```sh
-yarn start
-# 或者
 npm run start
 ```
 
@@ -61,8 +62,6 @@ npm run start
 ### 开发
 
 ```sh
-yarn dev
-# 或者
 npm run dev
 ```
 
