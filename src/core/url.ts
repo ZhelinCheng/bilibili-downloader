@@ -287,7 +287,7 @@ interface VideoDownloadUrl {
 }
 
 // 获取用户是否是大会员
-let isVip = false
+let isVip = false;
 export const getVipStatus = async (): Promise<boolean> => {
   try {
     const nowTime = Date.now();

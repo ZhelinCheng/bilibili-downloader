@@ -24,7 +24,7 @@
   </a>
 </p>
 
-> B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。妈妈再也不担心我没时间下载视频啦！🎉
+> B 站个人动态视频下载助手，支持下载 B 站个人动态更新的 4k 视频，运行该程序后，你所关注的 UP 主更新的视频第一时间下载保存。妈妈再也不担心我没时间下载视频啦！🎉
 
 ![bilibili-downloader](https://cdn.jsdelivr.net/gh/ZhelinCheng/storage@master/picture/78ZrEH_55.png)
 
@@ -32,15 +32,15 @@
 
 ## 使用
 
-本应用基于 NodeJS 12.19.0 开发，使用前请保证你的 Node 版本大于等于 12。**需要注意的是，只有你是大会员才会下载 4k / 1080 60帧等会员专享清晰度，如果不是大会员只能下载普通1080P清晰度的视频**，本程序不会去突破 B 站的清晰度限制，如果需要保存高清的视频，在活动期间开上一年的大会员，是十分划算的。
+本应用基于 NodeJS 12.19.0 开发，使用前请保证你的 Node 版本大于等于 12。**需要注意的是，只有你是大会员才会下载 4k / 1080 60 帧等会员专享清晰度，如果不是大会员只能下载普通 1080P 清晰度的视频**，本程序不会去突破 B 站的清晰度限制，如果需要保存高清的视频，在活动期间开上一年的大会员，是十分划算的。
 
 本程序支持视频保存本地及保存到 FTP 服务器，如何配置将在下面说明。
 
 ### 安装
 
-首先你需要[下载NodeJs](https://nodejs.org/en/)，进入后选择**LTS**版本。NodeJS会附带自动安装NPM，所以NodeJS安装完成后即可运行程序。
+首先你需要[下载 NodeJs](https://nodejs.org/en/)，进入后选择**LTS**版本。NodeJS 会附带自动安装 NPM，所以 NodeJS 安装完成后即可运行程序。
 
-你可以克隆master分支，或者直接到[Releases下载](https://github.com/ZhelinCheng/bilibili-downloader/releases)最新版本解压，进入目录执行：
+你可以克隆 master 分支，或者直接到[Releases 下载](https://github.com/ZhelinCheng/bilibili-downloader/releases)最新版本解压，进入目录执行：
 
 ```sh
 # 使用npm安装依赖

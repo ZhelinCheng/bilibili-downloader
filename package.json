@@ -1,7 +1,7 @@
 {
   "name": "bilibili-downloader",
-  "version": "1.0.4",
-  "description": "B站下载助手",
+  "version": "1.0.5",
+  "description": "B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "nodemon -e ts, js",
@@ -16,15 +16,14 @@
     "url": "git+https://github.com/ZhelinCheng/bilibili-downloader.git"
   },
   "keywords": [
-    "kindle",
-    "txt",
-    "mobi"
+    "bilibili",
+    "downloader"
   ],
   "author": "ZhelinCheng",
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "lint",
+      "pre-commit": "npm run lint",
       "prepare-commit-msg": "prepare-commit-msg"
     }
   },
