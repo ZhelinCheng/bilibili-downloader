@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 12:56:50
+ * @LastEditTime : 2021-04-24 14:25:06
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -155,7 +155,7 @@ async function downloadList(
           return '';
         }
       },
-      async (err, results: Array<string>) => {
+      async (err, results) => {
         if (isFtp) {
           await ftp.end();
         }
@@ -164,7 +164,7 @@ async function downloadList(
         if (err) {
           return reject(err);
         }
-        resolve(results);
+        resolve(results as Array<string>);
       },
     );
   });
@@ -183,12 +183,12 @@ async function getPageList(
         const arr = getVideoPage(bvid, name);
         return arr;
       },
-      (err, results: Array<Array<BaseItemType>>) => {
+      (err, results) => {
         if (err) {
           return reject(err);
         }
 
-        resolve(results);
+        resolve(results as Array<Array<BaseItemType>>);
       },
     );
   });

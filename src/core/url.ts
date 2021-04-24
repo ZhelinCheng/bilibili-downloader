@@ -2,13 +2,13 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 12:59:26
+ * @LastEditTime : 2021-04-24 14:22:43
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
 
-const _MY_UID = /DedeUserID=(?<userId>\d+);/gm.exec(env.BILIBILI_COOKIE);
+const _MY_UID = /DedeUserID=(?<userId>\d+);/gm.exec(env.BILIBILI_COOKIE || '');
 
 export interface VideoUrlItems {
   bvid: string;
@@ -350,7 +350,7 @@ export const getVideoDownloadUrl = async (
       return {
         url,
         size,
-        ext: urlExt.groups.ext as 'flv' | 'mp4',
+        ext: urlExt && urlExt.groups ? urlExt.groups.ext as 'flv' | 'mp4' : 'flv',
       };
     }
   } catch (e) {
@@ -424,15 +424,13 @@ export const getVideosUrl = async (): Promise<boolean> => {
     isVip = await getVipStatus();
     const queue = db.get('queue').value() || [];
     const filterSet = new Set(queue.map(({ bvid }) => bvid));
-
-    const { groups } = _MY_UID || { groups: { userId: '' } };
-
+    
     const {
       data: { code, data, message },
     } = await rq<DynamicNewType>({
       url: 'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new',
       params: {
-        uid: groups.userId,
+        uid: _MY_UID && _MY_UID.groups ? _MY_UID.groups.userId : '',
         type_list: 8,
         from: '',
         platform: 'web',
