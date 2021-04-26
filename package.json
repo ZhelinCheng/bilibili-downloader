@@ -1,15 +1,18 @@
 {
   "name": "bilibili-downloader",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。",
   "main": "./dist/index.js",
   "scripts": {
     "dev": "nodemon -e ts, js",
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "build": "tsc",
-    "format": "prettier --write **/*.{js,jsx,tsx,ts,less,md,json}",
+    "format": "prettier --write **/*.{js,ts,md,json}",
     "lint": "eslint . --ext .ts",
-    "prepare-commit-msg": "prepare-commit-msg"
+    "prepare-commit-msg": "prepare-commit-msg",
+    "prepare": "husky install",
+    "commitlint": "commitlint",
+    "lint-staged": "lint-staged"
   },
   "repository": {
     "type": "git",
@@ -21,11 +24,12 @@
   ],
   "author": "ZhelinCheng",
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "prepare-commit-msg": "prepare-commit-msg"
-    }
+  "lint-staged": {
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{js,ts}": "yarn lint"
   },
   "bugs": {
     "url": "https://github.com/ZhelinCheng/bilibili-downloader/issues"
@@ -35,9 +39,12 @@
     "@types/node": "14.14.41",
     "@typescript-eslint/eslint-plugin": "4.21.0",
     "@typescript-eslint/parser": "4.21.0",
+    "commitlint": "^12.1.1",
+    "conventional-changelog-conventionalcommits": "^4.5.0",
     "cross-env": "7.0.3",
     "eslint": "7.25.0",
     "husky": "6.0.0",
+    "lint-staged": "^10.5.4",
     "nodemon": "2.0.7",
     "prettier": "2.2.1",
     "ts-node": "9.1.1",
