@@ -15,3 +15,6 @@
 .DS_Store
 .env
 db.json
+
+.exclude
+.include

@@ -2,11 +2,12 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-17 15:41:43
+ * @LastEditTime : 2021-05-17 22:34:48
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
+import { INCLUDE_UID_ITEMS, EXCLUDE_UID_ITEMS } from '../const';
 
 const _MY_UID = /DedeUserID=(?<userId>\d+);/gm.exec(env.BILIBILI_COOKIE || '');
 
@@ -413,13 +414,8 @@ export const getVideoPage = async (
   return [];
 };
 
-const includeUid = new Set(
-  env.BILIBILI_INCLUDE_UID ? env.BILIBILI_INCLUDE_UID.split('|') : [],
-);
-
-const excludeUid = new Set(
-  env.BILIBILI_EXCLUDE_UID ? env.BILIBILI_EXCLUDE_UID.split('|') : [],
-);
+const includeUid = new Set(INCLUDE_UID_ITEMS);
+const excludeUid = new Set(EXCLUDE_UID_ITEMS);
 
 // 获取列表
 export const getVideosUrl = async (): Promise<boolean> => {
@@ -443,7 +439,9 @@ export const getVideosUrl = async (): Promise<boolean> => {
     if (code === 0 && Array.isArray(data.cards)) {
       const { cards } = data;
       const notes: string[] = db.get('notes').value();
-      const timeout = Math.floor(Date.now() / 1000) - 43200;
+      const timeout =
+        Math.floor(Date.now() / 1000) -
+        (process.env.NODE_ENV === 'development' ? 600 : 43200);
       let isDownload = false;
 
       const includeRe = new RegExp(env.BILIBILI_INCLUDE_KW || '', 'img');
