@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 19:52:41
- * @FilePath     : \bilibili-downloader\src\core\url.ts
+ * @LastEditTime : 2021-05-17 15:41:43
+ * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
@@ -350,7 +350,10 @@ export const getVideoDownloadUrl = async (
       return {
         url,
         size,
-        ext: urlExt && urlExt.groups ? urlExt.groups.ext as 'flv' | 'mp4' : 'flv',
+        ext:
+          urlExt && urlExt.groups
+            ? (urlExt.groups.ext as 'flv' | 'mp4')
+            : 'flv',
       };
     }
   } catch (e) {
@@ -424,7 +427,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
     isVip = await getVipStatus();
     const queue = db.get('queue').value() || [];
     const filterSet = new Set(queue.map(({ bvid }) => bvid));
-    
+
     const {
       data: { code, data, message },
     } = await rq<DynamicNewType>({
