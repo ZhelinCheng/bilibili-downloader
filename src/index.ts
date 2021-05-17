@@ -2,15 +2,20 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 14:13:45
- * @FilePath     : \bilibili-downloader\src\index.ts
+ * @LastEditTime : 2021-05-17 22:49:49
+ * @FilePath     : /bilibili-downloader/src/index.ts
  * @Description  : 入口文件
  */
 import { logger, db, env, isEnv } from './utils';
 import { CronJob } from 'cron';
 import ping from 'ping';
 import fse from 'fs-extra';
-import { outputPath, isFtp } from './const';
+import {
+  outputPath,
+  isFtp,
+  INCLUDE_UID_ITEMS,
+  EXCLUDE_UID_ITEMS,
+} from './const';
 import { downloader, getVideosUrl } from './core';
 
 let timer: CronJob;
@@ -85,6 +90,8 @@ bootstrap()
   .then(() => {
     logger.info('启动成功');
     logger.info(`视频保存位置：${isFtp ? 'FTP服务器' : '本地'}`);
+    logger.info(`必须包含的UID：${INCLUDE_UID_ITEMS.join('、')}`);
+    logger.info(`必须排除的UID：${EXCLUDE_UID_ITEMS.join('、')}`);
   })
   .catch((e: Error) => {
     logger.error(`启动失败：${e.message}`);

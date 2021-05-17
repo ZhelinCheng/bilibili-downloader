@@ -1,6 +1,6 @@
 {
   "name": "bilibili-downloader",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。",
   "main": "./dist/index.js",
   "scripts": {
