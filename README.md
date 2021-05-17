@@ -81,19 +81,21 @@ BILIBILI_COOKIE = "登录B站后的Cookie"
 BILIBILI_LISTEN_INTERVAL = "3"
 
 # 选填 必须要包含的UP主，填写UP主UID，多个UP主使用管道符（|）间隔
+# 你可以在根目录创建 .include 文件，并将UID一行一个的填写进去，该文件会与下面配置同时生效；
 BILIBILI_INCLUDE_UID = ""
 
 # 选填 必须包含的视频及UP主关键字，使用管道符（|）间隔
 BILIBILI_INCLUDE_KW = "宅舞|韩舞|中国舞"
 
 # 选填 排除以下UP主，填写UP主UID，多个UP主使用管道符（|）间隔
+# 你可以在根目录创建 .exclude 文件，并将UID一行一个的填写进去，该文件会与下面配置同时生效；
 BILIBILI_EXCLUDE_UID = ""
 
 # 选填 视频保存到本地的地址，例：/home/xxx/output，默认保存到项目根目录下的output文件夹
 BILIBILI_OUTPUT_PATH = ""
 
 # 选填 频保存到FTP的地址，例：/BotBackup/Bilibili
-BILIBILI_FTP_PATH = ""
+BILIBILI_FTP_PATH = "/Backup/Bilibili"
 BILIBILI_FTP_HOST = "10.0.0.3"
 BILIBILI_FTP_USER = "bilibili"
 BILIBILI_FTP_PASS = "password"
