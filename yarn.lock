@@ -287,10 +287,10 @@
   resolved "https://registry.nlark.com/@types/node/download/@types/node-15.6.0.tgz?cache=0&sync_timestamp=1621593401299&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
   integrity sha1-8N3KWmHlJifJ3LdxpgOdRGlFl7w=
 
-"@types/node@14.17.0":
-  version "14.17.0"
-  resolved "https://registry.nlark.com/@types/node/download/@types/node-14.17.0.tgz?cache=0&sync_timestamp=1621593401299&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.17.0.tgz#3ba770047723b3eeb8dc9fca02cce8a7fb6378da"
-  integrity sha1-O6dwBHcjs+643J/KAszop/tjeNo=
+"@types/node@14.17.1":
+  version "14.17.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.1.tgz#5e07e0cb2ff793aa7a1b41deae76221e6166049f"
+  integrity sha512-/tpUyFD7meeooTRwl3sYlihx2BrJE7q9XF71EguPFIySj9B7qgnRtHsHTho+0AUm4m1SvWGm6uSncrR94q6Vtw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
