@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 14:25:06
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2021-05-26 21:11:53
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -202,7 +202,6 @@ export const downloader = async (): Promise<void> => {
       return;
     }
 
-    logger.info(`执行下载${queue.length}条`);
     let downQueue: Array<VideoUrlItems & { cid: string }> = [];
 
     // 获取分集信息
@@ -219,6 +218,7 @@ export const downloader = async (): Promise<void> => {
       });
     }
 
+    logger.info(`执行下载${downQueue.length}条`);
     // 执行下载
     const downStatus = await downloadList(downQueue);
 

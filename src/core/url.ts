@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-17 22:34:48
+ * @LastEditTime : 2021-05-26 21:13:32
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
@@ -436,7 +436,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
       },
     });
 
-    if (code === 0 && Array.isArray(data.cards)) {
+    if (code === 0 && Array.isArray(data.cards) && data.cards.length) {
       const { cards } = data;
       const notes: string[] = db.get('notes').value();
       const timeout =
@@ -504,7 +504,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
 
       return isDownload;
     } else {
-      logger.error(`错误代码：${code}；错误信息：${message}`);
+      logger.error(`错误代码：${code}；错误信息：${message || '无数据'}`);
     }
   } catch (e) {
     console.error(e);
