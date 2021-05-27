@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-26 21:11:53
+ * @LastEditTime : 2021-05-27 21:42:13
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -10,7 +10,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { db, logger, env } from '../utils';
+import { db, logger, env, timeout } from '../utils';
 import { mapLimit } from 'async';
 import PromiseFtp from 'promise-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
@@ -76,6 +76,9 @@ async function ftpLink() {
   return false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// let errTimer: any = 0
+
 // 下载列表
 async function downloadList(
   queue: Array<BaseItemType>,
@@ -100,6 +103,8 @@ async function downloadList(
           if (notes.includes(cid)) {
             return bvid;
           }
+
+          await timeout(3000);
 
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
@@ -130,11 +135,6 @@ async function downloadList(
           const isOver =
             fileSize === size && headerSize === fileSize && uploadFtp;
 
-          if (isOver) {
-            notes.push(cid);
-            notes.push(bvid);
-          }
-
           logger.info(
             `状态 ⇒ ${isOver} | 文件大小：${fileSize} |  响应头：${headerSize} | 下载大小：${size}` +
               `${isFtp ? ` | FTP状态：${uploadFtp}` : ''}`,
@@ -149,18 +149,24 @@ async function downloadList(
             }
           }
 
+          if (isOver) {
+            notes.push(cid);
+            notes.push(bvid);
+            await db.set('notes', notes).write();
+          }
+
           return isOver ? bvid : '';
         } catch (e) {
           console.error(e);
           return '';
+        } finally {
+          clearTimeout(errTimer);
         }
       },
       async (err, results) => {
         if (isFtp) {
           await ftp.end();
         }
-
-        await db.set('notes', notes).write();
         if (err) {
           return reject(err);
         }
