@@ -312,6 +312,11 @@
   resolved "https://registry.nlark.com/@types/node/download/@types/node-14.17.0.tgz?cache=0&sync_timestamp=1621593401299&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.17.0.tgz#3ba770047723b3eeb8dc9fca02cce8a7fb6378da"
   integrity sha1-O6dwBHcjs+643J/KAszop/tjeNo=
 
+"@types/node@^15.3.0":
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.6.1.tgz#32d43390d5c62c5b6ec486a9bc9c59544de39a08"
+  integrity sha512-7EIraBEyRHEe7CH+Fm1XvgqU6uwZN8Q7jppJGcqjROMT29qhAuuOxYB1uEY5UMYQKEmA5D+5tBnhdaPXSsLONA==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.nlark.com/@types/normalize-package-data/download/@types/normalize-package-data-2.4.0.tgz?cache=0&sync_timestamp=1621242104575&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnormalize-package-data%2Fdownload%2F%40types%2Fnormalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -2373,12 +2378,13 @@ ping@^0.4.1:
     q "1.x"
     underscore "^1.12.0"
 
-pino-pretty@^4.5.0:
-  version "4.8.0"
-  resolved "https://registry.nlark.com/pino-pretty/download/pino-pretty-4.8.0.tgz#f2f3055bf222456217b14ffb04d8be0a0cc17fce"
-  integrity sha1-8vMFW/IiRWIXsU/7BNi+CgzBf84=
+pino-pretty@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/pino-pretty/-/pino-pretty-5.0.0.tgz#c25eb644db7e288dc5e4cd7b8b9d6728ef776985"
+  integrity sha512-onSCww1KYRYKk6khnAf572oaTqMOANXgLWeHNqM10CYXjnQMxL3iEZ/9GaSqP0KZhErcERn9H7GSXTNm1ulM8A==
   dependencies:
     "@hapi/bourne" "^2.0.0"
+    "@types/node" "^15.3.0"
     args "^5.0.1"
     chalk "^4.0.0"
     dateformat "^4.5.1"
