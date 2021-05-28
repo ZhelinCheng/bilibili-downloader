@@ -2,15 +2,15 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-27 21:43:36
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-05-29 00:10:33
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
-import axios from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { db, logger, env, timeout } from '../utils';
+import { db, logger, env } from '../utils';
 import { mapLimit } from 'async';
 import PromiseFtp from 'promise-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
@@ -25,7 +25,7 @@ const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
 type BaseItemType = VideoUrlItems & { cid: string };
 
 // import fs from 'fs';
-
+let cancelTokenSource: null | CancelTokenSource = null;
 export const downloadVideo = async (
   url: string,
 ): Promise<{
@@ -36,13 +36,14 @@ export const downloadVideo = async (
     if (!url) {
       return { headerSize: 0 };
     }
-
+    cancelTokenSource = axios.CancelToken.source();
     const { data, headers } = await axios({
       method: 'get',
       url,
       headers: {
         Cookie: '',
       },
+      cancelToken: cancelTokenSource.token,
       responseType: 'stream',
     });
     return {
@@ -80,6 +81,8 @@ async function ftpLink() {
 // let errTimer: any = 0
 
 // 下载列表
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let errTimer: any = 0;
 async function downloadList(
   queue: Array<BaseItemType>,
 ): Promise<Array<string>> {
@@ -98,16 +101,23 @@ async function downloadList(
     mapLimit(
       queue,
       1,
-      async function ({ bvid, name, cid }) {
+      async ({ bvid, name, cid }) => {
         try {
+          clearTimeout(errTimer);
           if (notes.includes(cid)) {
             return bvid;
           }
 
-          await timeout(3000);
-
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
+
+          errTimer = setTimeout(() => {
+            if (cancelTokenSource) {
+              cancelTokenSource.cancel();
+              reject('未下载完成');
+            }
+          }, 10 * 60 * 1000);
+
           const { data, headerSize } = await downloadVideo(url);
 
           if (!data || size <= 0) {
@@ -261,6 +271,6 @@ export const downloader = async (): Promise<void> => {
 
     logger.info('+++ 本次下载完成 +++');
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 };
