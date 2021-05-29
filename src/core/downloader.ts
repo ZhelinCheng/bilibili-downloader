@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-29 19:18:39
+ * @LastEditTime : 2021-05-30 00:35:37
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -117,13 +117,14 @@ async function downloadList(
               cancelTokenSource.cancel();
               if (isFtp) {
                 await ftp.delete(filePos);
+                await ftp.end();
               } else {
                 fse.removeSync(localPath);
               }
             }
             cancelTokenSource = null;
             reject('未下载完成');
-          }, 10 * 60 * 1000);
+          }, 4 * 1000);
 
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
           logger.info(`开始下载：${url} | ${size}`);
@@ -170,11 +171,11 @@ async function downloadList(
             }
           }
 
-          if (isOver) {
+          /* if (isOver) {
             notes.push(cid);
             notes.push(bvid);
             await db.set('notes', notes).write();
-          }
+          } */
 
           return isOver ? bvid : '';
         } catch (e) {
