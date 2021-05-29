@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-29 00:50:42
+ * @LastEditTime : 2021-05-29 19:18:39
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -112,6 +112,7 @@ async function downloadList(
 
           // 超时删除
           errTimer = setTimeout(async () => {
+            logger.error('清除下载');
             if (cancelTokenSource) {
               cancelTokenSource.cancel();
               if (isFtp) {
@@ -120,13 +121,12 @@ async function downloadList(
                 fse.removeSync(localPath);
               }
             }
-
             cancelTokenSource = null;
             reject('未下载完成');
           }, 10 * 60 * 1000);
 
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
-          logger.info('开始下载');
+          logger.info(`开始下载：${url} | ${size}`);
           const { data, headerSize } = await downloadVideo(url);
 
           if (!data || size <= 0) {
@@ -138,6 +138,7 @@ async function downloadList(
           const filePos = `${filePath}/${fileName}`;
           const localPath = `${outputPath}/${name}/${fileName}`;
 
+          logger.info(`保存中...`);
           const uploadFtp = await postData(
             ftp,
             data,
@@ -146,6 +147,7 @@ async function downloadList(
             localPath,
           );
 
+          logger.info(`判断是否下载完成...`);
           const fileSize = isFtp
             ? await ftp.size(filePos)
             : fs.statSync(localPath).size;
