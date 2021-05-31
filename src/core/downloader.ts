@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-31 21:54:17
+ * @LastEditTime : 2021-05-31 22:21:21
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -26,6 +26,9 @@ type BaseItemType = VideoUrlItems & { cid: string };
 
 // import fs from 'fs';
 let cancelTokenSource: null | CancelTokenSource = null;
+
+// 错误的文件
+// let errFile = '';
 export const downloadVideo = async (
   url: string,
 ): Promise<{
@@ -60,11 +63,17 @@ export const downloadVideo = async (
 async function ftpLink() {
   try {
     if (isFtp) {
+      logger.info(`FTP状态：${ftp.getConnectionStatus()}`);
       const serverMessage = await ftp.connect({
         host: env.BILIBILI_FTP_HOST,
         user: env.BILIBILI_FTP_USER,
         password: env.BILIBILI_FTP_PASS,
       });
+      /* if (errFile) {
+        logger.info('删除错误文件')
+        await ftp.delete(errFile);
+        errFile = '';
+      } */
       logger.info(serverMessage);
       // ftp.mkdir(baseFtpPath, true)
     } else {
@@ -110,6 +119,12 @@ async function downloadList(
 
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
 
+          const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
+          const filePath = `${baseFtpPath}/${name}`;
+          const fileName = `${date}-${cid}.${ext}`;
+          const filePos = `${filePath}/${fileName}`;
+          const localPath = `${outputPath}/${name}/${fileName}`;
+
           // 超时删除
           errTimer = setTimeout(async () => {
             if (
@@ -117,31 +132,23 @@ async function downloadList(
               typeof cancelTokenSource.cancel === 'function'
             ) {
               logger.error('清除下载');
-              cancelTokenSource.cancel();
+              cancelTokenSource.cancel('清楚超时文件');
               if (isFtp) {
-                await ftp.delete(filePos);
-                await ftp.end();
+                // errFile = filePos;
+                ftp.destroy();
               } else {
                 fse.removeSync(localPath);
               }
             }
             cancelTokenSource = null;
-            console.log('清除完成');
             reject('未下载完成');
-          }, 4 * 1000);
+          }, 480000);
 
-          const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
-          logger.info(`开始下载：${url} | ${size}`);
+          logger.info(`开始下载：${url}`);
           const { data, headerSize } = await downloadVideo(url);
-
           if (!data || size <= 0) {
             return '';
           }
-
-          const filePath = `${baseFtpPath}/${name}`;
-          const fileName = `${date}-${cid}.${ext}`;
-          const filePos = `${filePath}/${fileName}`;
-          const localPath = `${outputPath}/${name}/${fileName}`;
 
           logger.info(`保存中...`);
           const uploadFtp = await postData(
