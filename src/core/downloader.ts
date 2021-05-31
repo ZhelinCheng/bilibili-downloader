@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-30 00:35:37
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2021-05-31 21:54:17
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -112,8 +112,11 @@ async function downloadList(
 
           // 超时删除
           errTimer = setTimeout(async () => {
-            logger.error('清除下载');
-            if (cancelTokenSource) {
+            if (
+              cancelTokenSource &&
+              typeof cancelTokenSource.cancel === 'function'
+            ) {
+              logger.error('清除下载');
               cancelTokenSource.cancel();
               if (isFtp) {
                 await ftp.delete(filePos);
@@ -123,6 +126,7 @@ async function downloadList(
               }
             }
             cancelTokenSource = null;
+            console.log('清除完成');
             reject('未下载完成');
           }, 4 * 1000);
 
