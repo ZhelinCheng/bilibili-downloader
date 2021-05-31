@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-31 22:21:21
+ * @LastEditTime : 2021-05-31 22:30:14
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -27,8 +27,6 @@ type BaseItemType = VideoUrlItems & { cid: string };
 // import fs from 'fs';
 let cancelTokenSource: null | CancelTokenSource = null;
 
-// 错误的文件
-// let errFile = '';
 export const downloadVideo = async (
   url: string,
 ): Promise<{
@@ -69,11 +67,13 @@ async function ftpLink() {
         user: env.BILIBILI_FTP_USER,
         password: env.BILIBILI_FTP_PASS,
       });
-      /* if (errFile) {
-        logger.info('删除错误文件')
+
+      const errFile = db.get('errorFile').value();
+      if (errFile) {
+        logger.info('删除错误文件');
         await ftp.delete(errFile);
-        errFile = '';
-      } */
+        await db.set('errorFile', '').write();
+      }
       logger.info(serverMessage);
       // ftp.mkdir(baseFtpPath, true)
     } else {
@@ -132,9 +132,9 @@ async function downloadList(
               typeof cancelTokenSource.cancel === 'function'
             ) {
               logger.error('清除下载');
-              cancelTokenSource.cancel('清楚超时文件');
+              cancelTokenSource.cancel('清除超时文件');
               if (isFtp) {
-                // errFile = filePos;
+                await db.set('errorFile', filePos).write();
                 ftp.destroy();
               } else {
                 fse.removeSync(localPath);
