@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-01 15:57:29
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-06-01 23:50:14
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -19,6 +19,7 @@ import { outputPath, isFtp } from '../const';
 import dayjs from 'dayjs';
 
 const client = new FTP.Client();
+client.ftp.log = logger.info.bind(logger);
 client.ftp.verbose = true;
 
 const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
