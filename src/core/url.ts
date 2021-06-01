@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-26 21:13:32
+ * @LastEditTime : 2021-06-01 16:05:10
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
@@ -441,7 +441,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
       const notes: string[] = db.get('notes').value();
       const timeout =
         Math.floor(Date.now() / 1000) -
-        (process.env.NODE_ENV === 'development' ? 600 : 43200);
+        (process.env.NODE_ENV === 'development' ? 1200 : 43200);
       let isDownload = false;
 
       const includeRe = new RegExp(env.BILIBILI_INCLUDE_KW || '', 'img');

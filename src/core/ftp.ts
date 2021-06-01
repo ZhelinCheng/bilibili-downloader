@@ -2,15 +2,15 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 17:09:10
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 00:19:45
- * @FilePath     : \bilibili-downloader\src\core\ftp.ts
+ * @LastEditTime : 2021-06-01 15:39:49
+ * @FilePath     : /bilibili-downloader/src/core/ftp.ts
  * @Description  : 未添加文件描述
  */
 
 import fs from 'fs';
 import fse from 'fs-extra';
 import { isFtp } from '../const';
-import PromiseFtp from 'promise-ftp';
+import * as FTP from 'basic-ftp';
 
 const localSave = (
   input: NodeJS.ReadStream,
@@ -30,7 +30,7 @@ const localSave = (
 };
 
 export const postData = async (
-  ftp: PromiseFtp,
+  client: FTP.Client,
   input: NodeJS.ReadStream,
   destPath: string,
   fileName: string,
@@ -38,8 +38,8 @@ export const postData = async (
 ): Promise<boolean> => {
   try {
     if (isFtp) {
-      await ftp.mkdir(destPath, true);
-      await ftp.put(input, `${destPath}/${fileName}`);
+      await client.ensureDir(destPath);
+      await client.uploadFrom(input, `${destPath}/${fileName}`);
       return true;
     } else {
       fse.ensureDirSync(localPath.replace(/(\/|\\)\d+-\d+\.(mp4|flv)$/, ''));

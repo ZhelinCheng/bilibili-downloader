@@ -614,6 +614,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npm.taobao.org/balanced-match/download/balanced-match-1.0.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbalanced-match%2Fdownload%2Fbalanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha1-6D46fj8wCzTLnYf2FfoMvzV2kO4=
 
+basic-ftp@^4.6.6:
+  version "4.6.6"
+  resolved "https://registry.nlark.com/basic-ftp/download/basic-ftp-4.6.6.tgz#c37abae3b3bffa131027adb6a5b60938d9109501"
+  integrity sha1-w3q647O/+hMQJ622pbYJONkQlQE=
+
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.nlark.com/binary-extensions/download/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"

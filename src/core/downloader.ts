@@ -2,30 +2,31 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-31 22:30:14
+ * @LastEditTime : 2021-06-01 15:57:29
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import fs from 'fs';
 import fse from 'fs-extra';
-import { db, logger, env } from '../utils';
+import { db, logger, env, timeout } from '../utils';
 import { mapLimit } from 'async';
-import PromiseFtp from 'promise-ftp';
+import * as FTP from 'basic-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
 import { outputPath, isFtp } from '../const';
 import dayjs from 'dayjs';
 
-const ftp = new PromiseFtp();
+const client = new FTP.Client();
+client.ftp.verbose = true;
 
 const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
 
 type BaseItemType = VideoUrlItems & { cid: string };
 
 // import fs from 'fs';
-let cancelTokenSource: null | CancelTokenSource = null;
+// let cancelTokenSource: null | CancelTokenSource = null;
 
 export const downloadVideo = async (
   url: string,
@@ -37,14 +38,12 @@ export const downloadVideo = async (
     if (!url) {
       return { headerSize: 0 };
     }
-    cancelTokenSource = axios.CancelToken.source();
     const { data, headers } = await axios({
       method: 'get',
       url,
       headers: {
         Cookie: '',
       },
-      cancelToken: cancelTokenSource.token,
       responseType: 'stream',
     });
     return {
@@ -61,21 +60,11 @@ export const downloadVideo = async (
 async function ftpLink() {
   try {
     if (isFtp) {
-      logger.info(`FTP状态：${ftp.getConnectionStatus()}`);
-      const serverMessage = await ftp.connect({
+      await client.access({
         host: env.BILIBILI_FTP_HOST,
         user: env.BILIBILI_FTP_USER,
         password: env.BILIBILI_FTP_PASS,
       });
-
-      const errFile = db.get('errorFile').value();
-      if (errFile) {
-        logger.info('删除错误文件');
-        await ftp.delete(errFile);
-        await db.set('errorFile', '').write();
-      }
-      logger.info(serverMessage);
-      // ftp.mkdir(baseFtpPath, true)
     } else {
       logger.info(`存储到本地：${outputPath}`);
     }
@@ -86,12 +75,6 @@ async function ftpLink() {
   return false;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// let errTimer: any = 0
-
-// 下载列表
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let errTimer: any = 0;
 async function downloadList(
   queue: Array<BaseItemType>,
 ): Promise<Array<string>> {
@@ -112,11 +95,11 @@ async function downloadList(
       1,
       async ({ bvid, name, cid }) => {
         try {
-          clearTimeout(errTimer);
           if (notes.includes(cid)) {
             return bvid;
           }
 
+          await timeout(2000);
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
 
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
@@ -124,25 +107,6 @@ async function downloadList(
           const fileName = `${date}-${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
           const localPath = `${outputPath}/${name}/${fileName}`;
-
-          // 超时删除
-          errTimer = setTimeout(async () => {
-            if (
-              cancelTokenSource &&
-              typeof cancelTokenSource.cancel === 'function'
-            ) {
-              logger.error('清除下载');
-              cancelTokenSource.cancel('清除超时文件');
-              if (isFtp) {
-                await db.set('errorFile', filePos).write();
-                ftp.destroy();
-              } else {
-                fse.removeSync(localPath);
-              }
-            }
-            cancelTokenSource = null;
-            reject('未下载完成');
-          }, 480000);
 
           logger.info(`开始下载：${url}`);
           const { data, headerSize } = await downloadVideo(url);
@@ -152,7 +116,7 @@ async function downloadList(
 
           logger.info(`保存中...`);
           const uploadFtp = await postData(
-            ftp,
+            client,
             data,
             filePath,
             fileName,
@@ -161,7 +125,7 @@ async function downloadList(
 
           logger.info(`判断是否下载完成...`);
           const fileSize = isFtp
-            ? await ftp.size(filePos)
+            ? await client.size(filePos)
             : fs.statSync(localPath).size;
 
           // 校验下载完整性及上传状态
@@ -176,17 +140,17 @@ async function downloadList(
           // 删除不正确的文件
           if (!isOver && uploadFtp) {
             if (isFtp) {
-              await ftp.delete(filePos);
+              await client.remove(filePos);
             } else {
               fse.removeSync(localPath);
             }
           }
 
-          /* if (isOver) {
+          if (isOver) {
             notes.push(cid);
             notes.push(bvid);
             await db.set('notes', notes).write();
-          } */
+          }
 
           return isOver ? bvid : '';
         } catch (e) {
@@ -195,10 +159,7 @@ async function downloadList(
         }
       },
       async (err, results) => {
-        clearTimeout(errTimer);
-        if (isFtp) {
-          await ftp.end();
-        }
+        // clearTimeout(errTimer);
         if (err) {
           return reject(err);
         }
@@ -286,8 +247,6 @@ export const downloader = async (): Promise<void> => {
       }
     }
 
-    // console.log(downSuccess)
-
     logger.info('删除已下载完成的bvid');
     downSuccess.forEach(async (bvid: string) => {
       await db.get('queue').remove({ bvid }).write();
@@ -296,5 +255,9 @@ export const downloader = async (): Promise<void> => {
     logger.info('+++ 本次下载完成 +++');
   } catch (e) {
     logger.error(e);
+  } finally {
+    if (isFtp) {
+      client.close();
+    }
   }
 };
