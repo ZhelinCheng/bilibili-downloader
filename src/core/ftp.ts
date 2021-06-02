@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 17:09:10
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-01 15:39:49
- * @FilePath     : /bilibili-downloader/src/core/ftp.ts
+ * @LastEditTime : 2021-06-02 23:37:00
+ * @FilePath     : \bilibili-downloader\src\core\ftp.ts
  * @Description  : 未添加文件描述
  */
 
@@ -35,10 +35,17 @@ export const postData = async (
   destPath: string,
   fileName: string,
   localPath: string,
+  baseFtpPath: string,
 ): Promise<boolean> => {
   try {
     if (isFtp) {
-      await client.ensureDir(destPath);
+      const dirs = destPath.split(/\/|\\/);
+      const lastDir = dirs.pop();
+
+      await client.cd(baseFtpPath);
+      if (lastDir) {
+        await client.ensureDir(lastDir);
+      }
       await client.uploadFrom(input, `${destPath}/${fileName}`);
       return true;
     } else {

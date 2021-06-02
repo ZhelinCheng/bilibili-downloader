@@ -122,6 +122,7 @@ async function downloadList(
             filePath,
             fileName,
             localPath,
+            baseFtpPath,
           );
 
           logger.info(`判断是否下载完成...`);
