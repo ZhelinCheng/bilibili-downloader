@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-01 23:50:14
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2021-06-04 15:43:17
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -16,9 +16,9 @@ import * as FTP from 'basic-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
 import { outputPath, isFtp } from '../const';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
-const client = new FTP.Client();
+const client = new FTP.Client(180 * 1000);
 client.ftp.log = logger.info.bind(logger);
 client.ftp.verbose = true;
 
@@ -87,7 +87,7 @@ async function downloadList(
     return [];
   }
 
-  const date = dayjs().format('YYYYMMDDHHmm');
+  // const date = dayjs().format('YYYYMMDDHHmm');
   const notes = db.get('notes').value() || [];
 
   return new Promise((resolve, reject) => {
@@ -105,7 +105,7 @@ async function downloadList(
 
           const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
           const filePath = `${baseFtpPath}/${name}`;
-          const fileName = `${date}-${cid}.${ext}`;
+          const fileName = `${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
           const localPath = `${outputPath}/${name}/${fileName}`;
 
