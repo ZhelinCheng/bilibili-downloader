@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-04 15:43:17
+ * @LastEditTime : 2021-07-13 17:34:45
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -18,7 +18,7 @@ import { postData } from './ftp';
 import { outputPath, isFtp } from '../const';
 // import dayjs from 'dayjs';
 
-const client = new FTP.Client(180 * 1000);
+const client = new FTP.Client();
 client.ftp.log = logger.info.bind(logger);
 client.ftp.verbose = true;
 
