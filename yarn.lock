@@ -316,10 +316,10 @@
   resolved "https://registry.nlark.com/@types/parse-json/download/@types/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha1-L4u0QUNNFjs1+4/9zNcTiSf/uMA=
 
-"@types/ping@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.nlark.com/@types/ping/download/@types/ping-0.2.0.tgz#b97db062444e964ea6cb3a727e161cd37708e922"
-  integrity sha1-uX2wYkROlk6myzpyfhYc03cI6SI=
+"@types/ping@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@types/ping/-/ping-0.4.0.tgz#3821222708c7e67a98e5805eadc3b19b73197d9a"
+  integrity sha512-lJ2OK8FbOHxXhECZ9JRrKxeU3+BlxKgLoaa6mB5L27Hd2uZIT6GH/C/6QbZQiWIjzBR+f2O4gOtcZBzQzKDGRQ==
 
 "@types/pino-pretty@*":
   version "4.7.0"
