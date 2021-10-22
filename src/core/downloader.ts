@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-07-13 17:34:45
+ * @LastEditTime : 2021-10-22 15:00:50
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -60,7 +60,7 @@ export const downloadVideo = async (
 
 async function ftpLink() {
   try {
-    if (isFtp) {
+    if (client.closed && isFtp) {
       await client.access({
         host: env.BILIBILI_FTP_HOST,
         user: env.BILIBILI_FTP_USER,
@@ -258,8 +258,9 @@ export const downloader = async (): Promise<void> => {
   } catch (e) {
     logger.error(e);
   } finally {
-    if (isFtp) {
+    if (isFtp && !client.closed) {
       client.close();
     }
+    logger.info(`关闭FTP：${client.closed}`);
   }
 };
