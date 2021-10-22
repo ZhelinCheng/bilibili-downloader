@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-22 15:00:50
+ * @LastEditTime : 2021-10-22 15:54:55
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -260,7 +260,7 @@ export const downloader = async (): Promise<void> => {
   } finally {
     if (isFtp && !client.closed) {
       client.close();
+      logger.info(`关闭FTP：${client.closed}`);
     }
-    logger.info(`关闭FTP：${client.closed}`);
   }
 };
