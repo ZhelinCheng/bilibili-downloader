@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-07-13 17:34:45
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-10-22 00:46:50
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -15,14 +15,14 @@ import { mapLimit } from 'async';
 import * as FTP from 'basic-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
-import { outputPath, isFtp } from '../const';
+import { outputPath, isFtp, BASE_FTP_PAtH } from '../const';
 // import dayjs from 'dayjs';
 
 const client = new FTP.Client();
 client.ftp.log = logger.info.bind(logger);
 client.ftp.verbose = true;
 
-const baseFtpPath = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
+const baseFtpPath = BASE_FTP_PAtH;
 
 type BaseItemType = VideoUrlItems & { cid: string };
 
@@ -48,7 +48,7 @@ export const downloadVideo = async (
       responseType: 'stream',
     });
     return {
-      data,
+      data: data as NodeJS.ReadStream,
       headerSize: Number(headers['content-length']),
     };
   } catch (e) {
@@ -103,7 +103,10 @@ async function downloadList(
           await timeout(2000);
           logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
 
-          const { url, size, ext } = await getVideoDownloadUrl(bvid, cid);
+          const { url, size, ext, length } = await getVideoDownloadUrl(
+            bvid,
+            cid,
+          );
           const filePath = `${baseFtpPath}/${name}`;
           const fileName = `${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
@@ -111,7 +114,7 @@ async function downloadList(
 
           logger.info(`开始下载：${url}`);
           const { data, headerSize } = await downloadVideo(url);
-          if (!data || size <= 0) {
+          if (!data || size <= 0 || length >= 300) {
             return '';
           }
 
@@ -172,7 +175,7 @@ async function downloadList(
 }
 
 // 获取分集信息
-async function getPageList(
+export async function getPageList(
   queue: Array<VideoUrlItems>,
 ): Promise<Array<Array<BaseItemType>>> {
   logger.info('开始获取分集列表信息');
@@ -195,10 +198,12 @@ async function getPageList(
   });
 }
 
-export const downloader = async (): Promise<void> => {
+export const downloader = async (upListDownload = false): Promise<void> => {
   try {
     const downSuccess: string[] = [];
-    const queue = db.get('queue').value();
+    const queue = upListDownload
+      ? db.get('queueUp').value()
+      : db.get('queue').value();
     if (queue.length <= 0) {
       return;
     }

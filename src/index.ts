@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-31 21:54:25
- * @FilePath     : /bilibili-downloader/src/index.ts
+ * @LastEditTime : 2021-10-22 00:30:46
+ * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
 import { logger, db, env, isEnv } from './utils';
@@ -16,7 +16,9 @@ import {
   INCLUDE_UID_ITEMS,
   EXCLUDE_UID_ITEMS,
 } from './const';
-import { downloader, getVideosUrl } from './core';
+import { downloader, getVideosUrl, upList, getVipStatus } from './core';
+
+const args = process.argv.splice(2);
 
 let timer: CronJob;
 
@@ -35,7 +37,7 @@ async function netOnline() {
   }
 }
 
-async function bootstrap() {
+async function bootstrap(mid = '') {
   if (!isEnv) {
     logger.error(
       `未找到.env文件，请参考：https://github.com/ZhelinCheng/bilibili-downloader#readme`,
@@ -52,6 +54,19 @@ async function bootstrap() {
 
   if (!isFtp) {
     fse.ensureDirSync(outputPath);
+  }
+
+  process.env.BILIBILI_IS_VIP = (await getVipStatus()) ? 'yes' : '';
+
+  // 直接下载
+  if (mid) {
+    const isOnline = await netOnline();
+    if (!isOnline) {
+      return;
+    }
+    await upList();
+    await downloader(Boolean(mid));
+    return;
   }
 
   const interval =
@@ -86,7 +101,14 @@ async function bootstrap() {
   );
 }
 
-bootstrap()
+const mid = args
+  .map((arg) => {
+    const exec = /--up=(?<mid>\d+)/gim.exec(arg);
+    return exec?.groups?.mid;
+  })
+  .filter((arg) => arg)[0];
+
+bootstrap(mid)
   .then(() => {
     logger.info('启动成功');
     logger.info(`视频保存位置：${isFtp ? 'FTP服务器' : '本地'}`);

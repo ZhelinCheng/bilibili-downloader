@@ -35,3 +35,6 @@ export const EXCLUDE_UID_ITEMS = readConf('exclude');
 
 // 需要的UID
 export const INCLUDE_UID_ITEMS = readConf('include');
+
+// FTP路径
+export const BASE_FTP_PAtH = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';

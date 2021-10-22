@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:52:51
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-24 00:37:50
+ * @LastEditTime : 2021-10-22 00:31:56
  * @FilePath     : \bilibili-downloader\src\utils\env.ts
  * @Description  : 未添加文件描述
  */
@@ -28,7 +28,8 @@ interface EnvType {
   BILIBILI_EXCLUDE_UID?: string;
   BILIBILI_OUTPUT_PATH?: string;
   BILIBILI_LISTEN_INTERVAL?: string;
+  BILIBILI_IS_VIP?: string;
 }
 
-export const env = (process.env as unknown) as EnvType;
+export const env = process.env as unknown as EnvType;
 export const isEnv = fs.existsSync(envPath);

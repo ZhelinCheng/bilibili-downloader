@@ -2,17 +2,22 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-18 21:20:04
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-04-14 16:55:18
- * @FilePath     : /bilibili-downloader/src/utils/request.ts
+ * @LastEditTime : 2021-10-21 22:43:22
+ * @FilePath     : \bilibili-downloader\src\utils\request.ts
  * @Description  : 未添加文件描述
  */
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosPromise,
+} from 'axios';
 import { logger } from './index';
 import { env } from './env';
 
 axios.defaults.timeout = 5000;
 
-axios.defaults.headers = {
+axios.defaults.headers.common = {
   Cookie: env.BILIBILI_COOKIE,
   Accept: '*/*',
   referer: 'https://t.bilibili.com/',
@@ -45,8 +50,6 @@ axios.interceptors.response.use(
   },
 );
 
-export const rq = function <T>(
-  config: AxiosRequestConfig,
-): Promise<AxiosResponse<T>> {
-  return axios(config);
+export const rq = function <T>(config: AxiosRequestConfig): AxiosPromise<T> {
+  return axios(config) as AxiosPromise<T>;
 };

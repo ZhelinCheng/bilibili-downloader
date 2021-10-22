@@ -334,30 +334,6 @@
   resolved "https://registry.npmmirror.com/@types/ping/download/@types/ping-0.4.0.tgz#3821222708c7e67a98e5805eadc3b19b73197d9a"
   integrity sha1-OCEiJwjH5nqY5YBercOxm3MZfZo=
 
-"@types/pino-pretty@*":
-  version "4.7.1"
-  resolved "https://registry.nlark.com/@types/pino-pretty/download/@types/pino-pretty-4.7.1.tgz#2ce3f56f3cf4f9632374419d616ae2e6c933b935"
-  integrity sha1-LOP1bzz0+WMjdEGdYWri5skzuTU=
-  dependencies:
-    "@types/pino" "*"
-
-"@types/pino-std-serializers@*":
-  version "2.4.1"
-  resolved "https://registry.nlark.com/@types/pino-std-serializers/download/@types/pino-std-serializers-2.4.1.tgz#f8bd52a209c8b3c97d1533b1ba27f57c816382bf"
-  integrity sha1-+L1SognIs8l9FTOxuif1fIFjgr8=
-  dependencies:
-    "@types/node" "*"
-
-"@types/pino@*", "@types/pino@^6.3.12":
-  version "6.3.12"
-  resolved "https://registry.npmmirror.com/@types/pino/download/@types/pino-6.3.12.tgz#4425db6ced806109c3df957100cba9dfcd73c228"
-  integrity sha1-RCXbbO2AYQnD35VxAMup381zwig=
-  dependencies:
-    "@types/node" "*"
-    "@types/pino-pretty" "*"
-    "@types/pino-std-serializers" "*"
-    sonic-boom "^2.1.0"
-
 "@typescript-eslint/eslint-plugin@5.1.0":
   version "5.1.0"
   resolved "https://registry.npmmirror.com/@typescript-eslint/eslint-plugin/download/@typescript-eslint/eslint-plugin-5.1.0.tgz?cache=0&sync_timestamp=1634717116035&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40typescript-eslint%2Feslint-plugin%2Fdownload%2F%40typescript-eslint%2Feslint-plugin-5.1.0.tgz#381c188dfab12f7a2c7b6a8ba2402d6273eadeaa"
@@ -2655,7 +2631,7 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-sonic-boom@^2.1.0, sonic-boom@^2.2.0, sonic-boom@^2.2.1:
+sonic-boom@^2.2.0, sonic-boom@^2.2.1:
   version "2.3.0"
   resolved "https://registry.npmmirror.com/sonic-boom/download/sonic-boom-2.3.0.tgz#b1622bbd29111ed12be94a644ea6b586b6daea70"
   integrity sha1-sWIrvSkRHtEr6UpkTqa1hrba6nA=

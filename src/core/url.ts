@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-01 16:05:10
- * @FilePath     : /bilibili-downloader/src/core/url.ts
+ * @LastEditTime : 2021-10-22 00:39:05
+ * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
@@ -288,7 +288,6 @@ interface VideoDownloadUrl {
 }
 
 // 获取用户是否是大会员
-let isVip = false;
 export const getVipStatus = async (): Promise<boolean> => {
   try {
     const nowTime = Date.now();
@@ -318,6 +317,7 @@ export const getVideoDownloadUrl = async (
 ): Promise<{
   size: number;
   url: string;
+  length: number;
   ext: 'flv' | 'mp4';
 }> => {
   try {
@@ -328,7 +328,7 @@ export const getVideoDownloadUrl = async (
       data: VideoDownloadUrl;
     }>({
       url: 'https://api.bilibili.com/x/player/playurl',
-      params: isVip
+      params: env.BILIBILI_IS_VIP
         ? {
             bvid,
             cid,
@@ -344,13 +344,14 @@ export const getVideoDownloadUrl = async (
     });
 
     if (code === 0 && data && Array.isArray(data.durl)) {
-      const { url = '', size } = data.durl[0];
+      const { url = '', size, length } = data.durl[0];
       const urlExt = /\.(?<ext>mp4|flv)\?/.exec(url) || {
         groups: { ext: 'flv' },
       };
       return {
         url,
         size,
+        length: Math.floor(length / 1000),
         ext:
           urlExt && urlExt.groups
             ? (urlExt.groups.ext as 'flv' | 'mp4')
@@ -364,6 +365,7 @@ export const getVideoDownloadUrl = async (
   return {
     url: '',
     size: 0,
+    length: 100000000,
     ext: 'mp4',
   };
 };
@@ -420,7 +422,7 @@ const excludeUid = new Set(EXCLUDE_UID_ITEMS);
 // 获取列表
 export const getVideosUrl = async (): Promise<boolean> => {
   try {
-    isVip = await getVipStatus();
+    //  isVip = await getVipStatus();
     const queue = db.get('queue').value() || [];
     const filterSet = new Set(queue.map(({ bvid }) => bvid));
 
