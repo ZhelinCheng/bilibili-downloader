@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 17:09:10
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-06-02 23:37:00
+ * @LastEditTime : 2021-10-24 01:30:00
  * @FilePath     : \bilibili-downloader\src\core\ftp.ts
  * @Description  : 未添加文件描述
  */
@@ -49,7 +49,7 @@ export const postData = async (
       await client.uploadFrom(input, `${destPath}/${fileName}`);
       return true;
     } else {
-      fse.ensureDirSync(localPath.replace(/(\/|\\)\d+-\d+\.(mp4|flv)$/, ''));
+      fse.ensureDirSync(localPath.replace(/(\\|\/)\d+\.(mp4|flv)$/, ''));
       const status = await localSave(input, localPath);
       return status;
     }

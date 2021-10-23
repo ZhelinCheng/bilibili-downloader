@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-22 00:30:46
+ * @LastEditTime : 2021-10-23 02:13:27
  * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
@@ -64,8 +64,8 @@ async function bootstrap(mid = '') {
     if (!isOnline) {
       return;
     }
-    await upList();
-    await downloader(Boolean(mid));
+    await upList(mid);
+    await downloader();
     return;
   }
 

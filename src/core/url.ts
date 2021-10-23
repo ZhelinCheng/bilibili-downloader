@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-22 00:39:05
+ * @LastEditTime : 2021-10-23 02:14:55
  * @FilePath     : \bilibili-downloader\src\core\url.ts
  * @Description  : 未添加文件描述
  */
@@ -284,6 +284,7 @@ interface VideoDownloadUrl {
   durl: Array<{
     url: string;
     size: number;
+    length: number;
   }>;
 }
 

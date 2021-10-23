@@ -2,12 +2,12 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-10-21 22:29:10
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-22 00:16:53
+ * @LastEditTime : 2021-10-24 01:45:57
  * @FilePath     : \bilibili-downloader\src\core\up.ts
  * @Description  : 未添加文件描述
  */
 
-import { getPageList } from './downloader';
+// import { getPageList } from './downloader';
 import { logger, rq, db } from '../utils';
 
 interface VideoItem {
@@ -69,13 +69,13 @@ async function getVideos(
   };
 }
 
-async function upList() {
+async function upList(mid: string) {
   let next = true;
   let items: VideoItem[] = [];
   let pn = 1;
 
   while (next && pn < 10) {
-    const data = await getVideos('15385187', pn++);
+    const data = await getVideos(mid, pn++);
     next = data.next;
     items = items.concat(data.items);
   }
@@ -88,7 +88,7 @@ async function upList() {
     };
   });
 
-  await db.set<'queue'>('queueUp', queue).write();
+  await db.set<'queue'>('queue', queue).write();
 }
 
 export { upList };

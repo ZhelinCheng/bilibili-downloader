@@ -2,13 +2,14 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-22 00:46:50
+ * @LastEditTime : 2021-10-24 01:31:43
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
 import axios from 'axios';
 import fs from 'fs';
+import path from 'path';
 import fse from 'fs-extra';
 import { db, logger, env, timeout } from '../utils';
 import { mapLimit } from 'async';
@@ -60,7 +61,7 @@ export const downloadVideo = async (
 
 async function ftpLink() {
   try {
-    if (isFtp) {
+    if (client.closed && isFtp) {
       await client.access({
         host: env.BILIBILI_FTP_HOST,
         user: env.BILIBILI_FTP_USER,
@@ -110,7 +111,7 @@ async function downloadList(
           const filePath = `${baseFtpPath}/${name}`;
           const fileName = `${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
-          const localPath = `${outputPath}/${name}/${fileName}`;
+          const localPath = path.join(outputPath, name, fileName);
 
           logger.info(`开始下载：${url}`);
           const { data, headerSize } = await downloadVideo(url);
@@ -198,12 +199,10 @@ export async function getPageList(
   });
 }
 
-export const downloader = async (upListDownload = false): Promise<void> => {
+export const downloader = async (): Promise<void> => {
   try {
     const downSuccess: string[] = [];
-    const queue = upListDownload
-      ? db.get('queueUp').value()
-      : db.get('queue').value();
+    const queue = db.get('queue').value();
     if (queue.length <= 0) {
       return;
     }
@@ -263,8 +262,9 @@ export const downloader = async (upListDownload = false): Promise<void> => {
   } catch (e) {
     logger.error(e);
   } finally {
-    if (isFtp) {
+    if (isFtp && !client.closed) {
       client.close();
+      logger.info(`关闭FTP：${client.closed}`);
     }
   }
 };
