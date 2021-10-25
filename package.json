@@ -59,7 +59,7 @@
     "@types/lowdb": "^1.0.11",
     "@types/ping": "^0.4.0",
     "async": "^3.2.1",
-    "axios": "^0.23.0",
+    "axios": "^0.24.0",
     "basic-ftp": "^4.6.6",
     "cheerio": "^1.0.0-rc.5",
     "cron": "^1.8.2",
