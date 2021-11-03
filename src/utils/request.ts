@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-18 21:20:04
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-21 22:43:22
+ * @LastEditTime : 2021-11-03 22:09:08
  * @FilePath     : \bilibili-downloader\src\utils\request.ts
  * @Description  : 未添加文件描述
  */
@@ -15,7 +15,7 @@ import axios, {
 import { logger } from './index';
 import { env } from './env';
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 8000;
 
 axios.defaults.headers.common = {
   Cookie: env.BILIBILI_COOKIE,
