@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-24 02:03:34
+ * @LastEditTime : 2021-11-03 21:52:56
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -85,6 +85,7 @@ async function downloadList(
   const isConnFtp = await ftpLink();
 
   if (!isConnFtp) {
+    logger.error('FTP连接失败');
     return [];
   }
 
@@ -230,35 +231,40 @@ export const downloader = async (): Promise<void> => {
     // 状态1：有下载失败，需要重新下载，状态2：表示成功
     const statusMemo: { [key: string]: number } = {};
     const downStatusLen = downStatus.length;
-    downQueue.forEach(({ bvid }, index: number) => {
-      // 本次下载状态
-      const status = downStatus[index];
-      // 保存的下载状态
-      const saveStatus = statusMemo[bvid];
 
-      // 保存
-      if (!saveStatus) {
-        statusMemo[bvid] = 2;
+    if (downStatusLen === 0) {
+      logger.info('未执行下载');
+    } else {
+      downQueue.forEach(({ bvid }, index: number) => {
+        // 本次下载状态
+        const status = downStatus[index];
+        // 保存的下载状态
+        const saveStatus = statusMemo[bvid];
+
+        // 保存
+        if (!saveStatus) {
+          statusMemo[bvid] = 2;
+        }
+
+        // 当下载失败时
+        if (!status && downStatusLen) {
+          statusMemo[bvid] = 1;
+        }
+      });
+
+      for (const [key, val] of Object.entries(statusMemo)) {
+        if (val === 2) {
+          downSuccess.push(key);
+        }
       }
 
-      // 当下载失败时
-      if (!status && downStatusLen) {
-        statusMemo[bvid] = 1;
-      }
-    });
+      logger.info('删除已下载完成的bvid');
+      downSuccess.forEach(async (bvid: string) => {
+        await db.get('queue').remove({ bvid }).write();
+      });
 
-    for (const [key, val] of Object.entries(statusMemo)) {
-      if (val === 2) {
-        downSuccess.push(key);
-      }
+      logger.info('+++ 本次下载完成 +++');
     }
-
-    logger.info('删除已下载完成的bvid');
-    downSuccess.forEach(async (bvid: string) => {
-      await db.get('queue').remove({ bvid }).write();
-    });
-
-    logger.info('+++ 本次下载完成 +++');
   } catch (e) {
     logger.error(e);
   } finally {
