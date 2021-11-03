@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 14:59:08
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-23 02:11:06
+ * @LastEditTime : 2021-10-24 20:51:03
  * @FilePath     : \bilibili-downloader\src\utils\database.ts
  * @Description  : 未添加文件描述
  */
@@ -12,6 +12,7 @@ import { resolve } from 'path';
 import { VideoUrlItems } from '../core';
 
 const adapter = new FileSync<{
+  uid: string;
   notes: string[];
   queue: VideoUrlItems[];
   errorFile: string;
@@ -20,6 +21,7 @@ const adapter = new FileSync<{
 const db = low(adapter);
 
 db.defaults({
+  uid: '',
   notes: [],
   queue: [],
   errorFile: '',

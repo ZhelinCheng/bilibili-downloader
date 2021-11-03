@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2020-07-30 15:57:41
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-23 02:13:27
+ * @LastEditTime : 2021-10-24 20:55:23
  * @FilePath     : \bilibili-downloader\src\index.ts
  * @Description  : 入口文件
  */
@@ -60,6 +60,14 @@ async function bootstrap(mid = '') {
 
   // 直接下载
   if (mid) {
+    const uid = db.get('uid').value();
+    if (uid !== mid.toString()) {
+      console.log('重置up主');
+      await db.set('notes', []).write();
+      await db.set('queue', []).write();
+      await db.set('uid', mid.toString()).write();
+    }
+
     const isOnline = await netOnline();
     if (!isOnline) {
       return;
