@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-18 20:19:40
  * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-27 21:06:33
- * @FilePath     : /bilibili-downloader/src/utils/index.ts
+ * @LastEditTime : 2021-11-03 22:07:45
+ * @FilePath     : \bilibili-downloader\src\utils\index.ts
  * @Description  : 未添加文件描述
  */
 
@@ -13,9 +13,12 @@ export * from './request';
 export * from './database';
 
 export const logger = pino({
-  prettyPrint: {
-    colorize: true,
-    translateTime: 'SYS:yyyy-mm-dd HH:MM:ss',
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      translateTime: 'SYS:standard',
+    },
   },
 });
 
