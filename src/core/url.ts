@@ -1,9 +1,9 @@
 /*
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
- * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-23 02:14:55
- * @FilePath     : \bilibili-downloader\src\core\url.ts
+ * @LastEditors  : 程哲林
+ * @LastEditTime : 2021-12-08 11:45:01
+ * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 import { rq, env, db, logger } from '../utils';
@@ -282,6 +282,7 @@ interface VideoPageType {
 
 interface VideoDownloadUrl {
   durl: Array<{
+    backup_url: string[];
     url: string;
     size: number;
     length: number;
@@ -345,12 +346,12 @@ export const getVideoDownloadUrl = async (
     });
 
     if (code === 0 && data && Array.isArray(data.durl)) {
-      const { url = '', size, length } = data.durl[0];
+      const { url = '', size, length, backup_url } = data.durl[0];
       const urlExt = /\.(?<ext>mp4|flv)\?/.exec(url) || {
         groups: { ext: 'flv' },
       };
       return {
-        url,
+        url: backup_url[0],
         size,
         length: Math.floor(length / 1000),
         ext:
