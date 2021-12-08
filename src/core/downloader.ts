@@ -1,9 +1,9 @@
 /*
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
- * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-11-03 21:52:56
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditors  : 程哲林
+ * @LastEditTime : 2021-12-08 13:46:30
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -44,7 +44,7 @@ export const downloadVideo = async (
       method: 'get',
       url,
       headers: {
-        Cookie: '',
+        referer: 'https://www.bilibili.com/video/av99999999',
       },
       responseType: 'stream',
     });
