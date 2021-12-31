@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2021-12-31 14:42:17
+ * @LastEditTime : 2021-12-31 14:58:52
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -67,8 +67,6 @@ async function ftpLink() {
         user: env.BILIBILI_FTP_USER,
         password: env.BILIBILI_FTP_PASS,
       });
-    } else {
-      logger.info(`存储到本地：${outputPath}`);
     }
     return true;
   } catch (e) {
