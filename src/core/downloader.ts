@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2021-12-31 11:29:25
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2021-12-31 14:42:17
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -135,6 +135,9 @@ async function downloadList(
           );
 
           logger.info(`判断是否下载完成...`);
+
+          // 再次连接FTP
+          await ftpLink();
           const fileSize = isFtp
             ? await client.size(filePos)
             : fs.statSync(localPath).size;
