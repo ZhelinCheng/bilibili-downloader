@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-01-01 23:30:14
+ * @LastEditTime : 2022-01-01 23:33:25
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -233,7 +233,13 @@ export const downloader = async (): Promise<void> => {
       });
     }
 
-    logger.info(`执行下载${downQueue.length}条`);
+    const downQueueLen = downQueue.length;
+    logger.info(`执行下载${downQueueLen}条`);
+
+    if (downQueueLen <= 0) {
+      return logger.info('未执行下载');
+    }
+
     // 执行下载
     const downStatus = await downloadList(downQueue);
 
@@ -241,7 +247,7 @@ export const downloader = async (): Promise<void> => {
     const statusMemo: { [key: string]: number } = {};
     const downStatusLen = downStatus.length;
 
-    if (downStatusLen === 0 || downQueue.length <= 0) {
+    if (downStatusLen === 0) {
       logger.info('未执行下载');
     } else {
       downQueue.forEach(({ bvid }, index: number) => {
