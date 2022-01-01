@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-01-01 22:06:50
+ * @LastEditTime : 2022-01-01 23:30:14
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -241,7 +241,7 @@ export const downloader = async (): Promise<void> => {
     const statusMemo: { [key: string]: number } = {};
     const downStatusLen = downStatus.length;
 
-    if (downStatusLen === 0) {
+    if (downStatusLen === 0 || downQueue.length <= 0) {
       logger.info('未执行下载');
     } else {
       downQueue.forEach(({ bvid }, index: number) => {
