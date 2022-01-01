@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2021-12-31 14:58:52
+ * @LastEditTime : 2022-01-01 22:03:19
  * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -119,6 +119,9 @@ async function downloadList(
           }
 
           if (length >= 600) {
+            notes.push(cid);
+            notes.push(bvid);
+            await db.set('notes', notes).write();
             return bvid;
           }
 
