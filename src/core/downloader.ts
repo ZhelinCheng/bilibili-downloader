@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-01-01 23:33:25
- * @FilePath     : \bilibili-downloader\src\core\downloader.ts
+ * @LastEditTime : 2022-01-13 15:03:35
+ * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -237,19 +237,15 @@ export const downloader = async (): Promise<void> => {
     logger.info(`执行下载${downQueueLen}条`);
 
     if (downQueueLen <= 0) {
-      return logger.info('未执行下载');
-    }
-
-    // 执行下载
-    const downStatus = await downloadList(downQueue);
-
-    // 状态1：有下载失败，需要重新下载，状态2：表示成功
-    const statusMemo: { [key: string]: number } = {};
-    const downStatusLen = downStatus.length;
-
-    if (downStatusLen === 0) {
       logger.info('未执行下载');
     } else {
+      // 执行下载
+      const downStatus = await downloadList(downQueue);
+
+      // 状态1：有下载失败，需要重新下载，状态2：表示成功
+      const statusMemo: { [key: string]: number } = {};
+      const downStatusLen = downStatus.length;
+
       downQueue.forEach(({ bvid }, index: number) => {
         // 本次下载状态
         const status = downStatus[index];
@@ -274,12 +270,13 @@ export const downloader = async (): Promise<void> => {
       }
 
       logger.info('删除已下载完成的bvid');
-      downSuccess.forEach(async (bvid: string) => {
-        await db.get('queue').remove({ bvid }).write();
-      });
-
-      logger.info('+++ 本次下载完成 +++');
     }
+
+    downSuccess.forEach(async (bvid: string) => {
+      await db.get('queue').remove({ bvid }).write();
+    });
+
+    logger.info('+++ 本次下载完成 +++');
   } catch (e) {
     logger.error(e);
   } finally {
