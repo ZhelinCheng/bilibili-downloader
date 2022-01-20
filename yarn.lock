@@ -23,136 +23,147 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@commitlint/cli@^13.2.1":
-  version "13.2.1"
-  resolved "https://registry.npmmirror.com/@commitlint/cli/download/@commitlint/cli-13.2.1.tgz#80ebd46beef6ceed3bb0c0842bcda8d02a3c91de"
-  integrity sha1-gOvUa+72zu07sMCEK82o0Co8kd4=
+"@commitlint/cli@^16.1.0":
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-16.1.0.tgz#022ad86008374b02974c9f3faf86affb785f4574"
+  integrity sha512-x5L1knvA3isRWBRVQx+Q6D45pA9139a2aZQYpxkljMG0dj4UHZkCnsYWpnGalxPxASI7nrI0KedKfS2YeQ55cQ==
   dependencies:
-    "@commitlint/format" "^13.2.0"
-    "@commitlint/lint" "^13.2.0"
-    "@commitlint/load" "^13.2.1"
-    "@commitlint/read" "^13.2.0"
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/format" "^16.0.0"
+    "@commitlint/lint" "^16.0.0"
+    "@commitlint/load" "^16.1.0"
+    "@commitlint/read" "^16.0.0"
+    "@commitlint/types" "^16.0.0"
     lodash "^4.17.19"
     resolve-from "5.0.0"
     resolve-global "1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/ensure@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/ensure/download/@commitlint/ensure-13.2.0.tgz?cache=0&sync_timestamp=1632795159262&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fensure%2Fdownload%2F%40commitlint%2Fensure-13.2.0.tgz#990c24f753781d1f14c1647c52d34a5730892e3d"
-  integrity sha1-mQwk91N4HR8UwWR8UtNKVzCJLj0=
+"@commitlint/config-validator@^16.1.0":
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-validator/-/config-validator-16.1.0.tgz#410979f713ed55cbb85504d46295c1fd2419dc4d"
+  integrity sha512-2cHeZPNTuf1JWbMqyA46MkExor5HMSgv8JrdmzEakUbJHUreh35/wN00FJf57qGs134exQW2thiSQ1IJUsVx2Q==
   dependencies:
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/types" "^16.0.0"
+    ajv "^6.12.6"
+
+"@commitlint/ensure@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/ensure/-/ensure-16.0.0.tgz#fdac1e60a944a1993deb33b5e8454c559abe9866"
+  integrity sha512-WdMySU8DCTaq3JPf0tZFCKIUhqxaL54mjduNhu8v4D2AMUVIIQKYMGyvXn94k8begeW6iJkTf9cXBArayskE7Q==
+  dependencies:
+    "@commitlint/types" "^16.0.0"
     lodash "^4.17.19"
 
-"@commitlint/execute-rule@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/execute-rule/download/@commitlint/execute-rule-13.2.0.tgz?cache=0&sync_timestamp=1632795158749&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fexecute-rule%2Fdownload%2F%40commitlint%2Fexecute-rule-13.2.0.tgz#e112159d6647bc5afe2f77c2080ef0f615fd541f"
-  integrity sha1-4RIVnWZHvFr+L3fCCA7w9hX9VB8=
+"@commitlint/execute-rule@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/execute-rule/-/execute-rule-16.0.0.tgz#824e11ba5b208c214a474ae52a51780d32d31ebc"
+  integrity sha512-8edcCibmBb386x5JTHSPHINwA5L0xPkHQFY8TAuDEt5QyRZY/o5DF8OPHSa5Hx2xJvGaxxuIz4UtAT6IiRDYkw==
 
-"@commitlint/format@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/format/download/@commitlint/format-13.2.0.tgz#eccfff0a09ced8533afb21b2b3a1e28176b109d5"
-  integrity sha1-7M//CgnO2FM6+yGys6HigXaxCdU=
+"@commitlint/format@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/format/-/format-16.0.0.tgz#6a6fb2c1e6460aff63cc6eca30a7807a96b0ce73"
+  integrity sha512-9yp5NCquXL1jVMKL0ZkRwJf/UHdebvCcMvICuZV00NQGYSAL89O398nhqrqxlbjBhM5EZVq0VGcV5+7r3D4zAA==
   dependencies:
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/types" "^16.0.0"
     chalk "^4.0.0"
 
-"@commitlint/is-ignored@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/is-ignored/download/@commitlint/is-ignored-13.2.0.tgz#532ddfb5d62a489ff4d3ad88bcbee44e8c7d2c8f"
-  integrity sha1-Uy3ftdYqSJ/0062IvL7kTox9LI8=
+"@commitlint/is-ignored@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/is-ignored/-/is-ignored-16.0.0.tgz#5ab4c4a9c7444c1a8540f50a0f1a907dfd78eb70"
+  integrity sha512-gmAQcwIGC/R/Lp0CEb2b5bfGC7MT5rPe09N8kOGjO/NcdNmfFSZMquwrvNJsq9hnAP0skRdHIsqwlkENkN4Lag==
   dependencies:
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/types" "^16.0.0"
     semver "7.3.5"
 
-"@commitlint/lint@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/lint/download/@commitlint/lint-13.2.0.tgz?cache=0&sync_timestamp=1632795158876&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Flint%2Fdownload%2F%40commitlint%2Flint-13.2.0.tgz#b568c96bd21c8fa8eec359a5e21d22743206761f"
-  integrity sha1-tWjJa9Icj6juw1ml4h0idDIGdh8=
+"@commitlint/lint@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-16.0.0.tgz#87151a935941073027907fd4752a2e3c83cebbfe"
+  integrity sha512-HNl15bRC0h+pLzbMzQC3tM0j1aESXsLYhElqKnXcf5mnCBkBkHzu6WwJW8rZbfxX+YwJmNljN62cPhmdBo8x0A==
   dependencies:
-    "@commitlint/is-ignored" "^13.2.0"
-    "@commitlint/parse" "^13.2.0"
-    "@commitlint/rules" "^13.2.0"
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/is-ignored" "^16.0.0"
+    "@commitlint/parse" "^16.0.0"
+    "@commitlint/rules" "^16.0.0"
+    "@commitlint/types" "^16.0.0"
 
-"@commitlint/load@^13.2.1":
-  version "13.2.1"
-  resolved "https://registry.npmmirror.com/@commitlint/load/download/@commitlint/load-13.2.1.tgz?cache=0&sync_timestamp=1633770425629&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fload%2Fdownload%2F%40commitlint%2Fload-13.2.1.tgz#d5d926dbd05021c02837c438ff1057025b28b745"
-  integrity sha1-1dkm29BQIcAoN8Q4/xBXAlsot0U=
+"@commitlint/load@^16.1.0":
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/load/-/load-16.1.0.tgz#7a884072ab915611080c5e99a1f1d999c05f4360"
+  integrity sha512-MtlEhKjP8jAF85jjX4mw8DUUwCxKsCgAc865hhpnwxjrfBcmGP7Up2AFE/M3ZMGDmSl1X1TMybQk/zohj8Cqdg==
   dependencies:
-    "@commitlint/execute-rule" "^13.2.0"
-    "@commitlint/resolve-extends" "^13.2.0"
-    "@commitlint/types" "^13.2.0"
-    "@endemolshinegroup/cosmiconfig-typescript-loader" "^3.0.2"
+    "@commitlint/config-validator" "^16.1.0"
+    "@commitlint/execute-rule" "^16.0.0"
+    "@commitlint/resolve-extends" "^16.1.0"
+    "@commitlint/types" "^16.0.0"
     chalk "^4.0.0"
     cosmiconfig "^7.0.0"
+    cosmiconfig-typescript-loader "^1.0.0"
     lodash "^4.17.19"
     resolve-from "^5.0.0"
     typescript "^4.4.3"
 
-"@commitlint/message@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/message/download/@commitlint/message-13.2.0.tgz?cache=0&sync_timestamp=1632795153802&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fmessage%2Fdownload%2F%40commitlint%2Fmessage-13.2.0.tgz#1a60f578551750a8d6b533be8a40541fc2e928a8"
-  integrity sha1-GmD1eFUXUKjWtTO+ikBUH8LpKKg=
+"@commitlint/message@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/message/-/message-16.0.0.tgz#4a467341fc6bc49e5a3ead005dd6aa36fa856b87"
+  integrity sha512-CmK2074SH1Ws6kFMEKOKH/7hMekGVbOD6vb4alCOo2+33ZSLUIX8iNkDYyrw38Jwg6yWUhLjyQLUxREeV+QIUA==
 
-"@commitlint/parse@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/parse/download/@commitlint/parse-13.2.0.tgz?cache=0&sync_timestamp=1632795158701&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fparse%2Fdownload%2F%40commitlint%2Fparse-13.2.0.tgz#48054602bd73dccbffee4f9ba8b2549c857ba0b7"
-  integrity sha1-SAVGAr1z3Mv/7k+bqLJUnIV7oLc=
+"@commitlint/parse@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/parse/-/parse-16.0.0.tgz#5ce05af14edff806effc702ba910fcb32fcb192a"
+  integrity sha512-F9EjFlMw4MYgBEqoRrWZZKQBzdiJzPBI0qFDFqwUvfQsMmXEREZ242T4R5bFwLINWaALFLHEIa/FXEPa6QxCag==
   dependencies:
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/types" "^16.0.0"
     conventional-changelog-angular "^5.0.11"
     conventional-commits-parser "^3.2.2"
 
-"@commitlint/read@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/read/download/@commitlint/read-13.2.0.tgz#2af580322ec6297478aba84fa8ec24fd27c35a54"
-  integrity sha1-KvWAMi7GKXR4q6hPqOwk/SfDWlQ=
+"@commitlint/read@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/read/-/read-16.0.0.tgz#92fab45d4e0e4d7d049427306500270b3e459221"
+  integrity sha512-H4T2zsfmYQK9B+JtoQaCXWBHUhgIJyOzWZjSfuIV9Ce69/OgHoffNpLZPF2lX6yKuDrS1SQFhI/kUCjVc/e4ew==
   dependencies:
-    "@commitlint/top-level" "^13.2.0"
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/top-level" "^16.0.0"
+    "@commitlint/types" "^16.0.0"
     fs-extra "^10.0.0"
     git-raw-commits "^2.0.0"
 
-"@commitlint/resolve-extends@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/resolve-extends/download/@commitlint/resolve-extends-13.2.0.tgz?cache=0&sync_timestamp=1632795153742&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fresolve-extends%2Fdownload%2F%40commitlint%2Fresolve-extends-13.2.0.tgz#74f48512eb1785abe07336a5208225fdf7fec327"
-  integrity sha1-dPSFEusXhavgczalIIIl/ff+wyc=
+"@commitlint/resolve-extends@^16.1.0":
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/resolve-extends/-/resolve-extends-16.1.0.tgz#4b199197c45ddb436b59ef319662de6870f68fd5"
+  integrity sha512-8182s6AFoUFX6+FT1PgQDt15nO2ogdR/EN8SYVAdhNXw1rLz8kT5saB/ICw567GuRAUgFTUMGCXy3ctMOXPEDg==
   dependencies:
+    "@commitlint/config-validator" "^16.1.0"
+    "@commitlint/types" "^16.0.0"
     import-fresh "^3.0.0"
     lodash "^4.17.19"
     resolve-from "^5.0.0"
     resolve-global "^1.0.0"
 
-"@commitlint/rules@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/rules/download/@commitlint/rules-13.2.0.tgz?cache=0&sync_timestamp=1632795158663&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Frules%2Fdownload%2F%40commitlint%2Frules-13.2.0.tgz#e272fbd4099c2fe98bca1277d7f8caa3578b8f43"
-  integrity sha1-4nL71AmcL+mLyhJ31/jKo1eLj0M=
+"@commitlint/rules@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/rules/-/rules-16.0.0.tgz#79d28c3678d2d1f7f1cdbedaedb30b01a86ee75b"
+  integrity sha512-AOl0y2SBTdJ1bvIv8nwHvQKRT/jC1xb09C5VZwzHoT8sE8F54KDeEzPCwHQFgUcWdGLyS10kkOTAH2MyA8EIlg==
   dependencies:
-    "@commitlint/ensure" "^13.2.0"
-    "@commitlint/message" "^13.2.0"
-    "@commitlint/to-lines" "^13.2.0"
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/ensure" "^16.0.0"
+    "@commitlint/message" "^16.0.0"
+    "@commitlint/to-lines" "^16.0.0"
+    "@commitlint/types" "^16.0.0"
     execa "^5.0.0"
 
-"@commitlint/to-lines@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/to-lines/download/@commitlint/to-lines-13.2.0.tgz?cache=0&sync_timestamp=1632795153643&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Fto-lines%2Fdownload%2F%40commitlint%2Fto-lines-13.2.0.tgz#e65d16340f353b496e90609b452f23f4b0be0b6a"
-  integrity sha1-5l0WNA81O0lukGCbRS8j9LC+C2o=
+"@commitlint/to-lines@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/to-lines/-/to-lines-16.0.0.tgz#799980a89072302445baf595e20092fb86f0a58a"
+  integrity sha512-iN/qU38TCKU7uKOg6RXLpD49wNiuI0TqMqybHbjefUeP/Jmzxa8ishryj0uLyVdrAl1ZjGeD1ukXGMTtvqz8iA==
 
-"@commitlint/top-level@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/top-level/download/@commitlint/top-level-13.2.0.tgz?cache=0&sync_timestamp=1632795159345&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Ftop-level%2Fdownload%2F%40commitlint%2Ftop-level-13.2.0.tgz#869814e8ac0fec6a6e1f2e9665a318e4dc979e1e"
-  integrity sha1-hpgU6KwP7GpuHy6WZaMY5NyXnh4=
+"@commitlint/top-level@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/top-level/-/top-level-16.0.0.tgz#7c2efc33cc37df839b3de558c0bc2eaddb64efe6"
+  integrity sha512-/Jt6NLxyFkpjL5O0jxurZPCHURZAm7cQCqikgPCwqPAH0TLgwqdHjnYipl8J+AGnAMGDip4FNLoYrtgIpZGBYw==
   dependencies:
     find-up "^5.0.0"
 
-"@commitlint/types@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.npmmirror.com/@commitlint/types/download/@commitlint/types-13.2.0.tgz?cache=0&sync_timestamp=1632795158963&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40commitlint%2Ftypes%2Fdownload%2F%40commitlint%2Ftypes-13.2.0.tgz#ed8128f9e41383f8f0ee1b0370c724826821e581"
-  integrity sha1-7YEo+eQTg/jw7hsDcMckgmgh5YE=
+"@commitlint/types@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/types/-/types-16.0.0.tgz#3c133f106d36132756c464071a7f2290966727a3"
+  integrity sha512-+0FvYOAS39bJ4aKjnYn/7FD4DfWkmQ6G/06I4F0Gvu4KS5twirEg8mIcLhmeRDOOKn4Tp8PwpLwBiSA6npEMQA==
   dependencies:
     chalk "^4.0.0"
 
@@ -167,16 +178,6 @@
   integrity sha1-R4mECqhZ5G0vMXNyercHxmvzRPU=
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
-
-"@endemolshinegroup/cosmiconfig-typescript-loader@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.nlark.com/@endemolshinegroup/cosmiconfig-typescript-loader/download/@endemolshinegroup/cosmiconfig-typescript-loader-3.0.2.tgz#eea4635828dde372838b0909693ebd9aafeec22d"
-  integrity sha1-7qRjWCjd43KDiwkJaT69mq/uwi0=
-  dependencies:
-    lodash.get "^4"
-    make-error "^1"
-    ts-node "^9"
-    tslib "^2"
 
 "@eslint/eslintrc@^1.0.3":
   version "1.0.3"
@@ -440,10 +441,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-ajv@^6.10.0, ajv@^6.12.4:
+ajv@^6.10.0, ajv@^6.12.4, ajv@^6.12.6:
   version "6.12.6"
-  resolved "https://registry.nlark.com/ajv/download/ajv-6.12.6.tgz?cache=0&sync_timestamp=1631470912358&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fajv%2Fdownload%2Fajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
-  integrity sha1-uvWmLoArB9l3A0WG+MO69a3ybfQ=
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
+  integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
   dependencies:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
@@ -608,11 +609,6 @@ braces@^3.0.1, braces@~3.0.2:
   integrity sha1-NFThpGLujVmeI23zNs2epPiv4Qc=
   dependencies:
     fill-range "^7.0.1"
-
-buffer-from@^1.0.0:
-  version "1.1.2"
-  resolved "https://registry.nlark.com/buffer-from/download/buffer-from-1.1.2.tgz?cache=0&sync_timestamp=1627578510347&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fbuffer-from%2Fdownload%2Fbuffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
-  integrity sha1-KxRqb9cugLT1XSVfNe1Zo6mkG9U=
 
 cacheable-request@^6.0.0:
   version "6.1.0"
@@ -797,13 +793,13 @@ commander@^8.2.0:
   resolved "https://registry.nlark.com/commander/download/commander-8.2.0.tgz?cache=0&sync_timestamp=1631257318022&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-8.2.0.tgz#37fe2bde301d87d47a53adeff8b5915db1381ca8"
   integrity sha1-N/4r3jAdh9R6U63v+LWRXbE4HKg=
 
-commitlint@13.2.1:
-  version "13.2.1"
-  resolved "https://registry.npmmirror.com/commitlint/download/commitlint-13.2.1.tgz?cache=0&sync_timestamp=1633770765851&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcommitlint%2Fdownload%2Fcommitlint-13.2.1.tgz#99333fab4d7b3ece95fed915dd15daf9a11563e6"
-  integrity sha1-mTM/q017Ps6V/tkV3RXa+aEVY+Y=
+commitlint@16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/commitlint/-/commitlint-16.1.0.tgz#4a5361574f41de107e380095972da472540cb94d"
+  integrity sha512-Rqm1dcsVf6Wkn0yBMHMFGcMdqHfaGra4pu314INydD9vMLRkgvLL9BRCUz+2NXN5JmOtKq3bA6+VYi2vKdc9MQ==
   dependencies:
-    "@commitlint/cli" "^13.2.1"
-    "@commitlint/types" "^13.2.0"
+    "@commitlint/cli" "^16.1.0"
+    "@commitlint/types" "^16.0.0"
 
 compare-func@^2.0.0:
   version "2.0.0"
@@ -859,7 +855,15 @@ conventional-commits-parser@^3.2.2:
     split2 "^3.0.0"
     through2 "^4.0.0"
 
-cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
+cosmiconfig-typescript-loader@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-1.0.3.tgz#528f2bb3e6b6705020dc42df659f24837e75b611"
+  integrity sha512-ARo21VjxdacJUcHxgVMEYNIoVPYiuKOEwWBIYej4M22+pEbe3LzKgmht2UPM+0u7/T/KnZf2r/5IzHv2Nwz+/w==
+  dependencies:
+    cosmiconfig "^7"
+    ts-node "^10.4.0"
+
+cosmiconfig@^7, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.0.1"
   resolved "https://registry.nlark.com/cosmiconfig/download/cosmiconfig-7.0.1.tgz#714d756522cace867867ccb4474c5d01bbae5d6d"
   integrity sha1-cU11ZSLKzoZ4Z8y0R0xdAbuuXW0=
@@ -1882,11 +1886,6 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
-lodash.get@^4:
-  version "4.4.2"
-  resolved "https://registry.nlark.com/lodash.get/download/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
-  integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
-
 lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.nlark.com/lodash.merge/download/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
@@ -1942,7 +1941,7 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
-make-error@^1, make-error@^1.1.1:
+make-error@^1.1.1:
   version "1.3.6"
   resolved "https://registry.npm.taobao.org/make-error/download/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha1-LrLjfqm2fEiR9oShOUeZr0hM96I=
@@ -2638,19 +2637,6 @@ sonic-boom@^2.2.0, sonic-boom@^2.2.1:
   dependencies:
     atomic-sleep "^1.0.0"
 
-source-map-support@^0.5.17:
-  version "0.5.20"
-  resolved "https://registry.nlark.com/source-map-support/download/source-map-support-0.5.20.tgz#12166089f8f5e5e8c56926b377633392dd2cb6c9"
-  integrity sha1-EhZgifj15ejFaSazd2Mzkt0stsk=
-  dependencies:
-    buffer-from "^1.0.0"
-    source-map "^0.6.0"
-
-source-map@^0.6.0:
-  version "0.6.1"
-  resolved "https://registry.nlark.com/source-map/download/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
-  integrity sha1-dHIq8y6WFOnCh6jQu95IteLxomM=
-
 spdx-correct@^3.0.0:
   version "3.1.1"
   resolved "https://registry.nlark.com/spdx-correct/download/spdx-correct-3.1.1.tgz#dece81ac9c1e6713e5f7d1b6f17d468fa53d89a9"
@@ -2850,16 +2836,22 @@ ts-node@10.3.0:
     make-error "^1.1.1"
     yn "3.1.1"
 
-ts-node@^9:
-  version "9.1.1"
-  resolved "https://registry.npmmirror.com/ts-node/download/ts-node-9.1.1.tgz?cache=0&sync_timestamp=1633977659665&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fts-node%2Fdownload%2Fts-node-9.1.1.tgz#51a9a450a3e959401bda5f004a72d54b936d376d"
-  integrity sha1-UamkUKPpWUAb2l8ASnLVS5NtN20=
+ts-node@^10.4.0:
+  version "10.4.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.4.0.tgz#680f88945885f4e6cf450e7f0d6223dd404895f7"
+  integrity sha512-g0FlPvvCXSIO1JDF6S232P5jPYqBkRL9qly81ZgAOSU7rwI0stphCgd2kLiCrU9DjQCrJMWEqcNSjQL02s6d8A==
   dependencies:
+    "@cspotcode/source-map-support" "0.7.0"
+    "@tsconfig/node10" "^1.0.7"
+    "@tsconfig/node12" "^1.0.7"
+    "@tsconfig/node14" "^1.0.0"
+    "@tsconfig/node16" "^1.0.2"
+    acorn "^8.4.1"
+    acorn-walk "^8.1.1"
     arg "^4.1.0"
     create-require "^1.1.0"
     diff "^4.0.1"
     make-error "^1.1.1"
-    source-map-support "^0.5.17"
     yn "3.1.1"
 
 tslib@^1.8.1, tslib@^1.9.0:
@@ -2867,7 +2859,7 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.nlark.com/tslib/download/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha1-zy04vcNKE0vK8QkcQfZhni9nLQA=
 
-tslib@^2, tslib@^2.2.0:
+tslib@^2.2.0:
   version "2.3.1"
   resolved "https://registry.nlark.com/tslib/download/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha1-6KM1rdXOrlGqJh0ypJAVjvBC7wE=
