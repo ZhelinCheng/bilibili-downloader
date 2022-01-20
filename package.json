@@ -49,7 +49,7 @@
     "nodemon": "2.0.14",
     "prettier": "2.4.1",
     "ts-node": "10.3.0",
-    "typescript": "4.4.4"
+    "typescript": "4.5.5"
   },
   "dependencies": {
     "@types/async": "^3.2.8",
