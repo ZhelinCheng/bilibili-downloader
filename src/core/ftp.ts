@@ -1,9 +1,9 @@
 /*
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 17:09:10
- * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-10-24 01:30:00
- * @FilePath     : \bilibili-downloader\src\core\ftp.ts
+ * @LastEditors  : 程哲林
+ * @LastEditTime : 2022-02-03 18:13:01
+ * @FilePath     : /bilibili-downloader/src/core/ftp.ts
  * @Description  : 未添加文件描述
  */
 
@@ -11,6 +11,7 @@ import fs from 'fs';
 import fse from 'fs-extra';
 import { isFtp } from '../const';
 import * as FTP from 'basic-ftp';
+import { dirname } from 'path';
 
 const localSave = (
   input: NodeJS.ReadStream,
@@ -49,7 +50,7 @@ export const postData = async (
       await client.uploadFrom(input, `${destPath}/${fileName}`);
       return true;
     } else {
-      fse.ensureDirSync(localPath.replace(/(\\|\/)\d+\.(mp4|flv)$/, ''));
+      fse.ensureDirSync(dirname(localPath));
       const status = await localSave(input, localPath);
       return status;
     }

@@ -2,10 +2,12 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : 程哲林
- * @LastEditTime : 2021-12-08 13:48:14
+ * @LastEditTime : 2022-02-03 18:23:45
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
+
+import filenamify from 'filenamify';
 import { rq, env, db, logger } from '../utils';
 import { INCLUDE_UID_ITEMS, EXCLUDE_UID_ITEMS } from '../const';
 
@@ -14,6 +16,7 @@ const _MY_UID = /DedeUserID=(?<userId>\d+);/gm.exec(env.BILIBILI_COOKIE || '');
 export interface VideoUrlItems {
   bvid: string;
   name: string;
+  title: string;
 }
 
 interface DynamicNewType {
@@ -376,6 +379,7 @@ export const getVideoDownloadUrl = async (
 export const getVideoPage = async (
   bvid: string,
   name: string,
+  title: string,
 ): Promise<
   Array<
     VideoUrlItems & {
@@ -407,6 +411,7 @@ export const getVideoPage = async (
           bvid,
           cid,
           name,
+          title,
         });
       }
       return arr;
@@ -496,11 +501,19 @@ export const getVideosUrl = async (): Promise<boolean> => {
         // console.log(uname, isTopic, isCard, isIncludeUid, isNeed)
         if (isNeed) {
           isDownload = true;
+          const jsonCard = JSON.parse(card || '{}');
+
+          // 安全的标题
+          const title = filenamify(jsonCard?.title || 'none', {
+            replacement: '',
+          });
+
           await db
             .get<'queue'>('queue')
             .push({
               bvid,
               name: uname,
+              title,
             })
             .write();
         }

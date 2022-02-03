@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-01-13 15:03:35
+ * @LastEditTime : 2022-02-03 18:03:41
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -94,21 +94,23 @@ async function downloadList(
     mapLimit(
       queue,
       1,
-      async ({ bvid, name, cid }) => {
+      async ({ bvid, name, cid, title = 'none' }) => {
         try {
           if (notes.includes(cid)) {
             return bvid;
           }
 
           await timeout(2000);
-          logger.info(`下载 ⇒ 昵称：${name} | BVID：${bvid} | CID：${cid}`);
+          logger.info(
+            `下载 ⇒ 标题：${title} | 昵称：${name} | BVID：${bvid} | CID：${cid}`,
+          );
 
           const { url, size, ext, length } = await getVideoDownloadUrl(
             bvid,
             cid,
           );
           const filePath = `${baseFtpPath}/${name}`;
-          const fileName = `${cid}.${ext}`;
+          const fileName = `${title}_${bvid}_${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
           const localPath = path.join(outputPath, name, fileName);
 
@@ -194,8 +196,8 @@ export async function getPageList(
     mapLimit(
       queue,
       2,
-      async function ({ bvid, name }) {
-        const arr = getVideoPage(bvid, name);
+      async function ({ bvid, name, title = '' }) {
+        const arr = getVideoPage(bvid, name, title);
         return arr;
       },
       (err, results) => {
