@@ -2,12 +2,11 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-02-03 18:23:45
+ * @LastEditTime : 2022-02-03 18:42:41
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
 
-import filenamify from 'filenamify';
 import { rq, env, db, logger } from '../utils';
 import { INCLUDE_UID_ITEMS, EXCLUDE_UID_ITEMS } from '../const';
 
@@ -504,9 +503,10 @@ export const getVideosUrl = async (): Promise<boolean> => {
           const jsonCard = JSON.parse(card || '{}');
 
           // 安全的标题
-          const title = filenamify(jsonCard?.title || 'none', {
-            replacement: '',
-          });
+          const title = (jsonCard?.title || 'none').replace(
+            /<|>|:|"|\/|\\|\?|\*|\|/gm,
+            '',
+          );
 
           await db
             .get<'queue'>('queue')
