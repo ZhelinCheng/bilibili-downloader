@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-10 17:35:02
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-02-03 18:42:41
+ * @LastEditTime : 2022-02-04 22:34:33
  * @FilePath     : /bilibili-downloader/src/core/url.ts
  * @Description  : 未添加文件描述
  */
@@ -504,7 +504,7 @@ export const getVideosUrl = async (): Promise<boolean> => {
 
           // 安全的标题
           const title = (jsonCard?.title || 'none').replace(
-            /<|>|:|"|\/|\\|\?|\*|\|/gm,
+            /\s|<|>|:|"|\/|\\|\?|\*|\|/gm,
             '',
           );
 
