@@ -314,10 +314,10 @@
   resolved "https://registry.npmmirror.com/@types/node/download/@types/node-16.11.2.tgz?cache=0&sync_timestamp=1634814276329&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-16.11.2.tgz#31c249c136c3f9b35d4b60fb8e50e01a1f0cc9a5"
   integrity sha1-McJJwTbD+bNdS2D7jlDgGh8MyaU=
 
-"@types/node@14.17.3":
-  version "14.17.3"
-  resolved "https://registry.npmmirror.com/@types/node/download/@types/node-14.17.3.tgz?cache=0&sync_timestamp=1634814276329&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-14.17.3.tgz#6d327abaa4be34a74e421ed6409a0ae2f47f4c3d"
-  integrity sha1-bTJ6uqS+NKdOQh7WQJoK4vR/TD0=
+"@types/node@16.11.24":
+  version "16.11.24"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.24.tgz#9624338b685fea65fb1aba6c7b7eb45ca2df7188"
+  integrity sha512-Ezv33Rl4mIi6YdSHfIRNBd4Q9kUe5okiaw/ikvJiJDmuQZNW5kfdg7+oQPF8NO6sTcr3woIpj3jANzTXdvEZXA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
