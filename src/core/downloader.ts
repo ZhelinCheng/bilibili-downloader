@@ -2,7 +2,7 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-02-03 18:03:41
+ * @LastEditTime : 2022-03-18 17:46:34
  * @FilePath     : /bilibili-downloader/src/core/downloader.ts
  * @Description  : 未添加文件描述
  */
@@ -110,7 +110,10 @@ async function downloadList(
             cid,
           );
           const filePath = `${baseFtpPath}/${name}`;
-          const fileName = `${title}_${bvid}_${cid}.${ext}`;
+          const fileName = `${title.replace(
+            /(.{30}).*/,
+            '$1...',
+          )}_${bvid}_${cid}.${ext}`;
           const filePos = `${filePath}/${fileName}`;
           const localPath = path.join(outputPath, name, fileName);
 
