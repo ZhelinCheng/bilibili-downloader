@@ -2,8 +2,8 @@
  * @Author       : Zhelin Cheng
  * @Date         : 2021-02-19 15:16:57
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-03-18 17:46:34
- * @FilePath     : /bilibili-downloader/src/core/downloader.ts
+ * @LastEditTime : 2022-06-19 19:08:07
+ * @FilePath     : \bilibili-downloader\src\core\downloader.ts
  * @Description  : 未添加文件描述
  */
 
@@ -16,7 +16,7 @@ import { mapLimit } from 'async';
 import * as FTP from 'basic-ftp';
 import { getVideoDownloadUrl, getVideoPage, VideoUrlItems } from './url';
 import { postData } from './ftp';
-import { outputPath, isFtp, BASE_FTP_PAtH } from '../const';
+import { outputPath, isFtp, BASE_FTP_PAtH, LIMIT_DURATION } from '../const';
 // import dayjs from 'dayjs';
 
 const client = new FTP.Client();
@@ -123,10 +123,10 @@ async function downloadList(
             return '';
           }
 
-          if (length >= 600) {
+          if (LIMIT_DURATION && length >= LIMIT_DURATION) {
             notes.push(cid);
             notes.push(bvid);
-            await db.set('notes', notes).write();
+            db.set('notes', notes).write();
             logger.warn('视频长度超过600秒，跳过下载');
             return bvid;
           }

@@ -1,9 +1,9 @@
 /*
  * @Author       : Zhelin Cheng
  * @Date         : 2021-04-20 19:10:56
- * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-05-17 22:37:24
- * @FilePath     : /bilibili-downloader/src/const/index.ts
+ * @LastEditors  : 程哲林
+ * @LastEditTime : 2022-06-19 19:07:58
+ * @FilePath     : \bilibili-downloader\src\const\index.ts
  * @Description  : 未添加文件描述
  */
 
@@ -38,3 +38,6 @@ export const INCLUDE_UID_ITEMS = readConf('include');
 
 // FTP路径
 export const BASE_FTP_PAtH = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
+
+// 视频限制时长
+export const LIMIT_DURATION = Number(env.LIMIT_DURATION || '0');
