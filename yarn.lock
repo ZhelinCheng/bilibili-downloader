@@ -260,10 +260,10 @@
   resolved "https://registry.nlark.com/@tsconfig/node16/download/@tsconfig/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha1-Qjx3h30Fadsg4fyAiFrEEYMUAQ4=
 
-"@types/async@^3.2.8":
-  version "3.2.8"
-  resolved "https://registry.nlark.com/@types/async/download/@types/async-3.2.8.tgz#c4171a8990ed9ae4f0843cacbdceb4fabd7cc7e8"
-  integrity sha1-xBcaiZDtmuTwhDysvc60+r18x+g=
+"@types/async@^3.2.13":
+  version "3.2.13"
+  resolved "https://registry.npmmirror.com/@types/async/-/async-3.2.13.tgz#ec023074c70180d17cbc9117ddc3cec2f3894ea4"
+  integrity sha512-7Q3awrhnvm89OzfsmqeqRQh8mh+8Pxfgq1UvSAn2nWQ5y/F3+NrbIF0RbkWq8+5dY99ozgap2b3DNBNwjLVOxw==
 
 "@types/cron@^1.7.3":
   version "1.7.3"
@@ -541,10 +541,10 @@ astral-regex@^2.0.0:
   resolved "https://registry.nlark.com/astral-regex/download/astral-regex-2.0.0.tgz#483143c567aeed4785759c0865786dc77d7d2e31"
   integrity sha1-SDFDxWeu7UeFdZwIZXhtx319LjE=
 
-async@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.nlark.com/async/download/async-3.2.1.tgz?cache=0&sync_timestamp=1628205815983&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fasync%2Fdownload%2Fasync-3.2.1.tgz#d3274ec66d107a47476a4c49136aacdb00665fc8"
-  integrity sha1-0ydOxm0QekdHakxJE2qs2wBmX8g=
+async@^3.2.4:
+  version "3.2.4"
+  resolved "https://registry.npmmirror.com/async/-/async-3.2.4.tgz#2d22e00f8cddeb5fde5dd33522b56d1cf569a81c"
+  integrity sha512-iAB+JbDEGXhyIUavoDl9WP/Jj106Kz9DEn1DPgYw5ruDn0e3Wgi3sKFm55sASdGBNOQB8F59d9qQ7deqrHA8wQ==
 
 atomic-sleep@^1.0.0:
   version "1.0.0"
