@@ -100,6 +100,9 @@ BILIBILI_FTP_HOST = "10.0.0.3"
 BILIBILI_FTP_USER = "bilibili"
 BILIBILI_FTP_PASS = "password"
 
+
+# 限制视频时长
+LIMIT_DURATION = 600
 ```
 
 ## 🤝 贡献
