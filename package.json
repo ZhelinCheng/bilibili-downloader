@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@types/async": "^3.2.13",
-    "@types/cron": "^1.7.3",
+    "@types/cron": "^2.0.0",
     "@types/dotenv": "^8.2.0",
     "@types/fs-extra": "^9.0.13",
     "@types/lowdb": "^1.0.11",
@@ -62,7 +62,7 @@
     "axios": "^0.25.0",
     "basic-ftp": "^4.6.6",
     "cheerio": "^1.0.0-rc.5",
-    "cron": "^1.8.2",
+    "cron": "^2.0.0",
     "dayjs": "^1.10.7",
     "dotenv": "^10.0.0",
     "fs-extra": "^10.0.0",

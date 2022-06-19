@@ -265,13 +265,13 @@
   resolved "https://registry.npmmirror.com/@types/async/-/async-3.2.13.tgz#ec023074c70180d17cbc9117ddc3cec2f3894ea4"
   integrity sha512-7Q3awrhnvm89OzfsmqeqRQh8mh+8Pxfgq1UvSAn2nWQ5y/F3+NrbIF0RbkWq8+5dY99ozgap2b3DNBNwjLVOxw==
 
-"@types/cron@^1.7.3":
-  version "1.7.3"
-  resolved "https://registry.nlark.com/@types/cron/download/@types/cron-1.7.3.tgz#993db7d54646f61128c851607b64ba4495deae93"
-  integrity sha1-mT231UZG9hEoyFFge2S6RJXerpM=
+"@types/cron@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/cron/-/cron-2.0.0.tgz#4fe75f2720a3b69a1f7b80e656749f4c2c96d727"
+  integrity sha512-xZM08fqvwIXgghtPVkSPKNgC+JoMQ2OHazEvyTKnNf7aWu1aB6/4lBbQFrb03Td2cUGG7ITzMv3mFYnMu6xRaQ==
   dependencies:
+    "@types/luxon" "*"
     "@types/node" "*"
-    moment ">=2.14.0"
 
 "@types/dotenv@^8.2.0":
   version "8.2.0"
@@ -303,6 +303,11 @@
   integrity sha1-2DNqY16g29SKf29i+5/Mxew1iuM=
   dependencies:
     "@types/lodash" "*"
+
+"@types/luxon@*":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-2.3.2.tgz#8a3f2cdd4858ce698b56cd8597d9243b8e9d3c65"
+  integrity sha512-WOehptuhKIXukSUUkRgGbj2c997Uv/iUgYgII8U7XLJqq9W2oF0kQ6frEznRQbdurioz+L/cdaIm4GutTQfgmA==
 
 "@types/minimist@^1.2.0":
   version "1.2.2"
@@ -873,12 +878,12 @@ create-require@^1.1.0:
   resolved "https://registry.nlark.com/create-require/download/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha1-wdfo8eX2z8n/ZfnNNS03NIdWwzM=
 
-cron@^1.8.2:
-  version "1.8.2"
-  resolved "https://registry.nlark.com/cron/download/cron-1.8.2.tgz#4ac5e3c55ba8c163d84f3407bde94632da8370ce"
-  integrity sha1-SsXjxVuowWPYTzQHvelGMtqDcM4=
+cron@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cron/-/cron-2.0.0.tgz#15c6bf37c1cebf6da1d7a688b9ba1c68338bfe6b"
+  integrity sha512-RPeRunBCFr/WEo7WLp8Jnm45F/ziGJiHVvVQEBSDTSGu6uHW49b2FOP2O14DcXlGJRLhwE7TIoDzHHK4KmlL6g==
   dependencies:
-    moment-timezone "^0.5.x"
+    luxon "^1.23.x"
 
 cross-env@7.0.3:
   version "7.0.3"
@@ -1927,6 +1932,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+luxon@^1.23.x:
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.28.0.tgz#e7f96daad3938c06a62de0fb027115d251251fbf"
+  integrity sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==
+
 make-dir@^3.0.0:
   version "3.1.0"
   resolved "https://registry.nlark.com/make-dir/download/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
@@ -2019,18 +2029,6 @@ minimist@^1.2.0:
   version "1.2.5"
   resolved "https://registry.nlark.com/minimist/download/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=
-
-moment-timezone@^0.5.x:
-  version "0.5.33"
-  resolved "https://registry.nlark.com/moment-timezone/download/moment-timezone-0.5.33.tgz#b252fd6bb57f341c9b59a5ab61a8e51a73bbd22c"
-  integrity sha1-slL9a7V/NBybWaWrYajlGnO70iw=
-  dependencies:
-    moment ">= 2.9.0"
-
-"moment@>= 2.9.0", moment@>=2.14.0:
-  version "2.29.1"
-  resolved "https://registry.npm.taobao.org/moment/download/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
-  integrity sha1-sr52n6MZQL6e7qZGnAdeNQBvo9M=
 
 mri@1.1.4:
   version "1.1.4"
