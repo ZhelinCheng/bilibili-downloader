@@ -94,16 +94,46 @@ BILIBILI_EXCLUDE_UID = ""
 # 选填 视频保存到本地的地址，例：/home/xxx/output，默认保存到项目根目录下的output文件夹
 BILIBILI_OUTPUT_PATH = ""
 
-# 选填 频保存到FTP的地址，例：/BotBackup/Bilibili
+# 选填 视频保存到FTP的地址，例：/BotBackup/Bilibili
 BILIBILI_FTP_PATH = "/Backup/Bilibili"
 BILIBILI_FTP_HOST = "10.0.0.3"
 BILIBILI_FTP_USER = "bilibili"
 BILIBILI_FTP_PASS = "password"
 
-
-# 限制视频时长
+# 限制视频时长 (单位:秒) 超过此时长的视频不会被下载
 LIMIT_DURATION = 600
 ```
+
+## 使用 Docker
+
+以下为镜像构建和容器启动示例:
+
+```sh
+# 创建构建目录:
+mkdir -p /data/docker/bilibili-downloader
+
+# 下载配置模板并根据模板创建配置文件:
+# 无需在 `.env` 文件中配置 `BILIBILI_OUTPUT_PATH`
+cd /data/docker/bilibili-downloader
+wget https://raw.githubusercontent.com/ZhelinCheng/bilibili-downloader/master/env_template -O .env
+vim .env
+
+# 下载 Dockerfile:
+wget https://raw.githubusercontent.com/ZhelinCheng/bilibili-downloader/master/Dockerfile
+
+# 构建镜像:
+docker build -t bilibili-downloader .
+
+# 使用镜像启动容器
+docker run -d --name bilibili-downloader \
+  -v /data/docker/bilibili-downloader/.env:/bilibili-downloader/.env \
+  -v /data/docker/bilibili-downloader/download:/bilibili-downloader/output \
+  bilibili-downloader:latest
+```
+
+如果你完全复制和执行了以上命令:
+项目的配置文件将存储在: `/data/docker/bilibili-downloader/.env`
+下载后的视频将存储在: `/data/docker/bilibili-downloader/download`
 
 ## 🤝 贡献
 
