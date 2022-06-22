@@ -94,7 +94,7 @@ async function downloadList(
     mapLimit(
       queue,
       1,
-      async ({ bvid, name, cid, title = 'none' }) => {
+      async ({ bvid, name, cid, title = 'none' }: {bvid: string; name: string; cid: string; title: string}) => {
         try {
           if (notes.includes(cid)) {
             return bvid;
@@ -199,7 +199,7 @@ export async function getPageList(
     mapLimit(
       queue,
       2,
-      async function ({ bvid, name, title = '' }) {
+      async function ({ bvid, name, title = '' }: {bvid: string; name: string; title: string}) {
         const arr = getVideoPage(bvid, name, title);
         return arr;
       },
