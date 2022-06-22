@@ -100,7 +100,7 @@ BILIBILI_FTP_HOST = "10.0.0.3"
 BILIBILI_FTP_USER = "bilibili"
 BILIBILI_FTP_PASS = "password"
 
-# 限制视频时长 (单位:秒) 超过此时长的视频不会被下载
+# 限制视频时长，超过此时长的视频不会被下载（单位:秒）
 LIMIT_DURATION = 600
 ```
 
@@ -132,7 +132,9 @@ docker run -d --name bilibili-downloader \
 ```
 
 如果你完全复制和执行了以上命令:
+
 项目的配置文件将存储在: `/data/docker/bilibili-downloader/.env`
+
 下载后的视频将存储在: `/data/docker/bilibili-downloader/download`
 
 ## 🤝 贡献
