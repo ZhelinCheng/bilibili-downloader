@@ -58,7 +58,8 @@
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "sqlite3": "^5.1.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
