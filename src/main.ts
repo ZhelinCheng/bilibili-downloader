@@ -2,11 +2,11 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 14:53:02
+ * @LastEditTime : 2022-11-01 15:52:32
  * @FilePath     : /bilibili-downloader/src/main.ts
  * @Description  : 未添加文件描述
  */
-import { join } from 'path';
+// import { join } from 'path';
 
 import { NestFactory } from '@nestjs/core';
 import { VersioningType } from '@nestjs/common';
@@ -24,9 +24,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  // app.useStaticAssets(join(__dirname, '..', 'public'));
+
+  app.setGlobalPrefix('api');
 
   app.enableVersioning({
+    defaultVersion: '1',
     type: VersioningType.URI,
   });
 
