@@ -1,6 +1,8 @@
 import * as fse from 'fs-extra';
 import { join } from 'path';
-import { getQrCode, userInfo } from 'src/services/login';
+import { getQrCode, userInfo, loginStatus } from 'src/services/login';
+import * as qrcode from 'qrcode-terminal';
+import { State } from 'src/app.state';
 
 const cookiePath = join(__dirname, '../..', '.cookie.json');
 
@@ -52,20 +54,55 @@ export async function login() {
 
   if (data.code < 0) {
     // 获取二维码登陆
-    const qrcode = await getQrCode();
+    const qc = await getQrCode();
 
-    if (qrcode.data.code === 0) {
-      return {
-        ...qrcode.data.data,
-        is_login: false,
-      };
+    if (qc.data.code === 0) {
+      const qcData = qc.data.data;
+
+      qrcode.generate(qcData.url, { small: true });
+      console.log(`⬆️⬆️⬆️ 请扫码二维码登陆 ⬆️⬆️⬆️`);
+
+      const timer = setInterval(async () => {
+        const res = await loginStatus(qcData.qrcode_key);
+        const { code, refresh_token, message } = res.data.data;
+        if ([0, 86038].includes(code)) {
+          clearInterval(timer);
+        }
+        if (code === 0) {
+          const setCookie = res.headers['set-cookie'];
+
+          const cookies = setCookie.map((ck: string) => {
+            return ck.split(';')[0];
+          });
+
+          writeJsonFile({
+            cookie: cookies.join(';'),
+            token: refresh_token,
+          });
+
+          const user = await userInfo();
+          State.vipStatus = user.data.data.vip_status > 0;
+          State.isLogin = true;
+          console.log(
+            `登录成功，是否为大会员：${State.vipStatus ? '是' : '否'}`,
+          );
+        } else {
+          console.log(message);
+        }
+      }, 3000);
     }
   } else {
+    State.vipStatus = data.data.vip_status > 0;
+    State.isLogin = true;
+    console.log(`登录成功，是否为大会员：${State.vipStatus ? '是' : '否'}`);
+
     return {
       is_login: true,
       ...data.data,
     };
   }
+
+  console.error(`登录失败`);
 
   return null;
 }
