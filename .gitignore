@@ -9,6 +9,7 @@
 /test
 /output
 /output/**
+.cookie.json
 
 # misc
 .DS_Store

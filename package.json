@@ -42,6 +42,7 @@
     "url": "https://github.com/ZhelinCheng/bilibili-downloader/issues"
   },
   "dependencies": {
+    "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -51,6 +52,10 @@
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/serve-static": "^3.0.0",
     "@types/cron": "^2.0.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/qrcode-terminal": "^0.12.0",
+    "fs-extra": "^10.1.0",
+    "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
