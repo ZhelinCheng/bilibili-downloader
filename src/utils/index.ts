@@ -81,8 +81,9 @@ export function login() {
             });
 
             const user = await userInfo();
-            State.vipStatus = user.data.data.vip_status > 0;
+            State.vipStatus = user.data.data.vip_status === 1;
             State.isLogin = true;
+            State.userId = data.data.mid;
             console.log(
               `登录成功，是否为大会员：${State.vipStatus ? '是' : '否'}`,
             );
@@ -94,8 +95,9 @@ export function login() {
         }, 3000);
       }
     } else {
-      State.vipStatus = data.data.vip_status > 0;
+      State.vipStatus = data.data.vip_status === 1;
       State.isLogin = true;
+      State.userId = data.data.mid;
       console.log(`登录成功，是否为大会员：${State.vipStatus ? '是' : '否'}`);
 
       resolve(true);

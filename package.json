@@ -51,15 +51,19 @@
     "@nestjs/platform-fastify": "^9.1.6",
     "@nestjs/schedule": "^2.1.0",
     "@nestjs/serve-static": "^3.0.0",
+    "@nestjs/typeorm": "^9.0.1",
     "@types/cron": "^2.0.0",
     "@types/fs-extra": "^9.0.13",
     "@types/qrcode-terminal": "^0.12.0",
+    "dayjs": "^1.11.6",
     "fs-extra": "^10.1.0",
+    "mint-filter": "^3.0.1",
     "qrcode-terminal": "^0.12.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "sqlite3": "^5.1.2"
+    "sqlite3": "^5.1.2",
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

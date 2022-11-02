@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 19:41:09
+ * @LastEditTime : 2022-11-01 21:58:53
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -18,7 +18,25 @@ import { DownloadModule } from './download/download.module';
 import { join } from 'path';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig } from 'axios';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import * as path from 'path';
+// import fse from 'fs-extra';
 import { readCookie, login } from './utils';
+
+function getDbConfig(): TypeOrmModuleOptions {
+  const env = process.env;
+  const isDev = env.NODE_ENV === 'development';
+
+  return {
+    type: 'sqlite',
+    database: path.resolve(__dirname, '..', './.database'),
+    entities: [path.resolve(__dirname, './**/*.entity{.ts,.js}')],
+    maxQueryExecutionTime: isDev ? 200 : 100,
+    logging: isDev ? true : ['error', 'warn'],
+    // synchronize: true,
+    entityPrefix: 'bli_',
+  };
+}
 
 @Module({
   imports: [
@@ -44,6 +62,7 @@ import { readCookie, login } from './utils';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    TypeOrmModule.forRoot(getDbConfig()),
     WatchModule,
     DownloadModule,
   ],
