@@ -2,12 +2,12 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 20:46:28
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 21:00:57
+ * @LastEditTime : 2022-11-02 18:37:38
  * @FilePath     : /bilibili-downloader/src/services/watch.ts
  * @Description  : 未添加文件描述
  */
 import { State } from 'src/app.state';
-import { BLI_DYNAMIC_NEW } from 'src/const';
+import { BLI_DYNAMIC_NEW, BLI_VIDEO_PAGE } from 'src/const';
 import { rq } from '../utils/request';
 
 export interface VideoUrlItems {
@@ -276,6 +276,11 @@ interface Fold {
   dynamic_ids: number[];
 }
 
+interface VideoPageType {
+  cid: number;
+  part: string;
+}
+
 /**
  * 获取动态列表
  */
@@ -292,6 +297,30 @@ export const dynamicList = async (uid: number): Promise<DynamicNewType> => {
     });
 
     return data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getVideoCid = async (bvid: string): Promise<VideoPageType[]> => {
+  try {
+    const {
+      data: { code, data },
+    } = await rq<{
+      code: number;
+      data: Array<VideoPageType>;
+    }>({
+      url: BLI_VIDEO_PAGE,
+      params: {
+        bvid,
+      },
+    });
+
+    if (code === 0) {
+      return data;
+    } else {
+      return [];
+    }
   } catch (e) {
     console.error(e);
   }

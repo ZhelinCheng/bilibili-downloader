@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 21:58:53
+ * @LastEditTime : 2022-11-02 21:20:42
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -18,10 +18,12 @@ import { DownloadModule } from './download/download.module';
 import { join } from 'path';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { AxiosRequestConfig } from 'axios';
+import { DataSource } from 'typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as path from 'path';
 // import fse from 'fs-extra';
 import { readCookie, login } from './utils';
+import { Config } from './app.entities/config.entity';
 
 function getDbConfig(): TypeOrmModuleOptions {
   const env = process.env;
@@ -70,7 +72,10 @@ function getDbConfig(): TypeOrmModuleOptions {
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private dataSource: DataSource,
+    private readonly httpService: HttpService,
+  ) {}
   private readonly logger = new Logger(AppModule.name);
 
   onModuleInit() {
@@ -83,6 +88,13 @@ export class AppModule {
   }
 
   async onApplicationBootstrap(): Promise<void> {
+    const cfgCount = await this.dataSource.getRepository(Config).count();
+
+    if (cfgCount === 0) {
+      this.dataSource.getRepository(Config).save({});
+    }
+
+    // console.log(cfgCount);
     await login();
   }
 }

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 21:22:26
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 21:46:01
+ * @LastEditTime : 2022-11-02 19:35:55
  * @FilePath     : /bilibili-downloader/src/app.entities/queue.entity.ts
  * @Description  : 未添加文件描述
  */
@@ -46,7 +46,7 @@ export class Queue {
 
   @Column({
     type: 'int',
-    comment: 'BVID',
+    comment: 'UID',
     unsigned: true,
   })
   uid: number;
@@ -59,6 +59,7 @@ export class Queue {
   timestamp: number;
 
   // 0等待，1完成，2失败
+  @Index()
   @Column({
     type: 'int',
     comment: '状态',

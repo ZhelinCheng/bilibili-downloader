@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-01 20:50:15
+ * @LastEditTime : 2022-11-02 18:11:34
  * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
@@ -21,3 +21,6 @@ export const BLI_LOGIN_POLL =
 // 动态列表
 export const BLI_DYNAMIC_NEW =
   'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new';
+
+// 视频分集
+export const BLI_VIDEO_PAGE = 'https://api.bilibili.com/x/player/pagelist';
