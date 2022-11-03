@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-03 18:37:30
+ * @LastEditTime : 2022-11-03 18:43:25
  * @FilePath     : /bilibili-downloader/src/app.entities/config.entity.ts
  * @Description  : 未添加文件描述
  */
@@ -38,6 +38,13 @@ export class Config {
 
   @Column({
     type: 'text',
+    comment: '必须包含uid集合',
+    default: '',
+  })
+  include: string;
+
+  @Column({
+    type: 'text',
     comment: '关键词',
     default: '',
   })
@@ -49,6 +56,34 @@ export class Config {
     default: '',
   })
   fileName: string;
+
+  @Column({
+    type: 'text',
+    comment: '保存方式',
+    default: 'local',
+  })
+  saveType: 'ftp' | 'local';
+
+  @Column({
+    type: 'text',
+    comment: '账号',
+    default: '',
+  })
+  ftpAccount: string;
+
+  @Column({
+    type: 'text',
+    comment: '密码',
+    default: '',
+  })
+  ftpPassword: string;
+
+  @Column({
+    type: 'text',
+    comment: '远程地址',
+    default: '',
+  })
+  ftpRemote: string;
 
   @Column({
     type: 'text',
