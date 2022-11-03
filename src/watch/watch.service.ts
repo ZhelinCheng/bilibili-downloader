@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:41:46
+ * @LastEditTime : 2022-11-03 20:10:24
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -35,14 +35,15 @@ export class WatchService {
     private readonly cfgRep: Repository<Config>,
   ) {}
 
-  @Cron('0 */3 * * * *')
+  @Cron('50 * * * * *')
   async handleCron() {
-    if (!State.isLogin) {
+    if (!State.isLogin || State.isDownload) {
       return;
     }
 
     try {
       this.logger.log('执行动态列表查询...');
+      const timeSet = new Set([]);
 
       const [conf, queueBvid] = await Promise.all([
         this.cfgRep.find(),
@@ -90,6 +91,7 @@ export class WatchService {
             },
           },
         } of data.cards) {
+          timeSet.add(bvid);
           const { topic_details } = topic_info;
           const jsonCard = JSON.parse(card || '{}');
 
@@ -106,6 +108,8 @@ export class WatchService {
           // 关键词
           const isKws = !mint.validator(title + ',' + tags) || !kws;
           if (!bvidSet.has(bvid) && isKws && timeout < timestamp) {
+            bvidSet.add(bvid);
+
             dynamicArr.push({
               timestamp,
               uid,
@@ -126,28 +130,28 @@ export class WatchService {
       // 获取列表cid
       const qList = await this.allVideosCid<Omit<Queue, 'id'>>(dynamicArr);
 
-      // console.log(dynamicArr.length, qList);
-
       this.logger.log(`本次数据更新：${qList.length}条`);
 
-      await Promise.all([
-        this.queRep.save(qList),
-        this.dataSource
-          .createQueryBuilder()
-          .delete()
-          .from(Queue)
-          .where('status = :status', { status: 1 })
-          .andWhere('timestamp < :expire', {
-            expire: timeout - 3600,
-          })
-          .execute(),
-      ]);
+      if (qList.length) {
+        await Promise.all([
+          this.queRep.save(qList),
+          this.dataSource
+            .createQueryBuilder()
+            .delete()
+            .from(Queue)
+            .where('status = :status', { status: 1 })
+            .andWhere('timestamp < :expire', {
+              expire: timeout - 3600,
+            })
+            .execute(),
+        ]);
 
-      this.logger.log('本次动态数据更新完成');
-
-      State.isReady = true;
+        this.logger.log('本次动态数据更新完成');
+      }
     } catch (e) {
       this.logger.error(e);
+    } finally {
+      State.isReady = true;
     }
   }
 

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:20:42
+ * @LastEditTime : 2022-11-03 19:06:18
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -35,7 +35,7 @@ function getDbConfig(): TypeOrmModuleOptions {
     entities: [path.resolve(__dirname, './**/*.entity{.ts,.js}')],
     maxQueryExecutionTime: isDev ? 200 : 100,
     logging: isDev ? true : ['error', 'warn'],
-    // synchronize: true,
+    synchronize: true,
     entityPrefix: 'bli_',
   };
 }
