@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 18:11:34
+ * @LastEditTime : 2022-11-02 21:48:12
  * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
@@ -24,3 +24,6 @@ export const BLI_DYNAMIC_NEW =
 
 // 视频分集
 export const BLI_VIDEO_PAGE = 'https://api.bilibili.com/x/player/pagelist';
+
+// 视频下载地址
+export const BLI_PLAY_URL = 'http://api.bilibili.com/x/player/playurl';

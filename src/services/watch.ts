@@ -2,11 +2,10 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 20:46:28
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 18:37:38
+ * @LastEditTime : 2022-11-02 21:47:40
  * @FilePath     : /bilibili-downloader/src/services/watch.ts
  * @Description  : 未添加文件描述
  */
-import { State } from 'src/app.state';
 import { BLI_DYNAMIC_NEW, BLI_VIDEO_PAGE } from 'src/const';
 import { rq } from '../utils/request';
 

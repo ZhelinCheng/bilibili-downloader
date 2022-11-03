@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:29:41
+ * @LastEditTime : 2022-11-03 18:37:30
  * @FilePath     : /bilibili-downloader/src/app.entities/config.entity.ts
  * @Description  : 未添加文件描述
  */
@@ -42,4 +42,18 @@ export class Config {
     default: '',
   })
   keywords: string;
+
+  @Column({
+    type: 'text',
+    comment: '文件名',
+    default: '',
+  })
+  fileName: string;
+
+  @Column({
+    type: 'text',
+    comment: '输出目录',
+    default: '',
+  })
+  outputPath: string;
 }

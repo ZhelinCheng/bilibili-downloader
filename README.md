@@ -46,7 +46,7 @@
 
 ```sh
 # 使用npm安装依赖
-npm install
+export FFMPEG_BINARIES_URL=https://cdn.npmmirror.com/binaries/ffmpeg-static && npm install
 
 # 执行build命令，每一次更新都需要build一次
 npm run build

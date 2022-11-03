@@ -9,6 +9,7 @@
 /test
 /output
 /output/**
+/cache/**
 .cookie.json
 
 # misc
