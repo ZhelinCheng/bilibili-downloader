@@ -60,7 +60,10 @@ Windows用户可以不用安装
 
 ```sh
 # 使用npm安装依赖，需要设置FFmpeg的CDN地址
-export FFMPEG_BINARIES_URL=https://cdn.npmmirror.com/binaries/ffmpeg-static && npm install
+npm install
+# 如果无法安装成功，尝试使用
+npm run npm:install
+npm run yarn:install
 
 # 执行build命令，每一次更新都需要build一次
 npm run build

@@ -21,7 +21,9 @@
     "lint-staged": "lint-staged",
     "prepare-commit-msg": "prepare-commit-msg",
     "prepare": "husky install",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "npm:install": "cross-env FFMPEG_BINARIES_URL=https://cdn.npmmirror.com/binaries/ffmpeg-static && npm install",
+    "yarn:install": "cross-env FFMPEG_BINARIES_URL=https://cdn.npmmirror.com/binaries/ffmpeg-static && yarn install"
   },
   "repository": {
     "type": "git",
