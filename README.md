@@ -63,6 +63,7 @@ Windows用户可以不用安装
 npm install
 # 如果无法安装成功，尝试使用
 npm run npm:install
+# 或
 npm run yarn:install
 
 # 执行build命令，每一次更新都需要build一次
