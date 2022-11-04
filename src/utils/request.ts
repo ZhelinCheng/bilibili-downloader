@@ -1,27 +1,17 @@
-/*
- * @Author       : Zhelin Cheng
- * @Date         : 2021-02-18 21:20:04
- * @LastEditors  : Zhelin Cheng
- * @LastEditTime : 2021-11-03 22:09:08
- * @FilePath     : \bilibili-downloader\src\utils\request.ts
- * @Description  : 未添加文件描述
- */
 import axios, {
   AxiosError,
   AxiosRequestConfig,
   AxiosResponse,
   AxiosPromise,
 } from 'axios';
-import { logger } from './index';
-import { env } from './env';
+import { State } from 'src/app.state';
+import { readCookie } from '.';
 
-axios.defaults.timeout = 8000;
+axios.defaults.timeout = 5000;
 
 axios.defaults.headers.common = {
-  Cookie: env.BILIBILI_COOKIE,
   Accept: '*/*',
   referer: 'https://t.bilibili.com/',
-  // 'Accept-Encoding': 'gzip, deflate, br',
   Connection: 'keep-alive',
   'User-Agent':
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
@@ -29,6 +19,7 @@ axios.defaults.headers.common = {
 
 axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    config.headers.cookie = readCookie();
     return config;
   },
   (error: AxiosError) => {
@@ -39,13 +30,17 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response: AxiosResponse) => {
     const { status } = response;
-    if (status >= 200 || status < 250) {
+    if (status >= 200 || status < 300) {
+      if (typeof response.data.code === 'number' && response.data.code !== 0) {
+        console.error('登录过期，请到管理页面登录');
+        State.isLogin = false;
+      }
       return Promise.resolve(response);
     }
     return Promise.reject(response);
   },
   (error: AxiosError) => {
-    logger.error(error);
+    console.error(error);
     return Promise.reject(error);
   },
 );

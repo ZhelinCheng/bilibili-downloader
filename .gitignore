@@ -9,11 +9,16 @@
 /test
 /output
 /output/**
+/cache/**
+.cookie.json
 
 # misc
 .DS_Store
 .env
 db.json
+/db
+database
+.database
 
 .exclude
 .include

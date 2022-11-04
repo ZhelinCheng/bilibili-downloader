@@ -1,43 +1,29 @@
 /*
- * @Author       : Zhelin Cheng
- * @Date         : 2021-04-20 19:10:56
+ * @Author       : 程哲林
+ * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-06-19 19:07:58
- * @FilePath     : \bilibili-downloader\src\const\index.ts
+ * @LastEditTime : 2022-11-02 21:48:12
+ * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
 
-import { env } from '../utils/env';
-import fse from 'fs-extra';
-import { resolve } from 'path';
+// 获取用户信息
+export const BLI_USER_INFO = 'https://api.bilibili.com/x/vip/web/user/info';
 
-// 上传到FTP
-export const isFtp = env.BILIBILI_FTP_HOST && env.BILIBILI_FTP_PASS;
+// 获取登陆二维码
+export const BLI_QR_CODE =
+  'http://passport.bilibili.com/x/passport-login/web/qrcode/generate';
 
-// 本地存储地址
-export const outputPath =
-  env.BILIBILI_OUTPUT_PATH || resolve(__dirname, '../../output');
+// 登陆轮训
+export const BLI_LOGIN_POLL =
+  'http://passport.bilibili.com/x/passport-login/web/qrcode/poll';
 
-function readConf(fileName: 'exclude' | 'include') {
-  const filePath = resolve(__dirname, `../../.${fileName}`);
-  fse.ensureFileSync(filePath);
-  const envConf = process.env[`BILIBILI_${fileName.toUpperCase()}_UID`];
-  const envItems = envConf ? envConf.split('|') : [];
-  const file = fse
-    .readFileSync(filePath)
-    .toString()
-    .split(/\r|\n|\r\n/);
-  return file.concat(envItems).filter((uid) => Boolean(uid));
-}
+// 动态列表
+export const BLI_DYNAMIC_NEW =
+  'https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/dynamic_new';
 
-// 排除的UID
-export const EXCLUDE_UID_ITEMS = readConf('exclude');
+// 视频分集
+export const BLI_VIDEO_PAGE = 'https://api.bilibili.com/x/player/pagelist';
 
-// 需要的UID
-export const INCLUDE_UID_ITEMS = readConf('include');
-
-// FTP路径
-export const BASE_FTP_PAtH = env.BILIBILI_FTP_PATH || '/Multimedia/Bilibili';
-
-// 视频限制时长
-export const LIMIT_DURATION = Number(env.LIMIT_DURATION || '0');
+// 视频下载地址
+export const BLI_PLAY_URL = 'http://api.bilibili.com/x/player/playurl';
