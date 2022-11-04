@@ -1,1 +1,0 @@
-{"version":3,"file":"static/css/main.fc57fde1.css","mappings":"AAAA,gBAGE,cADA,gBADA,cAEA,CAEA,sCAEE,qBADA,WACA","sources":["App.module.scss"],"sourcesContent":[".app {\n  padding: 30px 0;\n  max-width: 600px;\n  margin: 0 auto;\n\n  .tag-input {\n    width: 150px;\n    display: inline-block;\n  }\n}\n"],"names":[],"sourceRoot":""}
