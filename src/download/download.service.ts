@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-03 20:20:33
+ * @LastEditTime : 2022-11-04 13:38:34
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -43,14 +43,14 @@ const video = `${cachePath}/video.m4s`;
 fse.ensureDirSync(outputPath);
 fse.ensureDirSync(cachePath);
 
-const timeout = (wait = 1000) => {
+/* const timeout = (wait = 1000) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
     }, wait);
   });
 };
-
+ */
 const fileSave = (
   input: NodeJS.ReadStream,
   localPath: string,
@@ -98,7 +98,6 @@ export class DownloadService {
     if (!State.isReady) {
       return;
     }
-    State.isDownload = true;
     State.isReady = false;
 
     try {
@@ -144,7 +143,6 @@ export class DownloadService {
       console.error(e);
     } finally {
       State.isReady = true;
-      State.isDownload = false;
     }
   }
 

@@ -4,7 +4,7 @@ import { Config } from './app.entities/config.entity';
  * @Author       : 程哲林
  * @Date         : 2022-11-01 19:29:35
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-03 19:56:30
+ * @LastEditTime : 2022-11-04 13:34:30
  * @FilePath     : /bilibili-downloader/src/app.state.ts
  * @Description  : 未添加文件描述
  */
@@ -19,6 +19,4 @@ export class State {
   static cfg: Config;
   // 准备就绪
   static isReady = false;
-  // 下载状态
-  static isDownload = false;
 }

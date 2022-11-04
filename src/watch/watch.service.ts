@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-03 20:10:24
+ * @LastEditTime : 2022-11-04 13:36:25
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -35,11 +35,13 @@ export class WatchService {
     private readonly cfgRep: Repository<Config>,
   ) {}
 
-  @Cron('50 * * * * *')
+  @Cron('20 */3 * * * *')
   async handleCron() {
-    if (!State.isLogin || State.isDownload) {
+    if (!State.isLogin || !State.isReady) {
       return;
     }
+
+    State.isReady = false;
 
     try {
       this.logger.log('执行动态列表查询...');
