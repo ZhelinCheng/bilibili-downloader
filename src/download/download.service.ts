@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 18:07:30
+ * @LastEditTime : 2022-11-04 22:37:05
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -21,6 +21,7 @@ import * as fs from 'fs';
 import * as fse from 'fs-extra';
 import * as ffmpegPath from 'ffmpeg-static';
 import * as shell from 'shelljs';
+import * as FTP from 'basic-ftp';
 // import * as CliProgress from 'cli-progress';
 
 shell.config.silent = true;
@@ -33,14 +34,14 @@ shell.config.silent = true;
   CliProgress.Presets.shades_grey,
 ); */
 
-let outputPath = path.resolve(__dirname, '../..', 'output');
+const localOutputPath = path.resolve(__dirname, '../..', 'output');
+let outputPath = localOutputPath;
 const cachePath = path.resolve(__dirname, '../..', 'cache');
 
 const audio = `${cachePath}/audio.m4s`;
 const video = `${cachePath}/video.m4s`;
 
 // 确保输出文件夹存在
-fse.ensureDirSync(outputPath);
 fse.ensureDirSync(cachePath);
 
 /* const timeout = (wait = 1000) => {
@@ -93,7 +94,10 @@ export class DownloadService {
 
   fileName = '';
 
-  @Cron('0 * * * * *')
+  // FTP客户端
+  ftpClient: FTP.Client;
+
+  @Cron('30 */3 * * * *')
   async handleCron() {
     if (!State.isReady) {
       return;
@@ -104,9 +108,7 @@ export class DownloadService {
       this.logger.log('执行文件下载流程...');
 
       const [conf, que] = await Promise.all([
-        this.cfgRep.find({
-          select: ['duration'],
-        }),
+        this.cfgRep.find(),
         this.queRep.find({
           where: {
             status: 0,
@@ -114,12 +116,28 @@ export class DownloadService {
         }),
       ]);
 
+      if (que.length <= 0) {
+        return this.logger.log('没有需要下载的视频');
+      }
+
       const cfg = conf[0];
+      State.cfg = cfg;
+
       // 文件名
       this.fileName = cfg.fileName || '{{title}}';
       // 输出目录
-      outputPath = cfg.outputPath || outputPath;
 
+      const { saveType } = cfg;
+
+      // 创建输出目录
+      if (saveType === 'local') {
+        outputPath = cfg.outputPath || localOutputPath;
+      } else {
+        outputPath = localOutputPath;
+      }
+
+      // 创建下载目录
+      fse.ensureDirSync(localOutputPath);
       const ids = await this.downloadTask(que, cfg.duration || 0);
 
       /* let count = ids.length;
@@ -137,10 +155,60 @@ export class DownloadService {
 
       this.logger.log(`下载完成${ids.length}个视频`);
       this.delCache();
+
+      // 下面开始走其他流程
+      await this.createFtpClient();
     } catch (e) {
       console.error(e);
     } finally {
       State.isReady = true;
+    }
+  }
+
+  async createFtpClient() {
+    const {
+      saveType,
+      ftpAccount,
+      ftpRemote,
+      ftpPassword,
+      outputPath: opt,
+    } = State.cfg;
+
+    if (saveType !== 'ftp') {
+      return;
+    }
+
+    try {
+      this.logger.log('创建FTP');
+      // 创建FTP客户端
+      this.ftpClient = new FTP.Client();
+      this.ftpClient.ftp.verbose = false;
+
+      await this.ftpClient.access({
+        host: ftpRemote,
+        user: ftpAccount,
+        password: ftpPassword,
+      });
+
+      if (!this.ftpClient?.closed) {
+        this.logger.log('创建FTP成功');
+        // 确保FTP目录存在并上传
+        await this.ftpClient.ensureDir(opt);
+        this.logger.log('开始上传');
+        await this.ftpClient.uploadFromDir(localOutputPath, opt);
+
+        this.logger.log('上传至FTP服务器完成');
+
+        fse.removeSync(localOutputPath);
+      } else {
+        this.logger.error('FTP创建失败');
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      // 关闭链接
+      this.ftpClient?.close();
+      this.ftpClient = undefined;
     }
   }
 
@@ -175,6 +243,15 @@ export class DownloadService {
     return false;
   }
 
+  async videoTag(id: number) {
+    return await this.dataSource
+      .createQueryBuilder()
+      .update(Queue)
+      .set({ status: 1 })
+      .where('id = :id', { id })
+      .execute();
+  }
+
   async downloadTask(que: Queue[], duration: number): Promise<number[]> {
     return new Promise((resolve, reject) => {
       mapLimit(
@@ -184,21 +261,30 @@ export class DownloadService {
           const { bvid, cid, id, title, name } = item;
           const res = await getPlayUrl(bvid, cid);
 
-          if (!res) {
-            return id;
-          }
+          const videoName = `${name} - ${title}`;
 
-          // multibar.stop();
+          // 未获取到视频资源标记
+          if (typeof res === 'number') {
+            if (res === -404) {
+              // 未找到视频时
+              await this.videoTag(id);
+              return id;
+            }
+            return null;
+          }
 
           const videoUrl = res.dash.video[0].baseUrl;
           const audioUrl = res.dash.audio[0].baseUrl;
           const timelength = Math.ceil(res.timelength / 1000);
 
-          this.logger.log(`下载：${name} - ${title}`);
-
+          // 超出限制标记
           if (duration > 0 && timelength > duration) {
+            this.logger.log(`【${videoName}】超出限制，放弃下载`);
+            await this.videoTag(id);
             return id;
           }
+
+          this.logger.log(`下载视频：${videoName}`);
 
           const [vStatus, aStatus] = await Promise.all([
             this.downloadUrl(videoUrl, 'video', bvid),
@@ -212,18 +298,13 @@ export class DownloadService {
             return null;
           }
 
-          // await timeout(500);
-          this.logger.log('视频合并中...');
+          this.logger.log(`合并视频：${videoName}`);
           // 执行视频合并
           const concatStatus = await this.concatVideo(item);
 
+          // 下载合并成功标记
           if (concatStatus) {
-            await this.dataSource
-              .createQueryBuilder()
-              .update(Queue)
-              .set({ status: 1 })
-              .where('id = :id', { id })
-              .execute();
+            await this.videoTag(id);
           }
 
           return concatStatus ? id : null;

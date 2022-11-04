@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-02 21:47:32
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:54:31
+ * @LastEditTime : 2022-11-04 21:16:34
  * @FilePath     : /bilibili-downloader/src/services/download.ts
  * @Description  : 未添加文件描述
  */
@@ -81,7 +81,7 @@ interface SegmentBase {
 export const getPlayUrl = async (
   bvid: string,
   cid: number,
-): Promise<null | PlayUrl> => {
+): Promise<number | PlayUrl> => {
   try {
     const {
       data: { code, data },
@@ -102,7 +102,7 @@ export const getPlayUrl = async (
     if (code === 0) {
       return data;
     } else {
-      return null;
+      return code;
     }
   } catch (e) {
     console.error(e);

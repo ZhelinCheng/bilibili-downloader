@@ -1,4 +1,4 @@
-/*! For license information please see main.0fcb9e5f.js.LICENSE.txt */
+/*! For license information please see main.5757ce79.js.LICENSE.txt */
 !(function () {
   var e = {
       4037: function (e, t, n) {
@@ -36217,7 +36217,9 @@
                       span: 8,
                       children: [
                         '\u4e0a\u6b21\u66f4\u65b0\uff1a',
-                        Ov()(r.config.lastTime).format('YYYY-MM-DD HH:mm'),
+                        Ov()(1e3 * r.config.lastTime).format(
+                          'YYYY-MM-DD HH:mm',
+                        ),
                       ],
                     }),
                   ],
@@ -36394,4 +36396,4 @@
       t.createRoot(document.getElementById('root')).render((0, Fv.jsx)(Hv, {}));
     })();
 })();
-//# sourceMappingURL=main.0fcb9e5f.js.map
+//# sourceMappingURL=main.5757ce79.js.map

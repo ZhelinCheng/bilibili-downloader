@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 17:59:45
+ * @LastEditTime : 2022-11-04 23:01:42
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -35,7 +35,7 @@ export class WatchService {
     private readonly cfgRep: Repository<Config>,
   ) {}
 
-  @Cron('51 * * * * *')
+  @Cron('0 */3 * * * *')
   async handleCron() {
     if (!State.isLogin || !State.isReady) {
       return;
@@ -45,7 +45,6 @@ export class WatchService {
 
     try {
       this.logger.log('执行动态列表查询...');
-      const timeSet = new Set([]);
 
       const [conf, queueBvid] = await Promise.all([
         this.cfgRep.find(),
@@ -93,7 +92,6 @@ export class WatchService {
             },
           },
         } of data.cards) {
-          timeSet.add(bvid);
           const { topic_details } = topic_info;
           const jsonCard = JSON.parse(card || '{}');
 
@@ -107,9 +105,30 @@ export class WatchService {
             .map(({ topic_name }) => topic_name)
             .join(',');
 
-          // 关键词
-          const isKws = !mint.validator(title + ',' + tags) || !kws;
-          if (!bvidSet.has(bvid) && isKws && timeout < timestamp) {
+          const excludeUid = cfg.exclude.split(',').filter((i) => i);
+          const includeUid = cfg.include.split(',').filter((i) => i);
+
+          const uidStr = uid.toString();
+
+          // 关键词通过
+          const isKwsPass = !kws || !mint.validator(title + ',' + tags);
+
+          // 基本判断通过：不是已经放入队列的，且没有超时
+          const isBasicPass = !bvidSet.has(bvid) && timeout < timestamp;
+
+          // 排除条件通过
+          const isExPass = !excludeUid.includes(uidStr);
+
+          // 必须包含通过
+          const isInPass = includeUid.includes(uidStr);
+
+          // 条件1：是必须包含的用户，会跳过关键词、排除校验
+          const condition1 = isInPass && isBasicPass;
+
+          // 条件2：不是排除用户，且命中关键词
+          const condition2 = isExPass && isKwsPass && isBasicPass;
+
+          if (condition1 || condition2) {
             bvidSet.add(bvid);
 
             dynamicArr.push({

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 16:39:17
+ * @LastEditTime : 2022-11-04 21:30:20
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -81,10 +81,13 @@ export class AppModule {
     const cfgCount = await this.dataSource.getRepository(Config).count();
 
     if (cfgCount === 0) {
-      this.dataSource.getRepository(Config).save({
+      await this.dataSource.getRepository(Config).save({
         outputPath: path.join(__dirname, '..', 'output'),
       });
     }
+
+    // 获取配置信息
+    State.cfg = await this.dataSource.getRepository(Config).find()[0];
 
     if (readCookie()) {
       const {
