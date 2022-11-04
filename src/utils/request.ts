@@ -31,7 +31,7 @@ axios.interceptors.response.use(
   (response: AxiosResponse) => {
     const { status } = response;
     if (status >= 200 || status < 300) {
-      if (response.data.code !== 0) {
+      if (typeof response.data.code === 'number' && response.data.code !== 0) {
         console.error('登录过期，请到管理页面登录');
         State.isLogin = false;
       }

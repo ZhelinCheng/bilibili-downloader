@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 17:04:13
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 14:22:02
+ * @LastEditTime : 2022-11-04 17:59:25
  * @FilePath     : /bilibili-downloader/src/services/login.ts
  * @Description  : 未添加文件描述
  */
@@ -22,7 +22,10 @@ export async function userInfo() {
   if (res.data.code === 0) {
     State.vipStatus = res.data.data.vip_status === 1;
     State.isLogin = true;
+    State.isReady = true;
     State.userId = res.data.data.mid;
+  } else {
+    State.isLogin = false;
   }
 
   return res;

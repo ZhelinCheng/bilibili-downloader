@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 13:36:25
+ * @LastEditTime : 2022-11-04 17:59:45
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -35,7 +35,7 @@ export class WatchService {
     private readonly cfgRep: Repository<Config>,
   ) {}
 
-  @Cron('20 */3 * * * *')
+  @Cron('51 * * * * *')
   async handleCron() {
     if (!State.isLogin || !State.isReady) {
       return;
@@ -135,8 +135,14 @@ export class WatchService {
       this.logger.log(`本次数据更新：${qList.length}条`);
 
       if (qList.length) {
+        await this.queRep.save(qList);
         await Promise.all([
-          this.queRep.save(qList),
+          this.dataSource
+            .createQueryBuilder()
+            .update(Config)
+            .set({ lastTime: Math.floor(Date.now() / 1000) })
+            .where('id = :id', { id: cfg.id })
+            .execute(),
           this.dataSource
             .createQueryBuilder()
             .delete()

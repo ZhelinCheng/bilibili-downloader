@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 13:38:34
+ * @LastEditTime : 2022-11-04 18:07:30
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -120,11 +120,9 @@ export class DownloadService {
       // 输出目录
       outputPath = cfg.outputPath || outputPath;
 
-      const ids = await this.downloadTask(que, cfg.duration);
+      const ids = await this.downloadTask(que, cfg.duration || 0);
 
-      console.log(ids);
-
-      let count = ids.length;
+      /* let count = ids.length;
       await this.dataSource.transaction(async () => {
         while (count--) {
           const id = ids[count];
@@ -135,9 +133,9 @@ export class DownloadService {
             .where('id = :id', { id })
             .execute();
         }
-      });
+      }); */
 
-      this.logger.log('下载完成');
+      this.logger.log(`下载完成${ids.length}个视频`);
       this.delCache();
     } catch (e) {
       console.error(e);
@@ -194,9 +192,13 @@ export class DownloadService {
 
           const videoUrl = res.dash.video[0].baseUrl;
           const audioUrl = res.dash.audio[0].baseUrl;
-          // const timelength = res.timelength;
+          const timelength = Math.ceil(res.timelength / 1000);
 
           this.logger.log(`下载：${name} - ${title}`);
+
+          if (duration > 0 && timelength > duration) {
+            return id;
+          }
 
           const [vStatus, aStatus] = await Promise.all([
             this.downloadUrl(videoUrl, 'video', bvid),
@@ -214,6 +216,15 @@ export class DownloadService {
           this.logger.log('视频合并中...');
           // 执行视频合并
           const concatStatus = await this.concatVideo(item);
+
+          if (concatStatus) {
+            await this.dataSource
+              .createQueryBuilder()
+              .update(Queue)
+              .set({ status: 1 })
+              .where('id = :id', { id })
+              .execute();
+          }
 
           return concatStatus ? id : null;
         },
