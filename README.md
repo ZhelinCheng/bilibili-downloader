@@ -27,7 +27,8 @@
 > B 站个人动态视频下载助手，支持下载 B 站个人动态更新的 4k 视频，运行该程序后，你所关注的 UP 主更新的视频第一时间下载保存。妈妈再也不担心我没时间下载视频啦！🎉
 
 <center>
-<img src="https://store.zhelin.me/static/2022/1667572817_localhost_6123_.png"/>
+<img src="./img1.png"/>
+<img src="./img2.png"/>
 </center>
 ### 🏠 [Homepage](https://github.com/ZhelinCheng/bilibili-downloader#readme)
 
