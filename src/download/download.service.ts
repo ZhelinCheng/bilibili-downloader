@@ -153,7 +153,6 @@ export class DownloadService {
       }); */
 
       this.logger.log(`下载完成${ids.length}个视频`);
-      this.delCache();
 
       if (ids.length) {
         // 下面开始走其他流程
@@ -230,7 +229,6 @@ export class DownloadService {
           .replace('{{bvid}}', bvid)
           .replace('{{cid}}', cid.toString()),
       );
-
       return code === 0;
     } catch (e) {
       console.error(e);
@@ -306,6 +304,8 @@ export class DownloadService {
               await this.videoTag(id);
             }
 
+            // 删除缓存
+            this.delCache();
             return concatStatus ? id : null;
           } catch (e) {
             console.error(e);
