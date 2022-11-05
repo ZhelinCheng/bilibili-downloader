@@ -26,8 +26,9 @@
 
 > B 站个人动态视频下载助手，支持下载 B 站个人动态更新的 4k 视频，运行该程序后，你所关注的 UP 主更新的视频第一时间下载保存。妈妈再也不担心我没时间下载视频啦！🎉
 
-![bilibili-downloader](https://store.zhelin.me/static/2022/1667572817_localhost_6123_.png)
-
+<center>
+<img src="https://store.zhelin.me/static/2022/1667572817_localhost_6123_.png"/>
+</center>
 ### 🏠 [Homepage](https://github.com/ZhelinCheng/bilibili-downloader#readme)
 
 ## 使用
@@ -59,7 +60,7 @@ sqlite3 -version
 #### 2. Node 安装构建
 
 ```sh
-# 使用npm安装依赖，需要设置FFmpeg的CDN地址
+# sqlite3在Windows系统上可能会安装失败，手动自行安装sqlite@5.0.2
 npm install
 
 # 执行build命令，每一次更新都需要build一次
