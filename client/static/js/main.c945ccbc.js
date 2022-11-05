@@ -1,4 +1,4 @@
-/*! For license information please see main.5757ce79.js.LICENSE.txt */
+/*! For license information please see main.c945ccbc.js.LICENSE.txt */
 !(function () {
   var e = {
       4037: function (e, t, n) {
@@ -36074,10 +36074,11 @@
             ),
             r = n[0],
             o = n[1],
-            i = (function () {
+            i = r.config.saveType,
+            u = (function () {
               var e = c(
                 l().mark(function e(t) {
-                  var n, o, i, u, c;
+                  var n, o, u, c, s;
                   return l().wrap(function (e) {
                     for (;;)
                       switch ((e.prev = e.next)) {
@@ -36088,15 +36089,30 @@
                             Vv(a(a({}, t), {}, { id: r.config.id }))
                           );
                         case 3:
-                          (n = e.sent),
+                          if (
+                            ((n = e.sent),
                             (o = n.data),
-                            (i = o.statusCode),
-                            (u = o.data),
-                            (c = o.message),
-                            200 === i && u
-                              ? js.success('\u66f4\u65b0\u6210\u529f')
-                              : js.error(c || '\u4fdd\u5b58\u5931\u8d25');
-                        case 9:
+                            (u = o.statusCode),
+                            (c = o.data),
+                            (s = o.message),
+                            t.outputPath)
+                          ) {
+                            e.next = 10;
+                            break;
+                          }
+                          return e.abrupt(
+                            'return',
+                            js.warning(
+                              'ftp' === i
+                                ? '\u8bf7\u586b\u5199FTP\u76ee\u5f55\u8def\u5f84\uff0c\u4ece/\uff08\u6839\u76ee\u5f55\uff09\u5f00\u59cb'
+                                : '\u8bf7\u586b\u5199\u6587\u4ef6\u4fdd\u5b58\u76ee\u5f55\u8def\u5f84\uff08\u6ce8\u610fWindows/Linux\u76ee\u5f55\u8def\u5f84\u533a\u522b\uff09',
+                            ),
+                          );
+                        case 10:
+                          200 === u && c
+                            ? js.success('\u66f4\u65b0\u6210\u529f')
+                            : js.error(s || '\u4fdd\u5b58\u5931\u8d25');
+                        case 11:
                         case 'end':
                           return e.stop();
                       }
@@ -36234,21 +36250,22 @@
                       name: 'basic',
                       labelCol: { span: 8 },
                       onValuesChange: function (e) {
-                        var t = e.saveType;
-                        t &&
+                        var n = e.saveType;
+                        n &&
+                          (t.setFieldValue('outputPath', ''),
                           o(function (e) {
                             return a(
                               a({}, e),
                               {},
                               {
-                                config: a(a({}, e.config), {}, { saveType: t }),
+                                config: a(a({}, e.config), {}, { saveType: n }),
                               },
                             );
-                          });
+                          }));
                       },
                       wrapperCol: { span: 16 },
                       initialValues: r.config,
-                      onFinish: i,
+                      onFinish: u,
                       onFinishFailed: function (e) {
                         console.log('Failed:', e);
                       },
@@ -36329,7 +36346,10 @@
                             })
                           : null,
                         (0, Fv.jsx)(jf.Item, {
-                          label: '\u89c6\u9891\u4fdd\u5b58\u4f4d\u7f6e',
+                          label:
+                            'ftp' === i
+                              ? 'FTP\u76ee\u5f55\u8def\u5f84'
+                              : '\u672c\u5730\u4fdd\u5b58\u8def\u5f84',
                           name: 'outputPath',
                           tooltip:
                             '\u672c\u5730\u9ed8\u8ba4\u4fdd\u5b58\u5728\u9879\u76ee\u6839\u76ee\u5f55output/\u4e0b\uff1bFTP\u6a21\u5f0f\u8bf7\u586b\u5199FTP\u4fdd\u5b58\u76ee\u5f55',
@@ -36396,4 +36416,4 @@
       t.createRoot(document.getElementById('root')).render((0, Fv.jsx)(Hv, {}));
     })();
 })();
-//# sourceMappingURL=main.5757ce79.js.map
+//# sourceMappingURL=main.c945ccbc.js.map
