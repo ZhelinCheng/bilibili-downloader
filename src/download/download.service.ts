@@ -344,7 +344,7 @@ export class DownloadService {
       const file = this.downFilePath(cid);
       const pt = file[type];
 
-      fse.removeSync(pt);
+      // fse.removeSync(pt);
 
       await fileSave(data, pt);
 
