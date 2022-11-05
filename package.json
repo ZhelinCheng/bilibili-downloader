@@ -63,7 +63,6 @@
     "cli-progress": "^3.11.2",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.6",
-    "ffmpeg-static": "^5.1.0",
     "fs-extra": "^10.1.0",
     "mint-filter": "^3.0.1",
     "qrcode-terminal": "^0.12.0",

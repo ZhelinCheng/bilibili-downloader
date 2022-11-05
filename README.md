@@ -40,27 +40,24 @@
 
 ### 安装
 
-首先你需要[下载 NodeJs](https://nodejs.org/en/)，进入后选择**LTS**版本。NodeJS 会附带自动安装 NPM，所以 NodeJS 安装完成后即可运行程序。
+必须的自行提前安装的工具类库，MacOS 和 Linux 平台一般是已经安装过的，不需要自行安装：
 
-你可以克隆 master 分支，或者直接到[Releases 下载](https://github.com/ZhelinCheng/bilibili-downloader/releases)最新版本解压，进入目录执行：
+[ffmpeg 下载](https://ffmpeg.org/download.html)：用于视频合成
+[sqlite3 下载](https://www.sqlite.org/download.html)：用于存储配置及下载信息
+
+#### 检查前置依赖
 
 ```sh
-# 使用本软件前，一定要检查是否安装了ffmpeg
+# 检查ffmpeg
 ffmpeg -version
 
-# Mac用户
-brew install ffmpeg
-
-# Linux发行版
-我暂未在这上面测试过，测试过的同学可以提pr
-
-# Windows
-Windows用户可以不用安装
+# 检查sqlite3
+sqlite3 -version
 ```
 
 ```sh
 # 使用npm安装依赖，需要设置FFmpeg的CDN地址
-export FFMPEG_BINARIES_URL=https://cdn.npmmirror.com/binaries/ffmpeg-static && npm install
+npm install
 
 # 执行build命令，每一次更新都需要build一次
 npm run build

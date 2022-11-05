@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 23:01:42
+ * @LastEditTime : 2022-11-05 13:25:01
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -16,6 +16,7 @@ import { Queue } from '../app.entities/queue.entity';
 import { Config } from '../app.entities/config.entity';
 import Mint from 'mint-filter';
 import { mapLimit } from 'async';
+import { userInfo } from '@/services/login';
 // import { Notes } from 'src/app.entities/notes.entity';
 
 @Injectable()
@@ -37,13 +38,15 @@ export class WatchService {
 
   @Cron('0 */3 * * * *')
   async handleCron() {
-    if (!State.isLogin || !State.isReady) {
-      return;
-    }
-
-    State.isReady = false;
-
     try {
+      await userInfo();
+
+      if (!State.isLogin || !State.isReady) {
+        return;
+      }
+
+      State.isReady = false;
+
       this.logger.log('执行动态列表查询...');
 
       const [conf, queueBvid] = await Promise.all([
