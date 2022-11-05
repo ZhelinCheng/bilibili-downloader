@@ -210,11 +210,6 @@ export class DownloadService {
     }
   }
 
-  delCache() {
-    fse.removeSync(audio);
-    fse.removeSync(video);
-  }
-
   async concatVideo({ name, title, bvid, cid }: Queue) {
     try {
       const filePath = path.join(outputPath, name);
@@ -252,6 +247,7 @@ export class DownloadService {
         1,
         async (item: Queue) => {
           try {
+            fse.ensureDirSync(cachePath);
             const { bvid, cid, id, title, name } = item;
             const res = await getPlayUrl(bvid, cid);
 
@@ -305,7 +301,7 @@ export class DownloadService {
             }
 
             // 删除缓存
-            this.delCache();
+            fse.removeSync(cachePath);
             return concatStatus ? id : null;
           } catch (e) {
             console.error(e);
