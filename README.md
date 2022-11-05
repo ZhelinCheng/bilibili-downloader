@@ -38,14 +38,15 @@
 
 本程序支持视频保存本地及保存到 FTP 服务器，如何配置将在下面说明。
 
-### 安装
+### 使用
 
 必须的自行提前安装的工具类库，MacOS 和 Linux 平台一般是已经安装过的，不需要自行安装：
 
 [ffmpeg 下载](https://ffmpeg.org/download.html)：用于视频合成
+
 [sqlite3 下载](https://www.sqlite.org/download.html)：用于存储配置及下载信息
 
-#### 检查前置依赖
+#### 1. 检查前置依赖
 
 ```sh
 # 检查ffmpeg
@@ -55,6 +56,8 @@ ffmpeg -version
 sqlite3 -version
 ```
 
+#### 2. Node 安装构建
+
 ```sh
 # 使用npm安装依赖，需要设置FFmpeg的CDN地址
 npm install
@@ -63,7 +66,7 @@ npm install
 npm run build
 ```
 
-### 运行
+#### 3. 运行
 
 ```sh
 npm run start
