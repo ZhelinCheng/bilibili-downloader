@@ -78,25 +78,29 @@ export class AppModule {
   private readonly logger = new Logger(AppModule.name);
 
   async onApplicationBootstrap(): Promise<void> {
-    const cfgCount = await this.dataSource.getRepository(Config).count();
+    try {
+      const cfgCount = await this.dataSource.getRepository(Config).count();
 
-    if (cfgCount === 0) {
-      await this.dataSource.getRepository(Config).save({
-        outputPath: path.join(__dirname, '..', 'output'),
-      });
-    }
-
-    // 获取配置信息
-    State.cfg = await this.dataSource.getRepository(Config).find()[0];
-
-    if (readCookie()) {
-      const {
-        data: { code },
-      } = await userInfo();
-
-      if (code !== 0) {
-        this.logger.error('未登录，请进入管理页面进行登录');
+      if (cfgCount === 0) {
+        await this.dataSource.getRepository(Config).save({
+          outputPath: path.join(__dirname, '..', 'output'),
+        });
       }
+
+      // 获取配置信息
+      State.cfg = await this.dataSource.getRepository(Config).find()[0];
+
+      if (readCookie()) {
+        const {
+          data: { code },
+        } = await userInfo();
+
+        if (code !== 0) {
+          this.logger.error('未登录，请进入管理页面进行登录');
+        }
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 }
