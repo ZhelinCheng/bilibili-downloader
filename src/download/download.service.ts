@@ -40,14 +40,14 @@ const cachePath = path.resolve(__dirname, '../..', 'cache');
 // 确保输出文件夹存在
 fse.ensureDirSync(cachePath);
 
-/* const timeout = (wait = 1000) => {
+const timeout = (wait = 1000) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
     }, wait);
   });
 };
- */
+
 const fileSave = (
   input: NodeJS.ReadStream,
   localPath: string,
@@ -157,6 +157,7 @@ export class DownloadService {
       }
 
       // 清空缓存目录
+      await timeout(3000);
       fse.emptyDirSync(cachePath);
     } catch (e) {
       console.error(e);
