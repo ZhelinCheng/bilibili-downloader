@@ -197,7 +197,7 @@ export class DownloadService {
 
         this.logger.log('上传至FTP服务器完成');
 
-        fse.removeSync(localOutputPath);
+        fse.emptyDirSync(localOutputPath);
       } else {
         this.logger.error('FTP创建失败');
       }
