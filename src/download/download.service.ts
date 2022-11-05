@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 22:37:05
+ * @LastEditTime : 2022-11-05 13:36:47
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -19,7 +19,6 @@ import { getPlayUrl } from 'src/services/download';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
-import * as ffmpegPath from 'ffmpeg-static';
 import * as shell from 'shelljs';
 import * as FTP from 'basic-ftp';
 // import * as CliProgress from 'cli-progress';
@@ -156,8 +155,10 @@ export class DownloadService {
       this.logger.log(`下载完成${ids.length}个视频`);
       this.delCache();
 
-      // 下面开始走其他流程
-      await this.createFtpClient();
+      if (ids.length) {
+        // 下面开始走其他流程
+        await this.createFtpClient();
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -219,8 +220,6 @@ export class DownloadService {
 
   async concatVideo({ name, title, bvid, cid }: Queue) {
     try {
-      const isFFmpeg = shell.which('ffmpeg');
-
       const filePath = path.join(outputPath, name);
       const mp4File = `${path.join(outputPath, name, this.fileName)}.mp4`;
 
@@ -228,9 +227,7 @@ export class DownloadService {
       // fse.removeSync(mp4File);
 
       const { code } = shell.exec(
-        `${
-          isFFmpeg ? 'ffmpeg' : ffmpegPath
-        } -i ${video} -i ${audio} -codec copy ${mp4File} -y`
+        `ffmpeg -i ${video} -i ${audio} -codec copy ${mp4File} -y`
           .replace('{{title}}', title)
           .replace('{{bvid}}', bvid)
           .replace('{{cid}}', cid.toString()),
@@ -295,6 +292,9 @@ export class DownloadService {
 
           // console.log(isDownStatus);
           if (!isDownStatus) {
+            this.logger.error(
+              `视频：【${videoName}】下载失败，等待下次下载 | ${vStatus} | ${aStatus}`,
+            );
             return null;
           }
 

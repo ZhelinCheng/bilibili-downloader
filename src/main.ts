@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 14:54:53
+ * @LastEditTime : 2022-11-05 13:32:02
  * @FilePath     : /bilibili-downloader/src/main.ts
  * @Description  : 未添加文件描述
  */
@@ -14,7 +14,6 @@ import { AppModule } from './app.module';
 import { TransformInterceptor } from './app.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as shell from 'shelljs';
-import * as ffmpegPath from 'ffmpeg-static';
 
 /* import {
   FastifyAdapter,
@@ -49,10 +48,17 @@ async function bootstrap() {
   `);
 }
 
-if (shell.which('ffmpeg') || shell.exec(`${ffmpegPath} -version`).code === 0) {
+const isFFmpeg = shell.which('ffmpeg');
+const isSQLite3 = shell.which('sqlite3');
+
+if (isFFmpeg && isSQLite3) {
   bootstrap();
 } else {
   console.error(
-    'ffmpeg 命令调用失败，请自行安装并执行【ffmpeg -version】检查是否安装成功',
+    `
+    请先自行下载安装依赖并配置环境变量：
+    ffmpeg：${isFFmpeg ? '正常' : '未安装'}
+    sqlite3：${isSQLite3 ? '正常' : '未安装'}
+    `,
   );
 }
