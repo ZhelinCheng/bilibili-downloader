@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 17:16:09
+ * @LastEditTime : 2022-11-05 15:52:28
  * @FilePath     : /bilibili-downloader/src/app.service.ts
  * @Description  : 未添加文件描述
  */
@@ -82,10 +82,11 @@ export class AppService {
         token: data.refresh_token,
       });
 
+      this.logger.log('扫码成功');
+
       await userInfo();
     }
 
-    this.logger.log(message);
     return data.code;
   }
 
