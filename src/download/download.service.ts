@@ -253,59 +253,64 @@ export class DownloadService {
         que,
         1,
         async (item: Queue) => {
-          const { bvid, cid, id, title, name } = item;
-          const res = await getPlayUrl(bvid, cid);
+          try {
+            const { bvid, cid, id, title, name } = item;
+            const res = await getPlayUrl(bvid, cid);
 
-          const videoName = `${name} - ${title}`;
+            const videoName = `${name} - ${title}`;
 
-          // 未获取到视频资源标记
-          if (typeof res === 'number') {
-            if (res === -404) {
-              // 未找到视频时
+            // 未获取到视频资源标记
+            if (typeof res === 'number') {
+              if (res === -404) {
+                // 未找到视频时
+                await this.videoTag(id);
+                return id;
+              }
+              return null;
+            }
+
+            const videoUrl = res.dash.video[0].baseUrl;
+            const audioUrl = res.dash.audio[0].baseUrl;
+            const timelength = Math.ceil(res.timelength / 1000);
+
+            // 超出限制标记
+            if (duration > 0 && timelength > duration) {
+              this.logger.log(`【${videoName}】超出限制，放弃下载`);
               await this.videoTag(id);
               return id;
             }
+
+            this.logger.log(`下载视频：${videoName}`);
+
+            const [vStatus, aStatus] = await Promise.all([
+              this.downloadUrl(videoUrl, 'video', bvid),
+              this.downloadUrl(audioUrl, 'audio', bvid),
+            ]);
+
+            const isDownStatus = vStatus && aStatus;
+
+            // console.log(isDownStatus);
+            if (!isDownStatus) {
+              this.logger.error(
+                `视频：【${videoName}】下载失败，等待下次下载 | ${vStatus} | ${aStatus}`,
+              );
+              return null;
+            }
+
+            this.logger.log(`合并视频：${videoName}`);
+            // 执行视频合并
+            const concatStatus = await this.concatVideo(item);
+
+            // 下载合并成功标记
+            if (concatStatus) {
+              await this.videoTag(id);
+            }
+
+            return concatStatus ? id : null;
+          } catch (e) {
+            console.error(e);
             return null;
           }
-
-          const videoUrl = res.dash.video[0].baseUrl;
-          const audioUrl = res.dash.audio[0].baseUrl;
-          const timelength = Math.ceil(res.timelength / 1000);
-
-          // 超出限制标记
-          if (duration > 0 && timelength > duration) {
-            this.logger.log(`【${videoName}】超出限制，放弃下载`);
-            await this.videoTag(id);
-            return id;
-          }
-
-          this.logger.log(`下载视频：${videoName}`);
-
-          const [vStatus, aStatus] = await Promise.all([
-            this.downloadUrl(videoUrl, 'video', bvid),
-            this.downloadUrl(audioUrl, 'audio', bvid),
-          ]);
-
-          const isDownStatus = vStatus && aStatus;
-
-          // console.log(isDownStatus);
-          if (!isDownStatus) {
-            this.logger.error(
-              `视频：【${videoName}】下载失败，等待下次下载 | ${vStatus} | ${aStatus}`,
-            );
-            return null;
-          }
-
-          this.logger.log(`合并视频：${videoName}`);
-          // 执行视频合并
-          const concatStatus = await this.concatVideo(item);
-
-          // 下载合并成功标记
-          if (concatStatus) {
-            await this.videoTag(id);
-          }
-
-          return concatStatus ? id : null;
         },
         (err, res) => {
           if (err) reject(err);
