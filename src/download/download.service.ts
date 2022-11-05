@@ -37,9 +37,6 @@ const localOutputPath = path.resolve(__dirname, '../..', 'output');
 let outputPath = localOutputPath;
 const cachePath = path.resolve(__dirname, '../..', 'cache');
 
-const audio = `${cachePath}/audio.m4s`;
-const video = `${cachePath}/video.m4s`;
-
 // 确保输出文件夹存在
 fse.ensureDirSync(cachePath);
 
@@ -158,6 +155,9 @@ export class DownloadService {
         // 下面开始走其他流程
         await this.createFtpClient();
       }
+
+      // 清空缓存目录
+      fse.emptyDirSync(cachePath);
     } catch (e) {
       console.error(e);
     } finally {
@@ -216,10 +216,10 @@ export class DownloadService {
       const mp4File = `${path.join(outputPath, name, this.fileName)}.mp4`;
 
       fse.ensureDirSync(filePath);
-      // fse.removeSync(mp4File);
 
+      const ceFile = this.downFilePath(cid);
       const { code } = shell.exec(
-        `ffmpeg -i ${video} -i ${audio} -codec copy ${mp4File} -y`
+        `ffmpeg -i ${ceFile.audio} -i ${ceFile.video} -codec copy ${mp4File} -y`
           .replace('{{title}}', title)
           .replace('{{bvid}}', bvid)
           .replace('{{cid}}', cid.toString()),
@@ -247,7 +247,6 @@ export class DownloadService {
         1,
         async (item: Queue) => {
           try {
-            fse.ensureDirSync(cachePath);
             const { bvid, cid, id, title, name } = item;
             const res = await getPlayUrl(bvid, cid);
 
@@ -277,8 +276,8 @@ export class DownloadService {
             this.logger.log(`下载视频：${videoName}`);
 
             const [vStatus, aStatus] = await Promise.all([
-              this.downloadUrl(videoUrl, 'video', bvid),
-              this.downloadUrl(audioUrl, 'audio', bvid),
+              this.downloadUrl(videoUrl, 'video', bvid, cid),
+              this.downloadUrl(audioUrl, 'audio', bvid, cid),
             ]);
 
             const isDownStatus = vStatus && aStatus;
@@ -300,8 +299,6 @@ export class DownloadService {
               await this.videoTag(id);
             }
 
-            // 删除缓存
-            fse.removeSync(cachePath);
             return concatStatus ? id : null;
           } catch (e) {
             console.error(e);
@@ -316,7 +313,19 @@ export class DownloadService {
     });
   }
 
-  async downloadUrl(url: string, type: 'audio' | 'video', bvid?: string) {
+  downFilePath(cid: number) {
+    return {
+      audio: path.join(cachePath, `${cid}.a.m4s`),
+      video: path.join(cachePath, `${cid}.v.m4s`),
+    };
+  }
+
+  async downloadUrl(
+    url: string,
+    type: 'audio' | 'video',
+    bvid: string,
+    cid: number,
+  ) {
     try {
       if (!url) {
         return { headerSize: 0 };
@@ -332,7 +341,9 @@ export class DownloadService {
 
       const hdSize = Number(headers['content-length']);
 
-      const pt = type === 'audio' ? audio : video;
+      const file = this.downFilePath(cid);
+      const pt = file[type];
+
       fse.removeSync(pt);
 
       await fileSave(data, pt);
