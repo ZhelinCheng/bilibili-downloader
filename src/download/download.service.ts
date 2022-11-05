@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-05 13:36:47
+ * @LastEditTime : 2022-11-05 13:40:58
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -192,10 +192,8 @@ export class DownloadService {
       });
 
       if (!this.ftpClient?.closed) {
-        this.logger.log('创建FTP成功');
         // 确保FTP目录存在并上传
         await this.ftpClient.ensureDir(opt);
-        this.logger.log('开始上传');
         await this.ftpClient.uploadFromDir(localOutputPath, opt);
 
         this.logger.log('上传至FTP服务器完成');
