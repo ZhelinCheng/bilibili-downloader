@@ -30,7 +30,6 @@
 <img src="./img1.png"/>
 <img src="./img2.png"/>
 </center>
-### 🏠 [Homepage](https://github.com/ZhelinCheng/bilibili-downloader#readme)
 
 ## 使用
 
