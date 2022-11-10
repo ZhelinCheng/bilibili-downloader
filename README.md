@@ -74,6 +74,10 @@ npm run start
 ```
 
 如果你使用的是 pm2，那么该项目也提供了`ecosystem.config.js`，你仅需执行它即可。
+```sh
+pm2 start ./ecosystem.config.js
+```
+
 
 ### 开发
 
