@@ -48,6 +48,8 @@
 
 [sqlite3 下载](https://www.sqlite.org/download.html)：用于存储配置及下载信息
 
+如果你使用的是 Rocky Linux 9 / AlmaLinux 9，可以点击查看[前置库的安装](#前置库的安装)
+
 #### 1. 检查前置依赖
 
 ```sh
@@ -80,6 +82,43 @@ npm run start
 
 ```sh
 npm run start:dev
+```
+
+## 前置库的安装
+
+### 1. Rocky Linux 9 / AlmaLinux 9
+
+#### 启用 EPEL 存储库和 PowerTools(CRB)
+
+```shell
+sudo dnf install epel-release
+
+sudo dnf config-manager --set-enabled crb
+```
+
+现在在 Rocky Linux 9 / AlmaLinux 9 上添加 RPM Fusion 存储库：
+
+```shell
+sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm -y
+sudo dnf install --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm -y
+```
+
+安装
+
+```
+### 安装ffmpeg
+sudo dnf install ffmpeg ffmpeg-devel
+
+### 安装sqlite3
+sudo dnf install sqlite
+```
+
+放开端口
+
+```
+sudo firewall-cmd --zone=public --add-port 6123/tcp --permanent
+
+sudo firewall-cmd --reload
 ```
 
 ## 🤝 贡献
