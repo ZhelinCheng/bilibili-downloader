@@ -2,4 +2,5 @@
 **/*.svg
 **/*.ejs
 **/*.html
+/client
 package.json
