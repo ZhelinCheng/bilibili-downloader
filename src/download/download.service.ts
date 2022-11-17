@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-05 13:40:58
+ * @LastEditTime : 2022-11-17 20:08:43
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -136,19 +136,6 @@ export class DownloadService {
       fse.ensureDirSync(localOutputPath);
       const ids = await this.downloadTask(que, cfg.duration || 0);
 
-      /* let count = ids.length;
-      await this.dataSource.transaction(async () => {
-        while (count--) {
-          const id = ids[count];
-          await this.dataSource
-            .createQueryBuilder()
-            .update(Queue)
-            .set({ status: 1 })
-            .where('id = :id', { id })
-            .execute();
-        }
-      }); */
-
       this.logger.log(`下载完成${ids.length}个视频`);
 
       if (ids.length) {
@@ -159,10 +146,11 @@ export class DownloadService {
       // 清空缓存目录
       await timeout(3000);
       fse.emptyDirSync(cachePath);
-    } catch (e) {
-      console.error(e);
-    } finally {
+
       State.isReady = true;
+    } catch (e) {
+      State.isReady = true;
+      console.error(e);
     }
   }
 

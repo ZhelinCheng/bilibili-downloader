@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-05 13:25:01
+ * @LastEditTime : 2022-11-17 20:10:12
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -176,12 +176,12 @@ export class WatchService {
             .execute(),
         ]);
 
+        State.isReady = true;
         this.logger.log('本次动态数据更新完成');
       }
     } catch (e) {
-      this.logger.error(e);
-    } finally {
       State.isReady = true;
+      this.logger.error(e);
     }
   }
 
