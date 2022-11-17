@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-17 20:08:43
+ * @LastEditTime : 2022-11-17 20:19:08
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -101,7 +101,7 @@ export class DownloadService {
     State.isReady = false;
 
     try {
-      this.logger.log('执行文件下载流程...');
+      this.logger.log(`执行文件下载流程... [isReady: ${State.isReady}]`);
 
       const [conf, que] = await Promise.all([
         this.cfgRep.find(),

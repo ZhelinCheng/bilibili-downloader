@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-17 20:10:12
+ * @LastEditTime : 2022-11-17 20:19:56
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -47,7 +47,9 @@ export class WatchService {
 
       State.isReady = false;
 
-      this.logger.log('执行动态列表查询...');
+      this.logger.log(
+        `执行动态列表查询... [isLogin: ${State.isLogin}] [isReady: ${State.isReady}]`,
+      );
 
       const [conf, queueBvid] = await Promise.all([
         this.cfgRep.find(),
