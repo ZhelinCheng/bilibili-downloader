@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-25 11:00:44
+ * @LastEditTime : 2022-11-25 11:02:10
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -339,7 +339,9 @@ export class DownloadService {
 
       const fileSize = fs.statSync(pt).size;
 
-      this.logger.log(`下载信息：${bvid} ${type} ${fileSize} ${hdSize}`);
+      this.logger.log(
+        `下载信息：${bvid} ${type} ${fileSize} ${hdSize} [${url}]`,
+      );
 
       const scale = fileSize / hdSize;
       return scale > 0.999 && scale < 1.001;
