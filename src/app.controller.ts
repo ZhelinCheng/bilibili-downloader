@@ -2,12 +2,11 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 17:13:59
+ * @LastEditTime : 2022-11-25 11:11:24
  * @FilePath     : /bilibili-downloader/src/app.controller.ts
  * @Description  : 未添加文件描述
  */
 import { Controller, Get, Query, Post, Body } from '@nestjs/common';
-import { threadId } from 'worker_threads';
 import { AppService } from './app.service';
 
 @Controller()
