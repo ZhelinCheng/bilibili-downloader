@@ -1,6 +1,6 @@
 {
   "name": "bilibili-downloader",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。",
   "author": "ZhelinCheng",
   "license": "MIT",
