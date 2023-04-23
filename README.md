@@ -49,7 +49,11 @@
 
 如果你使用的是 Rocky Linux 9 / AlmaLinux 9，可以点击查看[前置库的安装](#前置库的安装)
 
+#### 0. Docker 运行
+
 #### 1. 检查前置依赖
+
+如果不使用 Docker，运行前请检查
 
 ```sh
 # 检查ffmpeg
@@ -76,10 +80,10 @@ npm run start
 ```
 
 如果你使用的是 pm2，那么该项目也提供了`ecosystem.config.js`，你仅需执行它即可。
+
 ```sh
 pm2 start ./ecosystem.config.js
 ```
-
 
 ### 开发
 
@@ -119,7 +123,7 @@ sudo dnf install sqlite
 放开端口
 
 ```
-sudo firewall-cmd --zone=public --add-port 6123/tcp --permanent
+sudo firewall-cmd --zone=public --add-port 2233/tcp --permanent
 
 sudo firewall-cmd --reload
 ```

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-05 13:32:02
+ * @LastEditTime : 2023-04-23 15:56:18
  * @FilePath     : /bilibili-downloader/src/main.ts
  * @Description  : 未添加文件描述
  */
@@ -37,7 +37,7 @@ async function bootstrap() {
   // 格式转换
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  const port = parseInt(process.env.BLI_PORT, 10) || 6123;
+  const port = parseInt(process.env.BLI_PORT, 10) || 2233;
 
   await app.listen(port);
 
