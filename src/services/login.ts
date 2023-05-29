@@ -2,13 +2,20 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 17:04:13
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 17:59:25
+ * @LastEditTime : 2023-05-19 18:13:32
  * @FilePath     : /bilibili-downloader/src/services/login.ts
  * @Description  : 未添加文件描述
  */
 import { State } from 'src/app.state';
-import { BLI_LOGIN_POLL, BLI_QR_CODE, BLI_USER_INFO } from 'src/const';
+import {
+  BLI_CHECK_REFRESH,
+  BLI_LOGIN_POLL,
+  BLI_QR_CODE,
+  BLI_REFRESH_COOKIE,
+  BLI_USER_INFO,
+} from 'src/const';
 import { rq } from '../utils/request';
+import QS from 'qs';
 
 export async function userInfo() {
   const res = await rq<{
@@ -64,5 +71,40 @@ export async function loginStatus(qrcodeKey: string) {
       qrcode_key: qrcodeKey,
     },
     url: BLI_LOGIN_POLL,
+  });
+}
+
+export async function checkRefresh() {
+  return await rq<{
+    code: number;
+    message: string;
+    data: {
+      refresh: boolean;
+      timestamp: number;
+    };
+  }>({
+    url: BLI_CHECK_REFRESH,
+  });
+}
+
+export async function getCorrespondHtml(url: string) {
+  return await rq<string>({
+    url,
+  });
+}
+
+export async function cookieRefresh(data: Record<string, string>) {
+  return await rq<{
+    code: number;
+    message: string;
+    data: {
+      code: number;
+      message: string;
+      refresh_token: string;
+    };
+  }>({
+    method: 'post',
+    url: BLI_REFRESH_COOKIE,
+    data: QS.stringify(data),
   });
 }

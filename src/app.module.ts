@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 21:30:20
+ * @LastEditTime : 2023-05-19 17:24:25
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -16,7 +16,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { WatchModule } from './watch/watch.module';
 import { DownloadModule } from './download/download.module';
 import { join } from 'path';
-import { HttpModule, HttpService } from '@nestjs/axios';
+// import { HttpModule, HttpService } from '@nestjs/axios';
 // import { AxiosRequestConfig } from 'axios';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
@@ -47,10 +47,10 @@ function getDbConfig(): TypeOrmModuleOptions {
 
 @Module({
   imports: [
-    HttpModule.register({
+    /* HttpModule.register({
       timeout: 5000,
       maxRedirects: 5,
-    }),
+    }), */
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api*'],
@@ -72,8 +72,7 @@ function getDbConfig(): TypeOrmModuleOptions {
 })
 export class AppModule {
   constructor(
-    private dataSource: DataSource,
-    private readonly httpService: HttpService,
+    private dataSource: DataSource, // private readonly httpService: HttpService,
   ) {}
   private readonly logger = new Logger(AppModule.name);
 

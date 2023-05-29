@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-17 20:19:56
+ * @LastEditTime : 2023-05-19 21:27:28
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -16,7 +16,21 @@ import { Queue } from '../app.entities/queue.entity';
 import { Config } from '../app.entities/config.entity';
 import Mint from 'mint-filter';
 import { mapLimit } from 'async';
-import { userInfo } from '@/services/login';
+import {
+  checkRefresh,
+  cookieRefresh,
+  getCorrespondHtml,
+  userInfo,
+} from '@/services/login';
+import fse from 'fs-extra';
+import { resolve } from 'path';
+import {
+  cookiePath,
+  getCorrespondPath,
+  readCookie,
+  readFile,
+  writeJsonFile,
+} from '@/utils';
 // import { Notes } from 'src/app.entities/notes.entity';
 
 @Injectable()
@@ -36,13 +50,104 @@ export class WatchService {
     private readonly cfgRep: Repository<Config>,
   ) {}
 
+  async checkRefresh() {
+    const {
+      data: { code, data },
+    } = await checkRefresh();
+    if (code === 0) {
+      console.log(data);
+      return data.timestamp;
+      // return data.refresh ? data.timestamp : 0;
+    } else {
+      return -1;
+    }
+  }
+
+  async refreshToken(ts: number) {
+    try {
+      const cookie = readFile(cookiePath);
+
+      if (!cookie) {
+        this.logger.error('未找到Cookie文件');
+        return void 0;
+      }
+
+      const correspondPath = getCorrespondPath(ts);
+      // >(?<name>[0-9a-fA-F]{32})<
+
+      const authUrl = `https://www.bilibili.com/correspond/1/${correspondPath}`;
+      console.log(authUrl);
+
+      const htmlRes = await getCorrespondHtml(authUrl);
+      const htmlStr = htmlRes.data;
+      const exec = /htmlStr/gim.exec(htmlStr);
+
+      console.log(htmlStr, exec.groups);
+
+      if (!exec.groups?.name) {
+        this.logger.error('未获取到刷新name');
+        return void 0;
+      }
+
+      console.log({
+        csrf: cookie.cookieJson.bili_jct,
+        refresh_csrf: exec.groups.name,
+        source: 'main_web',
+        refresh_token: cookie.token,
+      });
+
+      const res = await cookieRefresh({
+        csrf: cookie.cookieJson.bili_jct,
+        refresh_csrf: exec.groups.name,
+        source: 'main_web',
+        refresh_token: cookie.token,
+      });
+
+      if (res.data.code !== 0) {
+        this.logger.error(res.data.message || 'Cookie刷新失败');
+        return void 0;
+      }
+
+      const setCookie = res.headers['set-cookie'];
+      const cookieJson: Record<string, string> = {};
+
+      const cookies = setCookie.map((ck: string) => {
+        const ckItem = ck.split(';')[0];
+        const kv = ckItem.split('=');
+        cookieJson[kv[0]] = kv[1];
+        return ckItem;
+      });
+
+      writeJsonFile({
+        cookie: cookies.join(';'),
+        token: res.data.data.refresh_token,
+        cookieJson,
+      });
+
+      State.isLogin = true;
+      this.logger.log('Cookie刷新成功');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   @Cron('0 */3 * * * *')
   async handleCron() {
     try {
-      await userInfo();
-
       if (!State.isLogin || !State.isReady) {
-        return;
+        return void 0;
+      }
+
+      const ts = await this.checkRefresh();
+      if (ts !== 0) {
+        State.isLogin = false;
+        if (ts > 0) {
+          await this.refreshToken(ts);
+        } else {
+          this.logger.error('登录信息失效');
+        }
+
+        return void 0;
       }
 
       State.isReady = false;

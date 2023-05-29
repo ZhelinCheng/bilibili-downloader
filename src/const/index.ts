@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:48:12
+ * @LastEditTime : 2023-05-19 18:07:50
  * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
@@ -27,3 +27,10 @@ export const BLI_VIDEO_PAGE = 'https://api.bilibili.com/x/player/pagelist';
 
 // 视频下载地址
 export const BLI_PLAY_URL = 'http://api.bilibili.com/x/player/playurl';
+
+// 检查Cookie是否需要刷新
+export const BLI_CHECK_REFRESH =
+  'https://passport.bilibili.com/x/passport-login/web/cookie/info';
+
+export const BLI_REFRESH_COOKIE =
+  'https://passport.bilibili.com/x/passport-login/web/cookie/infohttps://passport.bilibili.com/x/passport-login/web/cookie/refresh';

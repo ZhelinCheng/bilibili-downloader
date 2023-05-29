@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-05 15:52:28
+ * @LastEditTime : 2023-05-19 20:53:07
  * @FilePath     : /bilibili-downloader/src/app.service.ts
  * @Description  : 未添加文件描述
  */
@@ -72,14 +72,19 @@ export class AppService {
 
     if (data.code == 0) {
       const setCookie = res.headers['set-cookie'];
+      const cookieJson: Record<string, string> = {};
 
       const cookies = setCookie.map((ck: string) => {
-        return ck.split(';')[0];
+        const ckItem = ck.split(';')[0];
+        const kv = ckItem.split('=');
+        cookieJson[kv[0]] = kv[1];
+        return ckItem;
       });
 
       writeJsonFile({
         cookie: cookies.join(';'),
         token: data.refresh_token,
+        cookieJson,
       });
 
       this.logger.log('扫码成功');

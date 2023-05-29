@@ -18,7 +18,7 @@ axios.defaults.headers.common = {
 };
 
 axios.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config) => {
     config.headers.cookie = readCookie();
     config.maxContentLength = Infinity;
     config.maxBodyLength = Infinity;

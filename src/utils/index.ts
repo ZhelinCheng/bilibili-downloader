@@ -2,15 +2,17 @@ import * as fse from 'fs-extra';
 import { join } from 'path';
 import { getQrCode, userInfo, loginStatus } from 'src/services/login';
 import * as qrcode from 'qrcode-terminal';
+import * as crypto from 'crypto';
 import { State } from 'src/app.state';
 
-const cookiePath = join(__dirname, '../..', '.cookie.json');
+export const cookiePath = join(__dirname, '../..', '.cookie.json');
 
 type CookieFile = {
   cookie: string;
   token: string;
+  cookieJson: Record<string, string>;
 };
-const baseJson = { cookie: '', token: '' };
+const baseJson = { cookie: '', token: '', cookieJson: {} };
 
 export const removeFile = (path: string) => {
   fse.removeSync(path);
@@ -70,14 +72,19 @@ export function login() {
           }
           if (code === 0) {
             const setCookie = res.headers['set-cookie'];
+            const cookieJson: Record<string, string> = {};
 
             const cookies = setCookie.map((ck: string) => {
-              return ck.split(';')[0];
+              const ckItem = ck.split(';')[0];
+              const kv = ckItem.split('=');
+              cookieJson[kv[0]] = kv[1];
+              return ckItem;
             });
 
             writeJsonFile({
               cookie: cookies.join(';'),
               token: refresh_token,
+              cookieJson,
             });
 
             const user = await userInfo();
@@ -105,6 +112,35 @@ export function login() {
 
     resolve(null);
   });
+}
+
+/**
+ * 获取刷新Token的path
+ * @param timestamp 时间戳
+ * @returns path
+ */
+export function getCorrespondPath(timestamp: number) {
+  const jwk = {
+    kty: 'RSA',
+    n: 'y4HdjgJHBlbaBN04VERG4qNBIFHP6a3GozCl75AihQloSWCXC5HDNgyinEnhaQ_4-gaMud_GF50elYXLlCToR9se9Z8z433U3KjM-3Yx7ptKkmQNAMggQwAVKgq3zYAoidNEWuxpkY_mAitTSRLnsJW-NCTa0bqBFF6Wm1MxgfE',
+    e: 'AQAB',
+  };
+
+  const publicKey = crypto.createPublicKey({
+    key: jwk,
+    format: 'jwk',
+    type: 'spki',
+  });
+
+  const data = new TextEncoder().encode(`refresh_${timestamp}`);
+  const encrypted = new Uint8Array(
+    crypto.publicEncrypt(
+      { key: publicKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING },
+      data,
+    ),
+  );
+
+  return Buffer.from(encrypted).toString('hex');
 }
 
 /* export function polling() {
