@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-19 18:07:50
+ * @LastEditTime : 2023-05-30 14:00:55
  * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
@@ -34,3 +34,45 @@ export const BLI_CHECK_REFRESH =
 
 export const BLI_REFRESH_COOKIE =
   'https://passport.bilibili.com/x/passport-login/web/cookie/infohttps://passport.bilibili.com/x/passport-login/web/cookie/refresh';
+
+export enum ConfGroup {
+  // 展示设置
+  OVERVIEW = 'overview',
+  // 用户配置
+  USER = 'user',
+  // 黑白名单
+  LIST = 'list',
+  // 下载设置
+  DOWNLOAD = 'download',
+  // 通用设置
+  UNIVERSAL = 'universal',
+}
+
+export enum StorageType {
+  LOCAL = 'local',
+  FTP = 'ftp',
+  WEBDAV = 'webdav',
+}
+
+export enum DataType {
+  NUMBER = 'number',
+  STRING = 'string',
+  ARRAY = 'array',
+  OBJECT = 'object',
+  BOOLEAN = 'boolean',
+}
+
+export enum VideoClarity {
+  '240P' = '6',
+  '360P' = '16',
+  '480P' = '32',
+  '720P' = '64',
+  '720P60' = '74',
+  '1080P' = '80',
+  '1080P+' = '112',
+  '1080P60' = '116',
+  '4K' = '120',
+  HDR = '125',
+  DOLBY = '126',
+  '8K' = '127',
+}

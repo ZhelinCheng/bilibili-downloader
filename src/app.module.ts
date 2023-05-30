@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-19 17:24:25
+ * @LastEditTime : 2023-05-30 14:24:25
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -27,7 +27,10 @@ import { Queue } from 'src/app.entities/queue.entity';
 import { userInfo } from './services/login';
 import { State } from './app.state';
 import { readCookie } from './utils';
-const dbPath = path.resolve(__dirname, '..', './.database');
+import { ConfGroup } from './const';
+import { initBaseConfig } from './const/init';
+
+const dbPath = path.resolve(__dirname, '..', './appdata.db');
 // import { readCookie, login } from './utils';
 
 function getDbConfig(): TypeOrmModuleOptions {
@@ -78,16 +81,22 @@ export class AppModule {
 
   async onApplicationBootstrap(): Promise<void> {
     try {
-      const cfgCount = await this.dataSource.getRepository(Config).count();
+      const configRep = this.dataSource.getRepository(Config);
+      const cfgCount = await configRep.count();
 
+      // 初始化数据
       if (cfgCount === 0) {
-        await this.dataSource.getRepository(Config).save({
-          outputPath: path.join(__dirname, '..', 'output'),
-        });
+        await configRep.save(initBaseConfig);
       }
 
+      // 更新启动时间
+      await this.dataSource.manager.update(
+        Config,
+        { group: ConfGroup.OVERVIEW, key: 'startTime' },
+        { value: Math.ceil(Date.now() / 1000).toString() },
+      );
       // 获取配置信息
-      State.cfg = await this.dataSource.getRepository(Config).find()[0];
+      /* State.cfg = await this.dataSource.getRepository(Config).find()[0];
 
       if (readCookie()) {
         const {
@@ -97,7 +106,7 @@ export class AppModule {
         if (code !== 0) {
           this.logger.error('未登录，请进入管理页面进行登录');
         }
-      }
+      } */
     } catch (e) {
       console.error(e);
     }

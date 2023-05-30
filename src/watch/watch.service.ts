@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-19 21:27:28
+ * @LastEditTime : 2023-05-30 13:37:59
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -131,8 +131,8 @@ export class WatchService {
     }
   }
 
-  @Cron('0 */3 * * * *')
-  async handleCron() {
+  // @Cron('0 */3 * * * *')
+  /* async handleCron() {
     try {
       if (!State.isLogin || !State.isReady) {
         return void 0;
@@ -290,7 +290,7 @@ export class WatchService {
       State.isReady = true;
       this.logger.error(e);
     }
-  }
+  } */
 
   /**
    * 获取动态cid

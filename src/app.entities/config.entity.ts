@@ -2,11 +2,12 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-04 17:29:30
+ * @LastEditTime : 2023-05-30 13:46:59
  * @FilePath     : /bilibili-downloader/src/app.entities/config.entity.ts
  * @Description  : 未添加文件描述
  */
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ConfGroup, DataType } from '@/const';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 @Entity('config')
 export class Config {
@@ -15,87 +16,35 @@ export class Config {
   })
   id: number;
 
+  @Index()
   @Column({
-    type: 'int',
-    comment: '视频时长, 300秒',
-    default: 300,
+    type: 'simple-enum',
+    enum: ConfGroup,
+    default: ConfGroup.UNIVERSAL,
+    comment: '配置所属组',
   })
-  duration: number;
-
-  @Column({
-    type: 'int',
-    comment: '动态超期时间',
-    default: 600,
-  })
-  expire: number;
+  group: ConfGroup;
 
   @Column({
     type: 'text',
-    comment: '排除uid集合',
+    comment: 'key',
+    default: '',
+    length: 50,
+  })
+  key: string;
+
+  @Column({
+    type: 'text',
+    comment: 'value',
     default: '',
   })
-  exclude: string;
+  value: string;
 
   @Column({
-    type: 'text',
-    comment: '必须包含uid集合',
-    default: '',
+    type: 'simple-enum',
+    enum: DataType,
+    comment: 'type数据类型',
+    default: DataType.STRING,
   })
-  include: string;
-
-  @Column({
-    type: 'text',
-    comment: '关键词',
-    default: '',
-  })
-  keywords: string;
-
-  @Column({
-    type: 'text',
-    comment: '文件名',
-    default: '{{title}}',
-  })
-  fileName: string;
-
-  @Column({
-    type: 'text',
-    comment: '保存方式',
-    default: 'local',
-  })
-  saveType: 'ftp' | 'local';
-
-  @Column({
-    type: 'text',
-    comment: '账号',
-    default: '',
-  })
-  ftpAccount: string;
-
-  @Column({
-    type: 'text',
-    comment: '密码',
-    default: '',
-  })
-  ftpPassword: string;
-
-  @Column({
-    type: 'text',
-    comment: '远程地址',
-    default: '',
-  })
-  ftpRemote: string;
-
-  @Column({
-    type: 'text',
-    comment: '输出目录',
-    default: '',
-  })
-  outputPath: string;
-
-  @Column({
-    type: 'int',
-    comment: '最后更新时间',
-    default: 0,
-  })
-  lastTime: number;
+  type: DataType;
 }

@@ -4,6 +4,7 @@ import { getQrCode, userInfo, loginStatus } from 'src/services/login';
 import * as qrcode from 'qrcode-terminal';
 import * as crypto from 'crypto';
 import { State } from 'src/app.state';
+import * as os from 'os';
 
 export const cookiePath = join(__dirname, '../..', '.cookie.json');
 
@@ -13,6 +14,12 @@ type CookieFile = {
   cookieJson: Record<string, string>;
 };
 const baseJson = { cookie: '', token: '', cookieJson: {} };
+
+// 获取系统默认下载目录
+export function getDownloadDir() {
+  const downloadPath = join(os.homedir(), 'Downloads');
+  return downloadPath;
+}
 
 export const removeFile = (path: string) => {
   fse.removeSync(path);

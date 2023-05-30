@@ -19,6 +19,7 @@ db.json
 /db
 database
 .database
+appdata.db
 
 .exclude
 .include

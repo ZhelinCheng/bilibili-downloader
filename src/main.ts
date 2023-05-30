@@ -2,18 +2,19 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-19 16:34:47
+ * @LastEditTime : 2023-05-30 11:17:42
  * @FilePath     : /bilibili-downloader/src/main.ts
  * @Description  : 未添加文件描述
  */
 // import { join } from 'path';
 
 import { NestFactory } from '@nestjs/core';
-import { VersioningType } from '@nestjs/common';
+import { VersioningType, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { TransformInterceptor } from './app.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as shell from 'shelljs';
+// import { getDownloadDir } from './utils';
 
 /* import {
   FastifyAdapter,
@@ -34,12 +35,20 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
+  // 验证管道
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      forbidUnknownValues: true,
+      disableErrorMessages: false,
+    }),
+  );
+
   // 格式转换
   app.useGlobalInterceptors(new TransformInterceptor());
 
   const port = parseInt(process.env.BLI_PORT, 10) || 2233;
-
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 
   const serverUrl = await app.getUrl();
   console.log(`
