@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-30 10:52:01
+ * @LastEditTime : 2023-05-31 20:50:58
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -33,13 +33,11 @@ shell.config.silent = true;
   CliProgress.Presets.shades_grey,
 ); */
 
-const localOutputPath = path.resolve(__dirname, '../..', 'output');
-const outputPath = localOutputPath;
 const cachePath = path.resolve(__dirname, '../..', 'cache');
 
 // 确保输出文件夹存在
 fse.ensureDirSync(cachePath);
-fse.ensureDirSync(localOutputPath);
+// fse.ensureDirSync(localOutputPath);
 
 const timeout = (wait = 1000) => {
   return new Promise((resolve) => {

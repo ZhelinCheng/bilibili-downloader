@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 17:04:13
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-19 18:13:32
+ * @LastEditTime : 2023-05-31 21:27:28
  * @FilePath     : /bilibili-downloader/src/services/login.ts
  * @Description  : 未添加文件描述
  */
@@ -16,26 +16,54 @@ import {
 } from 'src/const';
 import { rq } from '../utils/request';
 import QS from 'qs';
+import { CacheManager } from '@/utils/cache';
 
-export async function userInfo() {
-  const res = await rq<{
-    code: number;
-    message: string;
-    data: any;
-  }>({
+interface UserInfo {
+  code: number;
+  message: string;
+  ttl: number;
+  data: Data;
+}
+
+interface Data {
+  mid: number;
+  vip_type: number;
+  vip_status: number;
+  vip_due_date: number;
+  vip_pay_type: number;
+  theme_type: number;
+  label: Record<string, string>;
+  avatar_subscript: number;
+  avatar_subscript_url: string;
+  nickname_color: string;
+  is_new_user: boolean;
+  // tip_material?: any;
+}
+
+const cm = new CacheManager<UserInfo>(60 * 10000);
+
+export async function userInfo(refresh?: boolean) {
+  const memo = cm.get();
+  if (memo && !refresh) {
+    return memo;
+  }
+
+  const res = await rq<UserInfo>({
     url: BLI_USER_INFO,
   });
 
   if (res.data.code === 0) {
     State.vipStatus = res.data.data.vip_status === 1;
     State.isLogin = true;
-    State.isReady = true;
     State.userId = res.data.data.mid;
+
+    cm.set(res.data);
   } else {
+    cm.clear();
     State.isLogin = false;
   }
 
-  return res;
+  return res.data;
 }
 
 export async function getQrCode() {

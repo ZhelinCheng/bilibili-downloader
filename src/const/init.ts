@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2023-05-30 13:45:33
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-30 14:34:23
+ * @LastEditTime : 2023-05-31 21:36:50
  * @FilePath     : /bilibili-downloader/src/const/init.ts
  * @Description  : 未添加文件描述
  */
@@ -88,6 +88,20 @@ export const initBaseConfig = [
     key: 'namingType',
     value: '{username}_{filename}_{bvid}_{cid}',
     type: DataType.STRING,
+  },
+  {
+    // 收藏夹
+    group: ConfGroup.DOWNLOAD,
+    key: 'favorites',
+    value: '[]',
+    type: DataType.ARRAY,
+  },
+  {
+    // 监听范围
+    group: ConfGroup.DOWNLOAD,
+    key: 'scope',
+    value: '[]',
+    type: DataType.ARRAY,
   },
   {
     group: ConfGroup.UNIVERSAL,

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 20:46:28
  * @LastEditors  : 程哲林
- * @LastEditTime : 2022-11-02 21:47:40
+ * @LastEditTime : 2023-05-31 21:40:40
  * @FilePath     : /bilibili-downloader/src/services/watch.ts
  * @Description  : 未添加文件描述
  */
@@ -319,6 +319,46 @@ export const getVideoCid = async (bvid: string): Promise<VideoPageType[]> => {
       return data;
     } else {
       return [];
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+type FavoritesList = {
+  count: null;
+  list: Array<{
+    attr: number;
+    fav_state: number;
+    fid: number;
+    id: number;
+    media_count: number;
+    mid: number;
+    title: string;
+  }>;
+};
+
+export const getFavorites = async (
+  mid: number,
+): Promise<FavoritesList | null> => {
+  try {
+    const {
+      data: { code, data },
+    } = await rq<{
+      code: number;
+      data: FavoritesList;
+    }>({
+      url: 'https://api.bilibili.com/x/v3/fav/folder/created/list-all',
+      params: {
+        up_mid: mid,
+        type: 2,
+      },
+    });
+
+    if (code === 0) {
+      return data;
+    } else {
+      return null;
     }
   } catch (e) {
     console.error(e);

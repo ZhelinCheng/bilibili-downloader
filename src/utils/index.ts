@@ -5,6 +5,9 @@ import * as qrcode from 'qrcode-terminal';
 import * as crypto from 'crypto';
 import { State } from 'src/app.state';
 import * as os from 'os';
+import { DataSource } from 'typeorm';
+import { Config } from '@/app.entities/config.entity';
+import { Queue } from '@/app.entities/queue.entity';
 
 export const cookiePath = join(__dirname, '../..', '.cookie.json');
 
@@ -53,7 +56,7 @@ export const readCookie = (): string => {
 };
 
 // 登陆
-export function login() {
+/* export function login() {
   return new Promise(async (resolve) => {
     const { status, data } = await userInfo();
 
@@ -94,10 +97,7 @@ export function login() {
               cookieJson,
             });
 
-            const user = await userInfo();
-            State.vipStatus = user.data.data.vip_status === 1;
-            State.isLogin = true;
-            State.userId = data.data.mid;
+            await userInfo();
             console.log(
               `登录成功，是否为大会员：${State.vipStatus ? '是' : '否'}`,
             );
@@ -119,7 +119,7 @@ export function login() {
 
     resolve(null);
   });
-}
+} */
 
 /**
  * 获取刷新Token的path
@@ -148,6 +148,32 @@ export function getCorrespondPath(timestamp: number) {
   );
 
   return Buffer.from(encrypted).toString('hex');
+}
+
+export async function dbUpdate(
+  dataSource: DataSource,
+  table: any,
+  data: any[],
+): Promise<boolean> {
+  let count = data.length;
+
+  try {
+    await dataSource.transaction(async (transactionalEntityManager) => {
+      while (count--) {
+        const item = data[count];
+        await transactionalEntityManager
+          .createQueryBuilder()
+          .update(table)
+          .set(item.update)
+          .where(item.where)
+          .execute();
+      }
+    });
+    return true;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 }
 
 /* export function polling() {
