@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 21:49:46
+ * @LastEditTime : 2023-05-31 21:52:07
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -126,6 +126,7 @@ export class AppModule {
                 ),
               },
             );
+            this.logger.log('收藏夹信息写入成功');
           }
           this.logger.log('登录信息可用');
         }
