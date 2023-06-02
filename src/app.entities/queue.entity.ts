@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 21:22:26
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-30 14:39:32
+ * @LastEditTime : 2023-06-03 00:09:01
  * @FilePath     : /bilibili-downloader/src/app.entities/queue.entity.ts
  * @Description  : 未添加文件描述
  */
@@ -39,6 +39,14 @@ export class Queue {
 
   @Column({
     type: 'text',
+    comment: '副标题',
+    length: 64,
+    default: '',
+  })
+  part: string;
+
+  @Column({
+    type: 'text',
     comment: '封面',
   })
   cover: string;
@@ -72,13 +80,13 @@ export class Queue {
   })
   completeTime: number;
 
-  // 0等待，1完成，2失败
+  // 0完成，1等待，2主动添加，4失败
   @Index()
   @Column({
     type: 'int',
     comment: '状态',
     unsigned: true,
-    default: 0,
+    default: 1,
     width: 1,
   })
   status: number;

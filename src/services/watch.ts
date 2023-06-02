@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 20:46:28
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 22:01:57
+ * @LastEditTime : 2023-06-02 23:07:52
  * @FilePath     : /bilibili-downloader/src/services/watch.ts
  * @Description  : 未添加文件描述
  */
@@ -16,13 +16,6 @@ export interface VideoUrlItems {
 }
 
 interface DynamicNewType {
-  code: number;
-  msg: string;
-  message: string;
-  data: Data;
-}
-
-interface Data {
   new_num: number;
   exist_gap: number;
   update_num: number;
@@ -283,9 +276,11 @@ interface VideoPageType {
 /**
  * 获取动态列表
  */
-export const dynamicList = async (uid: number): Promise<DynamicNewType> => {
+export const dynamicList = async (
+  uid: number,
+): Promise<BiResponseType<DynamicNewType>> => {
   try {
-    const { data } = await rq<DynamicNewType>({
+    const { data, status } = await rq<BiResponseType<DynamicNewType>>({
       url: BLI_DYNAMIC_NEW,
       params: {
         uid,
@@ -295,10 +290,86 @@ export const dynamicList = async (uid: number): Promise<DynamicNewType> => {
       },
     });
 
-    return data;
+    if (status === 200) {
+      return data;
+    }
   } catch (e) {
     console.error(e);
   }
+
+  return null;
+};
+interface Favorite {
+  id: number;
+  type: number;
+  title: string;
+  cover: string;
+  intro: string;
+  page: number;
+  duration: number;
+  upper: Upper;
+  attr: number;
+  cnt_info: Cntinfo;
+  link: string;
+  ctime: number;
+  pubtime: number;
+  fav_time: number;
+  bv_id: string;
+  bvid: string;
+  season?: any;
+  ogv?: any;
+  ugc: Ugc;
+}
+
+interface Ugc {
+  first_cid: number;
+}
+
+interface Cntinfo {
+  collect: number;
+  play: number;
+  danmaku: number;
+  vt: number;
+  play_switch: number;
+  reply: number;
+}
+
+interface Upper {
+  mid: number;
+  name: string;
+  face: string;
+}
+
+type FavoriteDetail = {
+  info: {
+    title: string;
+  };
+  medias: Favorite[];
+};
+
+export const favoritesDetails = async (
+  mid: number,
+  pn = 1,
+  ps = 20,
+): Promise<BiResponseType<FavoriteDetail>> => {
+  try {
+    const { data, status } = await rq<BiResponseType<FavoriteDetail>>({
+      url: 'https://api.bilibili.com/x/v3/fav/resource/list',
+      params: {
+        media_id: mid,
+        ps,
+        pn,
+      },
+    });
+
+    if (status === 200) {
+      return data;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  return null;
 };
 
 export const getVideoCid = async (bvid: string): Promise<VideoPageType[]> => {

@@ -8,6 +8,7 @@ import * as os from 'os';
 import { DataSource } from 'typeorm';
 import { Config } from '@/app.entities/config.entity';
 import { Queue } from '@/app.entities/queue.entity';
+import { DataType } from '@/const';
 
 export const cookiePath = join(__dirname, '../..', '.cookie.json');
 
@@ -185,3 +186,30 @@ export async function dbUpdate(
     }, 1500);
   });
 } */
+
+export const arrayToObject = (arr: Array<Config>) => {
+  if (!Array.isArray(arr)) {
+    return {};
+  }
+
+  const obj: Record<string, any> = {};
+  arr.forEach(({ key, value, type }) => {
+    let newVal: any = value;
+    switch (type) {
+      case DataType.NUMBER: {
+        newVal = parseInt(value);
+        break;
+      }
+      case DataType.STRING: {
+        newVal = value;
+        break;
+      }
+      default: {
+        newVal = JSON.parse(value);
+      }
+    }
+    obj[key] = newVal;
+  });
+
+  return obj;
+};

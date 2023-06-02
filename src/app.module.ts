@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 21:52:07
+ * @LastEditTime : 2023-06-02 11:14:58
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -24,6 +24,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Config } from 'src/app.entities/config.entity';
 import { Queue } from 'src/app.entities/queue.entity';
+import { List } from 'src/app.entities/list.entity';
 import { ConfGroup } from './const';
 import { initBaseConfig } from './const/init';
 import { State } from './app.state';
@@ -67,7 +68,7 @@ function getDbConfig(): TypeOrmModuleOptions {
     TypeOrmModule.forRoot(getDbConfig()),
     WatchModule,
     DownloadModule,
-    TypeOrmModule.forFeature([Queue, Config]),
+    TypeOrmModule.forFeature([Queue, Config, List]),
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2023-05-30 13:45:33
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 21:36:50
+ * @LastEditTime : 2023-06-02 23:26:25
  * @FilePath     : /bilibili-downloader/src/const/init.ts
  * @Description  : 未添加文件描述
  */
@@ -54,36 +54,42 @@ export const initBaseConfig = [
     type: DataType.NUMBER,
   },
   {
+    // 存储位置
     group: ConfGroup.DOWNLOAD,
     key: 'outputPath',
     value: getDownloadDir(),
     type: DataType.STRING,
   },
   {
+    // 存储类型
     group: ConfGroup.DOWNLOAD,
     key: 'storageType',
     value: StorageType.LOCAL,
     type: DataType.STRING,
   },
   {
+    // 视频清晰度
     group: ConfGroup.DOWNLOAD,
     key: 'clarity',
     value: VideoClarity['8K'],
     type: DataType.NUMBER,
   },
   {
+    // 超期时间限制
     group: ConfGroup.DOWNLOAD,
-    key: 'overtime',
+    key: 'overtimeLimit',
+    value: '600',
+    type: DataType.NUMBER,
+  },
+  {
+    // 视频时长限制
+    group: ConfGroup.DOWNLOAD,
+    key: 'durationLimit',
     value: '300',
     type: DataType.NUMBER,
   },
   {
-    group: ConfGroup.DOWNLOAD,
-    key: 'limit',
-    value: '300',
-    type: DataType.NUMBER,
-  },
-  {
+    // 文件命名
     group: ConfGroup.DOWNLOAD,
     key: 'namingType',
     value: '{username}_{filename}_{bvid}_{cid}',
@@ -104,6 +110,14 @@ export const initBaseConfig = [
     type: DataType.ARRAY,
   },
   {
+    // 关键词
+    group: ConfGroup.DOWNLOAD,
+    key: 'keywords',
+    value: '["收藏夹"]',
+    type: DataType.ARRAY,
+  },
+  {
+    // 日志长度限制
     group: ConfGroup.UNIVERSAL,
     key: 'logLimit',
     value: '300',

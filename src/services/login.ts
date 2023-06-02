@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 17:04:13
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 21:27:28
+ * @LastEditTime : 2023-06-01 11:18:20
  * @FilePath     : /bilibili-downloader/src/services/login.ts
  * @Description  : 未添加文件描述
  */
@@ -40,7 +40,7 @@ interface Data {
   // tip_material?: any;
 }
 
-const cm = new CacheManager<UserInfo>(60 * 10000);
+const cm = new CacheManager<UserInfo>(30 * 10000);
 
 export async function userInfo(refresh?: boolean) {
   const memo = cm.get();

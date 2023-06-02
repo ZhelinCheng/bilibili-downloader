@@ -2,19 +2,20 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 21:24:29
+ * @LastEditTime : 2023-06-02 11:15:30
  * @FilePath     : /bilibili-downloader/src/app.service.ts
  * @Description  : 未添加文件描述
  */
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
-import { Queue } from './app.entities/queue.entity';
+// import { Queue } from './app.entities/queue.entity';
 import { Config } from './app.entities/config.entity';
+// import { List } from './app.entities/list.entity';
 import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getQrCode, loginStatus, userInfo } from './services/login';
-import { dbUpdate } from './utils';
+import { arrayToObject, dbUpdate } from './utils';
 import { ConfQueryDto } from './app.dto/query.dto';
-import { ConfGroup, DataType } from './const';
+import { ConfGroup } from './const';
 import { State } from './app.state';
 import { UpdateConfigDto } from './app.dto/update.dto';
 
@@ -24,11 +25,12 @@ export class AppService {
   constructor(
     private dataSource: DataSource,
 
-    @InjectRepository(Queue)
-    private readonly queRep: Repository<Queue>,
+    /* @InjectRepository(Queue)
+    private readonly queRep: Repository<Queue>, */
 
     @InjectRepository(Config)
-    private readonly cfgRep: Repository<Config>,
+    private readonly cfgRep: Repository<Config> /* @InjectRepository(List)
+    private readonly listRep: Repository<List>, */,
   ) {}
 
   async getUserInfo(): Promise<any> {
@@ -44,30 +46,7 @@ export class AppService {
     const config = await this.cfgRep.find({
       where: { group },
     });
-
-    const obj = {};
-
-    if (Array.isArray(config)) {
-      config.forEach(({ key, value, type }) => {
-        let newVal: any = value;
-        switch (type) {
-          case DataType.NUMBER: {
-            newVal = parseInt(value);
-            break;
-          }
-          case DataType.STRING: {
-            newVal = value;
-            break;
-          }
-          default: {
-            newVal = JSON.parse(value);
-          }
-        }
-        obj[key] = newVal;
-      });
-    }
-
-    return obj;
+    return arrayToObject(config);
   }
 
   async qrCodeGenerate() {
