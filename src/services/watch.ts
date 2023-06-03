@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 20:46:28
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-02 23:07:52
+ * @LastEditTime : 2023-06-03 16:28:51
  * @FilePath     : /bilibili-downloader/src/services/watch.ts
  * @Description  : 未添加文件描述
  */
@@ -412,14 +412,9 @@ type FavoritesList = {
 // 获取收藏夹
 export const getFavorites = async (
   mid: number,
-): Promise<FavoritesList | null> => {
+): Promise<BiResponseType<FavoritesList>> => {
   try {
-    const {
-      data: { code, data },
-    } = await rq<{
-      code: number;
-      data: FavoritesList;
-    }>({
+    const { data } = await rq<BiResponseType<FavoritesList>>({
       url: 'https://api.bilibili.com/x/v3/fav/folder/created/list-all',
       params: {
         up_mid: mid,
@@ -427,11 +422,7 @@ export const getFavorites = async (
       },
     });
 
-    if (code === 0) {
-      return data;
-    } else {
-      return null;
-    }
+    return data;
   } catch (e) {
     console.error(e);
   }

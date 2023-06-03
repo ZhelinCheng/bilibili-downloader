@@ -18,6 +18,7 @@ import { ConfQueryDto } from './app.dto/query.dto';
 import { ConfGroup } from './const';
 import { State } from './app.state';
 import { UpdateConfigDto } from './app.dto/update.dto';
+import { getFavorites } from './services/watch';
 
 @Injectable()
 export class AppService {
@@ -32,6 +33,18 @@ export class AppService {
     private readonly cfgRep: Repository<Config> /* @InjectRepository(List)
     private readonly listRep: Repository<List>, */,
   ) {}
+
+  async getFavorites() {
+    const res = await getFavorites(State.userId);
+
+    if (res.code === 0) {
+      return res.data.list.map(({ id, title }) => {
+        return { id, title };
+      });
+    }
+
+    return [];
+  }
 
   async getUserInfo(): Promise<any> {
     const res = await userInfo();

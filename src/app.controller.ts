@@ -20,13 +20,18 @@ export class AppController {
     return this.appService.getUserInfo();
   }
 
+  @Get('config')
+  findAll(@Query() query: ConfQueryDto) {
+    return this.appService.getConfig(query);
+  }
+
   /**
    * 获取基础配置
    * @returns 配置信息
    */
-  @Get('config')
-  findAll(@Query() query: ConfQueryDto) {
-    return this.appService.getConfig(query);
+  @Get('favorites')
+  favorites() {
+    return this.appService.getFavorites();
   }
 
   /**

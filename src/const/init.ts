@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2023-05-30 13:45:33
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-02 23:26:25
+ * @LastEditTime : 2023-06-03 18:53:06
  * @FilePath     : /bilibili-downloader/src/const/init.ts
  * @Description  : 未添加文件描述
  */
@@ -56,6 +56,27 @@ export const initBaseConfig = [
   {
     // 存储位置
     group: ConfGroup.DOWNLOAD,
+    key: 'password',
+    value: '',
+    type: DataType.STRING,
+  },
+  {
+    // 存储位置
+    group: ConfGroup.DOWNLOAD,
+    key: 'account',
+    value: '',
+    type: DataType.STRING,
+  },
+  {
+    // 远程地址
+    group: ConfGroup.DOWNLOAD,
+    key: 'remoteURL',
+    value: '',
+    type: DataType.STRING,
+  },
+  {
+    // 存储位置
+    group: ConfGroup.DOWNLOAD,
     key: 'outputPath',
     value: getDownloadDir(),
     type: DataType.STRING,
@@ -71,7 +92,7 @@ export const initBaseConfig = [
     // 视频清晰度
     group: ConfGroup.DOWNLOAD,
     key: 'clarity',
-    value: VideoClarity['8K'],
+    value: VideoClarity['4K'],
     type: DataType.NUMBER,
   },
   {
@@ -92,15 +113,8 @@ export const initBaseConfig = [
     // 文件命名
     group: ConfGroup.DOWNLOAD,
     key: 'namingType',
-    value: '{username}_{filename}_{bvid}_{cid}',
+    value: '{username}_{title}_{bvid}_{cid}',
     type: DataType.STRING,
-  },
-  {
-    // 收藏夹
-    group: ConfGroup.DOWNLOAD,
-    key: 'favorites',
-    value: '[]',
-    type: DataType.ARRAY,
   },
   {
     // 监听范围

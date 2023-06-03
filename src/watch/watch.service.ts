@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-05 16:48:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-03 00:17:37
+ * @LastEditTime : 2023-06-03 19:19:13
  * @FilePath     : /bilibili-downloader/src/watch/watch.service.ts
  * @Description  : 未添加文件描述
  */
@@ -150,167 +150,6 @@ export class WatchService {
       console.error(e);
     }
   }
-
-  // @Cron('0 */3 * * * *')
-  /* async handleCron() {
-    try {
-      if (!State.isLogin || !State.isReady) {
-        return void 0;
-      }
-
-      const ts = await this.checkRefresh();
-      if (ts !== 0) {
-        State.isLogin = false;
-        if (ts > 0) {
-          await this.refreshToken(ts);
-        } else {
-          this.logger.error('登录信息失效');
-        }
-
-        return void 0;
-      }
-
-      State.isReady = false;
-
-      this.logger.log(
-        `执行动态列表查询... [isLogin: ${State.isLogin}] [isReady: ${State.isReady}]`,
-      );
-
-      const [conf, queueBvid] = await Promise.all([
-        this.cfgRep.find(),
-        this.queRep.find({
-          select: ['bvid'],
-        }),
-      ]);
-
-      const cfg = conf[0];
-      State.cfg = cfg;
-
-      const kws = cfg['keywords'] || '';
-      const expire = cfg['expire'] || 600;
-
-      const timeout = Math.floor(Date.now() / 1000) - expire;
-
-      const mint = new Mint(kws.split(','));
-
-      // 获取动态列表
-      const { code, message, data } = await dynamicList(State.userId);
-
-      const dynamicArr: Array<Omit<Queue, 'id'>> = [];
-
-      const bvidSet = new Set(
-        queueBvid.map(({ bvid }) => {
-          return bvid;
-        }),
-      );
-
-      // 筛选符合下载需求的数据
-      if (code === 0 && Array.isArray(data?.cards) && data?.cards?.length) {
-        for (const {
-          display: {
-            topic_info = {
-              topic_details: [],
-            },
-          },
-          card = '',
-          desc: {
-            uid,
-            bvid,
-            timestamp,
-            user_profile: {
-              info: { uname },
-            },
-          },
-        } of data.cards) {
-          const { topic_details } = topic_info;
-          const jsonCard = JSON.parse(card || '{}');
-
-          // 安全的标题
-          const title = (jsonCard?.title || 'none').replace(
-            /\s|<|>|:|"|\/|\\|\?|\*|\|/gm,
-            '',
-          );
-
-          const tags = topic_details
-            .map(({ topic_name }) => topic_name)
-            .join(',');
-
-          const excludeUid = cfg.exclude.split(',').filter((i) => i);
-          const includeUid = cfg.include.split(',').filter((i) => i);
-
-          const uidStr = uid.toString();
-
-          // 关键词通过
-          const isKwsPass = !kws || !mint.validator(title + ',' + tags);
-
-          // 基本判断通过：不是已经放入队列的，且没有超时
-          const isBasicPass = !bvidSet.has(bvid) && timeout < timestamp;
-
-          // 排除条件通过
-          const isExPass = !excludeUid.includes(uidStr);
-
-          // 必须包含通过
-          const isInPass = includeUid.includes(uidStr);
-
-          // 条件1：是必须包含的用户，会跳过关键词、排除校验
-          const condition1 = isInPass && isBasicPass;
-
-          // 条件2：不是排除用户，且命中关键词
-          const condition2 = isExPass && isKwsPass && isBasicPass;
-
-          if (condition1 || condition2) {
-            bvidSet.add(bvid);
-
-            dynamicArr.push({
-              timestamp,
-              uid,
-              bvid,
-              name: uname,
-              title,
-              cid: 0,
-              status: 0,
-            });
-          }
-        }
-      } else {
-        this.logger.error(
-          `错误代码：${code}；错误信息：${message || '无数据'}`,
-        );
-      }
-
-      // 获取列表cid
-      const qList = await this.allVideosCid<Omit<Queue, 'id'>>(dynamicArr);
-
-      this.logger.log(`本次数据更新：${qList.length}条`);
-
-      if (qList.length) {
-        await this.queRep.save(qList);
-        await Promise.all([
-          this.dataSource
-            .createQueryBuilder()
-            .update(Config)
-            .set({ lastTime: Math.floor(Date.now() / 1000) })
-            .where('id = :id', { id: cfg.id })
-            .execute(),
-          this.dataSource
-            .createQueryBuilder()
-            .delete()
-            .from(Queue)
-            .where('status = :status', { status: 1 })
-            .andWhere('timestamp < :expire', {
-              expire: timeout - 3600,
-            })
-            .execute(),
-        ]);
-
-        State.isReady = true;
-        this.logger.log('本次动态数据更新完成');
-      }
-    } catch (e) {
-      State.isReady = true;
-      this.logger.error(e);
-    }
-  } */
 
   /**
    * 获取动态cid
@@ -463,21 +302,23 @@ export class WatchService {
 
       const completeQueue = await this.allVideosCid(filterQueue);
 
-      /* await this.queRep.save(
-        completeQueue.map(({ uid, name, title, part, cover, bvid, cid }) => {
-          return {
-            uid,
-            name,
-            title,
-            part: part || '',
-            cover,
-            bvid,
-            cid,
-            createdTime: nowTime,
-            completeTime: nowTime,
-          };
-        }),
-      ); */
+      if (completeQueue.length) {
+        await this.queRep.save(
+          completeQueue.map(({ uid, name, title, part, cover, bvid, cid }) => {
+            return {
+              uid,
+              name,
+              title,
+              part: part || '',
+              cover,
+              bvid,
+              cid,
+              createdTime: nowTime,
+              completeTime: nowTime,
+            };
+          }),
+        );
+      }
 
       /* await Promise.all([
         this.dataSource

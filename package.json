@@ -4,6 +4,7 @@
   "description": "B 站个人动态视频下载助手，支持下载B站个人动态更新的4k视频，运行该程序后，你所关注的UP主更新的视频第一时间下载保存。",
   "author": "ZhelinCheng",
   "license": "MIT",
+  "type": "commonjs",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -74,7 +75,8 @@
     "rxjs": "^7.8.1",
     "shelljs": "^0.8.5",
     "sqlite3": "^5.1.6",
-    "typeorm": "^0.3.16"
+    "typeorm": "^0.3.16",
+    "webdav": "4.11.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.5.0",

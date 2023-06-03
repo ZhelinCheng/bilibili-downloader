@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 16:27:07
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-30 14:00:55
+ * @LastEditTime : 2023-06-03 17:18:06
  * @FilePath     : /bilibili-downloader/src/const/index.ts
  * @Description  : 未添加文件描述
  */
@@ -75,4 +75,10 @@ export enum VideoClarity {
   HDR = '125',
   DOLBY = '126',
   '8K' = '127',
+}
+
+export enum ClarityType {
+  '4K' = '4k',
+  '8K' = '8k',
+  '1080P' = '1080p',
 }

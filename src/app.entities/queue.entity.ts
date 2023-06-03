@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 21:22:26
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-03 00:09:01
+ * @LastEditTime : 2023-06-03 17:28:33
  * @FilePath     : /bilibili-downloader/src/app.entities/queue.entity.ts
  * @Description  : 未添加文件描述
  */
@@ -80,13 +80,13 @@ export class Queue {
   })
   completeTime: number;
 
-  // 0完成，1等待，2主动添加，4失败
+  // 0需要下载，1已下载，2下载失败，3未找到视频资源
   @Index()
   @Column({
     type: 'int',
     comment: '状态',
     unsigned: true,
-    default: 1,
+    default: 0,
     width: 1,
   })
   status: number;

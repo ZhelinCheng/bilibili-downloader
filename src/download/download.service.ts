@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-05-31 20:50:58
+ * @LastEditTime : 2023-06-03 21:04:08
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -14,13 +14,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Queue } from '../app.entities/queue.entity';
 import { Config } from '../app.entities/config.entity';
 import axios from 'axios';
-import { mapLimit } from 'async';
 import { getPlayUrl } from 'src/services/download';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
 import * as shell from 'shelljs';
 import * as FTP from 'basic-ftp';
+import * as WebDAV from 'webdav';
+import { arrayToObject, getDownloadDir } from '@/utils';
+import { ConfGroup, StorageType } from '@/const';
 // import * as CliProgress from 'cli-progress';
 
 shell.config.silent = true;
@@ -91,6 +93,267 @@ export class DownloadService {
 
   // FTP客户端
   ftpClient: FTP.Client;
+  wdClient: WebDAV.WebDAVClient;
+
+  cfg: Record<string, any> = {};
+
+  ready = true;
+  @Cron('*/10 * * * * *')
+  async handleCron() {
+    if (!State.isLogin || !this.ready) {
+      return void 0;
+    }
+
+    this.ready = false;
+
+    this.logger.log(`执行文件下载流程...`);
+
+    const [conf, queue] = await Promise.all([
+      this.cfgRep.find({
+        where: {
+          group: ConfGroup.DOWNLOAD,
+        },
+      }),
+      this.queRep.find({
+        where: {
+          status: 0,
+        },
+      }),
+    ]);
+
+    this.cfg = arrayToObject(conf);
+
+    if (queue.length <= 0) {
+      this.logger.log('没有需要下载的视频');
+    } else {
+      await this.downloadTask(queue);
+    }
+
+    this.ready = true;
+  }
+
+  createDownloadDir(name: string) {
+    const { storageType = StorageType.LOCAL, outputPath = getDownloadDir() } =
+      this.cfg;
+
+    const op = path.join(outputPath, name);
+
+    switch (storageType) {
+      case StorageType.LOCAL: {
+        fse.ensureDirSync(op);
+        break;
+      }
+      case StorageType.WEBDAV: {
+        this.createWebDAVClient(op);
+        break;
+      }
+    }
+  }
+
+  async videoTag(id: number, status: number) {
+    return await this.dataSource
+      .createQueryBuilder()
+      .update(Queue)
+      .set({ status })
+      .where('id = :id', { id })
+      .execute();
+  }
+
+  async downloadTask(list: Queue[]) {
+    let idx = 0;
+
+    // 清空缓冲目录
+    fse.emptyDirSync(cachePath);
+
+    while (idx < list.length) {
+      const item = list[idx];
+      const { name, title, bvid, cid, id } = item;
+
+      this.logger.log(`开始执行下载 ——>《${title}》—— ${name}`);
+
+      this.logger.log(`获取下载地址 ——> bvid:${bvid} cid:${cid}`);
+
+      const res = await getPlayUrl(bvid, cid);
+
+      if (typeof res === 'number') {
+        if (res === -404) {
+          // 未找到视频时，标记视频
+          await this.videoTag(id, 3);
+        }
+        continue;
+      }
+
+      // 获取视频地址
+      const videoUrl = res.dash.video[0].baseUrl;
+      const audioUrl = res.dash.audio[0].baseUrl;
+
+      this.logger.log(`执行视频下载 ——> 标题：${title}`);
+
+      const [videoStatus, audioStatus] = await Promise.all([
+        this.downloadUrl(videoUrl, 'video', bvid, cid),
+        this.downloadUrl(audioUrl, 'audio', bvid, cid),
+      ]);
+
+      const isFinish = videoStatus && audioStatus;
+      this.log('视频缓存状态', isFinish);
+
+      // 下载失败跳过
+      if (!isFinish) {
+        continue;
+      }
+
+      const isConcat = this.concatVideo(item);
+
+      this.log('视频合成状态', isConcat);
+
+      if (!isConcat) {
+        continue;
+      }
+
+      const isPush = await this.pushRemote(item);
+
+      this.log('视频下载状态', isPush);
+
+      idx++;
+    }
+  }
+
+  log(msg: string, status: boolean) {
+    if (status) {
+      this.logger.log(`${msg} ——> 成功`);
+    } else {
+      this.logger.error(`${msg} ——> 失败`);
+    }
+  }
+
+  downFilePath(cid: number) {
+    return {
+      audio: path.join(cachePath, `${cid}.a.m4s`),
+      video: path.join(cachePath, `${cid}.v.m4s`),
+    };
+  }
+
+  async downloadUrl(
+    url: string,
+    type: 'audio' | 'video',
+    bvid: string,
+    cid: number,
+  ) {
+    try {
+      if (!url) {
+        return false;
+      }
+
+      const { data, headers } = await axios({
+        method: 'get',
+        url,
+        headers: {
+          referer: `https://www.bilibili.com/video/${bvid || 'bvid12123'}`,
+        },
+        responseType: 'stream',
+      });
+
+      const hdSize = Number(headers['content-length']);
+
+      const file = this.downFilePath(cid);
+      const pt = file[type];
+
+      // fse.removeSync(pt);
+
+      await fileSave(data, pt);
+
+      const fileSize = fs.statSync(pt).size;
+
+      const scale = fileSize / hdSize;
+      return scale > 0.999 && scale < 1.001;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return false;
+  }
+
+  concatVideo({ name, title, bvid, cid }: Queue) {
+    try {
+      // 创建目录
+      this.createDownloadDir(name);
+
+      const { outputPath, storageType, namingType } = this.cfg;
+      const fileName = namingType
+        .replace('{username}', name)
+        .replace('{title}', title)
+        .replace('{bvid}', bvid)
+        .replace('{cid}', cid);
+
+      const isLocal = storageType === StorageType.LOCAL;
+
+      // 判断存储位置是本地的话就合成到输出文件夹，如果不是就合成到缓冲文件夹
+      const mp4File = isLocal
+        ? `${path.join(outputPath, name, fileName)}.mp4`
+        : `${path.join(cachePath, cid.toString())}.mp4`;
+
+      const ceFile = this.downFilePath(cid);
+      this.logger.log(1);
+      const { code } = shell.exec(
+        `ffmpeg -i ${ceFile.audio} -i ${ceFile.video} -codec copy ${mp4File} -y`,
+      );
+      this.logger.log(2);
+      return code === 0;
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  }
+
+  webdavWrite(cid: number, outputPath: string) {
+    return new Promise((resolve, reject) => {
+      const input = fs.createReadStream(path.join(cachePath, `${cid}.mp4`));
+      input.pipe(this.wdClient.createWriteStream(outputPath));
+
+      input.on('end', function () {
+        resolve(true);
+      });
+
+      input.on('error', function (err) {
+        reject(err);
+      });
+    });
+  }
+
+  async pushRemote(item: Queue) {
+    try {
+      const { storageType = StorageType.LOCAL, outputPath } = this.cfg;
+
+      const op = path.join(outputPath, item.name);
+
+      switch (storageType) {
+        case StorageType.WEBDAV: {
+          await this.webdavWrite(item.cid, op);
+          break;
+        }
+      }
+
+      return true;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return false;
+  }
+
+  async createWebDAVClient(outputPath?: string) {
+    const { remoteURL, account, password } = this.cfg;
+
+    if (!this.wdClient) {
+      this.wdClient = WebDAV.createClient(remoteURL, {
+        authType: WebDAV.AuthType.Password,
+        username: account,
+        password,
+      });
+    }
+
+    await this.wdClient.createDirectory(outputPath);
+  }
 
   // @Cron('30 */3 * * * *')
   /*  async handleCron() {

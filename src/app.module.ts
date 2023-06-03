@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 14:23:15
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-02 11:14:58
+ * @LastEditTime : 2023-06-03 16:30:04
  * @FilePath     : /bilibili-downloader/src/app.module.ts
  * @Description  : 未添加文件描述
  */
@@ -107,12 +107,12 @@ export class AppModule {
       );
 
       if (State.cookie) {
-        const { code, data } = await userInfo();
+        const { code } = await userInfo();
 
         if (code !== 0) {
           this.logger.error('未登录，请进入管理页面进行登录');
         } else {
-          const res = await getFavorites(data.mid);
+          /* const res = await getFavorites(data.mid);
 
           if (res) {
             // 写入收藏夹信息
@@ -128,7 +128,7 @@ export class AppModule {
               },
             );
             this.logger.log('收藏夹信息写入成功');
-          }
+          } */
           this.logger.log('登录信息可用');
         }
       }
