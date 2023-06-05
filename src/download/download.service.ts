@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-03 21:04:08
+ * @LastEditTime : 2023-06-05 20:42:48
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -49,27 +49,17 @@ const timeout = (wait = 1000) => {
   });
 };
 
-const fileSave = (
+const writeStreamFile = (
   input: NodeJS.ReadStream,
   localPath: string,
-  // length?: number,
 ): Promise<boolean> => {
-  // const pg = multibar.create(length, 0);
-  // let count = 0;
-
   input.pipe(fs.createWriteStream(localPath), { end: true });
-  // input.end()
   return new Promise((resolve, reject) => {
-    /* input.on('data', function (chunk) {
-      pg.update((count += chunk.length));
-    }); */
-
     input.on('end', function () {
       resolve(true);
     });
 
     input.on('error', function (err) {
-      // pg.stop();
       reject(err);
     });
   });
@@ -100,6 +90,7 @@ export class DownloadService {
   ready = true;
   @Cron('*/10 * * * * *')
   async handleCron() {
+    // TODO: 下载失败多少次就暂停
     if (!State.isLogin || !this.ready) {
       return void 0;
     }
@@ -132,11 +123,13 @@ export class DownloadService {
     this.ready = true;
   }
 
-  createDownloadDir(name: string) {
+  async createDownloadDir(name: string) {
     const { storageType = StorageType.LOCAL, outputPath = getDownloadDir() } =
       this.cfg;
 
     const op = path.join(outputPath, name);
+
+    let pass = true;
 
     switch (storageType) {
       case StorageType.LOCAL: {
@@ -144,10 +137,16 @@ export class DownloadService {
         break;
       }
       case StorageType.WEBDAV: {
-        this.createWebDAVClient(op);
+        pass = await this.createWebDAVClient(op);
+        break;
+      }
+      case StorageType.FTP: {
+        pass = await this.createFTPClient(op);
         break;
       }
     }
+
+    return pass;
   }
 
   async videoTag(id: number, status: number) {
@@ -260,7 +259,7 @@ export class DownloadService {
 
       // fse.removeSync(pt);
 
-      await fileSave(data, pt);
+      await writeStreamFile(data, pt);
 
       const fileSize = fs.statSync(pt).size;
 
@@ -273,10 +272,15 @@ export class DownloadService {
     return false;
   }
 
-  concatVideo({ name, title, bvid, cid }: Queue) {
+  async concatVideo({ name, title, bvid, cid }: Queue) {
     try {
       // 创建目录
-      this.createDownloadDir(name);
+      const isSuccess = await this.createDownloadDir(name);
+
+      if (!isSuccess) {
+        this.logger.error('文件夹创建失败');
+        return false;
+      }
 
       const { outputPath, storageType, namingType } = this.cfg;
       const fileName = namingType
@@ -301,8 +305,15 @@ export class DownloadService {
       return code === 0;
     } catch (e) {
       console.error(e);
+      return false;
     }
-    return false;
+  }
+
+  async ftpWrite(cid: number, outputPath: string) {
+    await this.ftpClient.uploadFromDir(
+      path.join(cachePath, `${cid}.mp4`),
+      outputPath,
+    );
   }
 
   webdavWrite(cid: number, outputPath: string) {
@@ -331,6 +342,10 @@ export class DownloadService {
           await this.webdavWrite(item.cid, op);
           break;
         }
+        case StorageType.FTP: {
+          await this.ftpWrite(item.cid, op);
+          break;
+        }
       }
 
       return true;
@@ -341,18 +356,52 @@ export class DownloadService {
     return false;
   }
 
-  async createWebDAVClient(outputPath?: string) {
-    const { remoteURL, account, password } = this.cfg;
+  async createFTPClient(outputPath?: string) {
+    try {
+      const { remoteURL, account, password } = this.cfg;
 
-    if (!this.wdClient) {
-      this.wdClient = WebDAV.createClient(remoteURL, {
-        authType: WebDAV.AuthType.Password,
-        username: account,
-        password,
-      });
+      if (!this.ftpClient) {
+        this.ftpClient = new FTP.Client();
+        this.ftpClient.ftp.verbose = false;
+
+        await this.ftpClient.access({
+          host: remoteURL,
+          user: account,
+          password: password,
+        });
+      }
+
+      if (outputPath) {
+        await this.ftpClient.ensureDir(outputPath);
+      }
+
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
     }
+  }
 
-    await this.wdClient.createDirectory(outputPath);
+  async createWebDAVClient(outputPath?: string) {
+    try {
+      const { remoteURL, account, password } = this.cfg;
+
+      if (!this.wdClient) {
+        this.wdClient = WebDAV.createClient(remoteURL, {
+          authType: WebDAV.AuthType.Password,
+          username: account,
+          password,
+        });
+      }
+
+      if (outputPath) {
+        await this.wdClient.createDirectory(outputPath);
+      }
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   }
 
   // @Cron('30 */3 * * * *')
