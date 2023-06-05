@@ -2,7 +2,7 @@
  * @Author       : 程哲林
  * @Date         : 2022-11-01 15:07:48
  * @LastEditors  : 程哲林
- * @LastEditTime : 2023-06-05 20:42:48
+ * @LastEditTime : 2023-06-05 21:35:49
  * @FilePath     : /bilibili-downloader/src/download/download.service.ts
  * @Description  : 未添加文件描述
  */
@@ -41,13 +41,13 @@ const cachePath = path.resolve(__dirname, '../..', 'cache');
 fse.ensureDirSync(cachePath);
 // fse.ensureDirSync(localOutputPath);
 
-const timeout = (wait = 1000) => {
+/* const timeout = (wait = 1000) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true);
     }, wait);
   });
-};
+}; */
 
 const writeStreamFile = (
   input: NodeJS.ReadStream,
@@ -201,7 +201,7 @@ export class DownloadService {
         continue;
       }
 
-      const isConcat = this.concatVideo(item);
+      const isConcat = await this.concatVideo(item);
 
       this.log('视频合成状态', isConcat);
 
@@ -212,6 +212,10 @@ export class DownloadService {
       const isPush = await this.pushRemote(item);
 
       this.log('视频下载状态', isPush);
+
+      if (isPush) {
+        await this.videoTag(item.id, 0);
+      }
 
       idx++;
     }
@@ -310,13 +314,20 @@ export class DownloadService {
   }
 
   async ftpWrite(cid: number, outputPath: string) {
-    await this.ftpClient.uploadFromDir(
-      path.join(cachePath, `${cid}.mp4`),
-      outputPath,
-    );
+    try {
+      await this.ftpClient.uploadFromDir(
+        path.join(cachePath, `${cid}.mp4`),
+        outputPath,
+      );
+
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   }
 
-  webdavWrite(cid: number, outputPath: string) {
+  webdavWrite(cid: number, outputPath: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const input = fs.createReadStream(path.join(cachePath, `${cid}.mp4`));
       input.pipe(this.wdClient.createWriteStream(outputPath));
@@ -337,18 +348,20 @@ export class DownloadService {
 
       const op = path.join(outputPath, item.name);
 
+      let pass = true;
+
       switch (storageType) {
         case StorageType.WEBDAV: {
-          await this.webdavWrite(item.cid, op);
+          pass = await this.webdavWrite(item.cid, op);
           break;
         }
         case StorageType.FTP: {
-          await this.ftpWrite(item.cid, op);
+          pass = await this.ftpWrite(item.cid, op);
           break;
         }
       }
 
-      return true;
+      return pass;
     } catch (e) {
       console.error(e);
     }
