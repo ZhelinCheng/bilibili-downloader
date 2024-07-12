@@ -1,4 +1,4 @@
-<h1>⚠️⚠️⚠️工作繁忙，一直没有时间优化，推荐更好的方案： [bili-sync](https://github.com/amtoaer/bili-sync)⚠️⚠️⚠️</h1>
+<p>⚠️⚠️⚠️工作繁忙，一直没有时间优化，推荐更好的方案： [bili-sync](https://github.com/amtoaer/bili-sync)⚠️⚠️⚠️</h1>
 
 
 <h1 align="center">Welcome to bilibili-downloader 2.0 👋</h1>
